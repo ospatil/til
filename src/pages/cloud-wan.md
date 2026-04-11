@@ -1,3 +1,7 @@
+---
+layout: ../layouts/GistLayout.astro
+---
+
 # AWS Cloud WAN - Step-by-Step Explanation
 
 ---

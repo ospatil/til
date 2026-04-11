@@ -1,3 +1,7 @@
+---
+layout: ../layouts/GistLayout.astro
+---
+
 # Docker Networking Guide
 
 A comprehensive guide to understanding Docker networking, network modes, security configurations, and common pitfalls.

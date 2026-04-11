@@ -1,3 +1,7 @@
+---
+layout: ../layouts/GistLayout.astro
+---
+
 # AWS Hybrid & Multi-VPC Connectivity Guide
 
 A comprehensive reference for AWS hybrid connectivity terms, concepts, and architecture patterns.

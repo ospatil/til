@@ -1,0 +1,30 @@
+---
+import 'github-markdown-css/github-markdown-light.css'
+const { frontmatter } = Astro.props
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{frontmatter?.title || 'Document'}</title>
+  </head>
+  <body>
+    <article class="markdown-body">
+      <slot />
+    </article>
+  </body>
+</html>
+<style>
+  .markdown-body {
+    box-sizing: border-box;
+    min-width: 12.5rem;
+    max-width: 61.25rem;
+    margin: 0 auto;
+    padding: 2.8rem;
+  }
+  @media (max-width: 48rem) {
+    .markdown-body {
+      padding: 1rem;
+    }
+  }
+</style>

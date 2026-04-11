@@ -1,17 +1,53 @@
 ---
-
+import 'github-markdown-css/github-markdown-light.css'
+const files = import.meta.glob(['./**/*.md', './**/*.html'], { eager: true })
+const links = await Promise.all(
+  Object.entries(files)
+    .filter(([path]) => !path.includes('index'))
+    .map(async ([path, mod]) => {
+      const url = path.replace(/\.(md|html)$/, '/').replace(/^\./, '')
+      const slug = url.split('/').filter(Boolean).pop() || 'Untitled'
+      let title = mod.frontmatter?.title
+      if (!title && mod.getHeadings) {
+        const headings = await mod.getHeadings()
+        title = headings.find(h => h.depth === 1)?.text
+      }
+      if (!title && mod.compiledContent) {
+        const html = await mod.compiledContent()
+        title = html.match(/<h1[^>]*>(.*?)<\/h1>/)?.[1]
+      }
+      return { url, title: title || slug }
+    })
+)
+links.sort((a, b) => a.title.localeCompare(b.title))
 ---
-
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>TIL</title>
+  </head>
+  <body>
+    <article class="markdown-body">
+      <h1>Field Notes</h1>
+      <ul>
+        {links.map(p => <li><a href={p.url}>{p.title}</a></li>)}
+      </ul>
+    </article>
+  </body>
 </html>
+<style>
+  .markdown-body {
+    box-sizing: border-box;
+    min-width: 12.5rem;
+    max-width: 61.25rem;
+    margin: 0 auto;
+    padding: 2.8rem;
+  }
+  @media (max-width: 48rem) {
+    .markdown-body {
+      padding: 1rem;
+    }
+  }
+</style>

@@ -1,3 +1,7 @@
+---
+layout: ../layouts/GistLayout.astro
+---
+
 # EKS Networking Guide
 
 ## AWS VPC CNI — Pod Networking

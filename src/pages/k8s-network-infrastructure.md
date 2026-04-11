@@ -1,3 +1,7 @@
+---
+layout: ../layouts/GistLayout.astro
+---
+
 # Kubernetes Network Infrastructure — L2, BGP, and On-Prem Load Balancing
 
 A companion to [01-k8s-services-dns.md](./01-k8s-services-dns.md). That doc covers Kubernetes service types, DNS, and traffic policies. This doc goes deeper into the network infrastructure underneath — how traffic actually enters the cluster on-prem, the protocols involved, and the load balancing options available when there's no cloud provider.

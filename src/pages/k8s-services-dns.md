@@ -1,3 +1,7 @@
+---
+layout: ../layouts/GistLayout.astro
+---
+
 # Kubernetes Services and DNS Guide
 
 ## Service Types
