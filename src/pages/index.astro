@@ -1,6 +1,7 @@
 ---
 import 'github-markdown-css/github-markdown-light.css'
 const files = import.meta.glob(['./**/*.md', './**/*.html'], { eager: true })
+const htmlRaw = import.meta.glob(['./**/*.html'], { eager: true, query: '?raw', import: 'default' })
 const links = await Promise.all(
   Object.entries(files)
     .filter(([path]) => !path.includes('index'))
@@ -12,9 +13,8 @@ const links = await Promise.all(
         const headings = await mod.getHeadings()
         title = headings.find(h => h.depth === 1)?.text
       }
-      if (!title && mod.compiledContent) {
-        const html = await mod.compiledContent()
-        title = html.match(/<h1[^>]*>(.*?)<\/h1>/)?.[1]
+      if (!title && path.endsWith('.html') && htmlRaw[path]) {
+        title = String(htmlRaw[path]).match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
       }
       return { url, title: title || slug }
     })
@@ -30,7 +30,7 @@ links.sort((a, b) => a.title.localeCompare(b.title))
   </head>
   <body>
     <article class="markdown-body">
-      <h1>Field Notes</h1>
+      <h1>Today I Learned</h1>
       <ul>
         {links.map(p => <li><a href={p.url}>{p.title}</a></li>)}
       </ul>
