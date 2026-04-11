@@ -6,7 +6,7 @@ function rehypeRewriteMdLinks() {
   return (tree) => {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'a' && node.properties?.href) {
-        node.properties.href = node.properties.href.replace(/\.md$/, '/');
+        node.properties.href = node.properties.href.replace(/^(?:\.\/)?(.+)\.md$/, '/$1/');
       }
     });
   };

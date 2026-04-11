@@ -14,7 +14,8 @@ const links = await Promise.all(
         title = headings.find(h => h.depth === 1)?.text
       }
       if (!title && path.endsWith('.html') && htmlRaw[path]) {
-        title = String(htmlRaw[path]).match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
+        const raw = String(htmlRaw[path])
+        title = raw.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1] || raw.match(/<title>(.*?)<\/title>/i)?.[1]
       }
       return { url, title: title || slug }
     })
