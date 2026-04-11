@@ -1,7 +1,5 @@
 ---
 import 'github-markdown-css/github-markdown-light.css'
-import fs from 'node:fs'
-import path from 'node:path'
 
 const mdFiles = import.meta.glob(['./**/*.md'], { eager: true })
 const mdLinks = await Promise.all(
@@ -18,14 +16,14 @@ const mdLinks = await Promise.all(
     })
 )
 
-const publicDir = path.join(process.cwd(), 'public')
-const htmlFiles = fs.readdirSync(publicDir).filter(f => f.endsWith('.html'))
-const htmlLinks = htmlFiles.map(f => {
-  const raw = fs.readFileSync(path.join(publicDir, f), 'utf-8')
-  const title = raw.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
-    || raw.match(/<title>(.*?)<\/title>/i)?.[1]
-    || f.replace(/\.html$/, '')
-  return { url: `/${f}`, title }
+const htmlRaw = import.meta.glob('/public/**/*.html', { eager: true, query: '?raw', import: 'default' })
+const htmlLinks = Object.entries(htmlRaw).map(([p, raw]) => {
+  const file = p.split('/').pop()
+  const content = String(raw)
+  const title = content.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
+    || content.match(/<title>(.*?)<\/title>/i)?.[1]
+    || file.replace(/\.html$/, '')
+  return { url: `/${file}`, title }
 })
 
 const links = [...mdLinks, ...htmlLinks].sort((a, b) => a.title.localeCompare(b.title))
