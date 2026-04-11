@@ -1,5 +1,6 @@
 {
   "name": "til",
+  "description": "Collection of technical notes and explanations",
   "type": "module",
   "version": "0.0.1",
   "engines": {
