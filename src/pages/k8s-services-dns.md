@@ -644,7 +644,7 @@ The progression: ClusterIP (internal) → NodePort (expose on nodes) → LoadBal
 
 ### Related: Network Infrastructure Deep Dive
 
-See [02-k8s-network-infrastructure.md](./02-k8s-network-infrastructure.md) for:
+See [k8s-network-infrastructure.md](k8s-network-infrastructure.md) for:
 
 - **L2 Announcements** — how VIPs work via ARP, failover via gratuitous ARP, broadcast domain limitations
 - **BGP Route Advertisement** — peering, ECMP multi-node load balancing, route propagation
