@@ -1,6 +1,9 @@
 ---
 import 'github-markdown-css/github-markdown-light.css'
 
+// --- Discover Markdown pages from src/pages/ ---
+// Glob all .md files under src/pages/, excluding the index page itself.
+// Title is resolved from: frontmatter.title → first h1 heading → filename fallback.
 const mdFiles = import.meta.glob(['./**/*.md'], { eager: true })
 const mdLinks = await Promise.all(
   Object.entries(mdFiles)
@@ -16,16 +19,22 @@ const mdLinks = await Promise.all(
     })
 )
 
+// --- Discover HTML pages from public/ (including subfolders) ---
+// Glob all .html files under public/, imported as raw strings to extract titles.
+// URL is derived by stripping the /public prefix, preserving subfolder structure.
+// e.g. /public/pages/foo.html → /pages/foo.html
+// Title is resolved from: <h1> → <title> → filename fallback.
 const htmlRaw = import.meta.glob('/public/**/*.html', { eager: true, query: '?raw', import: 'default' })
 const htmlLinks = Object.entries(htmlRaw).map(([p, raw]) => {
-  const file = p.split('/').pop()
+  const file = p.replace(/^\/public/, '')
   const content = String(raw)
   const title = content.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
     || content.match(/<title>(.*?)<\/title>/i)?.[1]
-    || file.replace(/\.html$/, '')
-  return { url: `/${file}`, title }
+    || file.split('/').pop().replace(/\.html$/, '')
+  return { url: file, title }
 })
 
+// Merge both sources and sort alphabetically by title
 const links = [...mdLinks, ...htmlLinks].sort((a, b) => a.title.localeCompare(b.title))
 ---
 <html lang="en">
