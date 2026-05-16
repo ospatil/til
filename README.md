@@ -2,7 +2,7 @@
 
 🔗 **[til.omkarpatil.dev](https://til.omkarpatil.dev/)**
 
-A collection of technical notes and explanations I write to understand various topics. Built with [Astro](https://astro.build) and styled with [github-markdown-css](https://github.com/sindresorhus/github-markdown-css) for a clean, GitHub gist-like reading experience.
+A collection of technical notes and explanations I write to understand various topics. Built with [Astro](https://astro.build) with full-text search powered by [Pagefind](https://pagefind.app/).
 
 ## Adding content
 
@@ -14,7 +14,7 @@ A collection of technical notes and explanations I write to understand various t
   ---
   ```
 
-- **HTML** — Drop self-contained `.html` files into `public/`.
+- **HTML** — Drop self-contained `.html` files into `public/pages/`.
 
 The index page automatically discovers all pages and lists them using the first `<h1>` heading (or `<title>` for HTML files) as the link text.
 
@@ -25,9 +25,10 @@ src/
 ├── layouts/
 │   └── GistLayout.astro    # GitHub light theme layout for markdown
 └── pages/
-    ├── index.astro          # Auto-generated index page
+    ├── index.astro          # Auto-generated index page with search
     └── *.md                 # Markdown content pages
 public/
+└── pages/
     └── *.html               # Self-contained HTML pages
 ```
 
@@ -35,8 +36,9 @@ public/
 
 ```sh
 npm install
-npm run dev       # localhost:4321
-npm run build     # Build to ./dist/
+npm run dev       # localhost:4321 (search won't work in dev)
+npm run build     # Build to ./dist/ and generate search index
+npm run preview   # Preview build with working search
 ```
 
 ## Deployment

@@ -9,11 +9,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.1.5",
+    "astro": "^6.3.3",
     "github-markdown-css": "^5.9.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }
