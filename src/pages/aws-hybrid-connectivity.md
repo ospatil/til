@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [aws, networking]
+tags: [aws, networking, guide]
 ---
 
 # AWS Hybrid & Multi-VPC Connectivity Guide

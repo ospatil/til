@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [svelte, sveltekit, ssr]
+tags: [svelte, sveltekit, ssr, guide]
 ---
 
 # SvelteKit SSR, Data Loading & State
@@ -389,10 +389,10 @@ Load functions can return unresolved promises. The page renders immediately with
 // +page.server.ts
 export async function load() {
   return {
-    // Resolved immediately — blocks rendering
+    // Resolved immediately - blocks rendering
     post: await db.posts.findOne(),
 
-    // Streamed — page renders before these resolve
+    // Streamed - page renders before these resolve
     comments: db.comments.findAll(),        // Note: no await!
     relatedPosts: db.posts.findRelated()
   }
@@ -442,7 +442,7 @@ export async function load() {
 
 ### Nested Layouts and Streaming
 
-Streamed data from layout load functions works the same way — child pages render immediately while layout data streams in:
+Streamed data from layout load functions works the same way - child pages render immediately while layout data streams in:
 
 ```typescript
 // +layout.server.ts
@@ -839,7 +839,7 @@ Options set in `+layout.ts` are inherited by all child pages (children can overr
 
 SvelteKit 2.27+ introduces remote functions: type-safe RPC-style communication. Declared in `.remote.ts` files, they always execute on the server but can be called like regular functions.
 
-**Status:** Still experimental as of SvelteKit 2.60+. Not subject to semver — breaking changes can ship in any release. The API has evolved significantly since introduction.
+**Status:** Still experimental as of SvelteKit 2.60+. Not subject to semver - breaking changes can ship in any release. The API has evolved significantly since introduction.
 
 ### Four Core Types
 
@@ -912,8 +912,8 @@ Remote functions address load function pain points (colocation, granularity, typ
 
 **No.** Remote functions generate HTTP endpoints at framework-managed URLs (`/_app/remote/...`), but these are **not designed for external consumption**:
 
-- The URL structure is an implementation detail — no stable contract
-- Wire format uses **devalue** (not JSON) — supports `Date`, `Map`, `Set` but external clients can't easily consume it
+- The URL structure is an implementation detail - no stable contract
+- Wire format uses **devalue** (not JSON) - supports `Date`, `Map`, `Set` but external clients can't easily consume it
 - No versioning or API documentation support
 
 For external APIs (mobile apps, third-party services), use `+server.ts` routes.
@@ -922,8 +922,8 @@ For external APIs (mobile apps, third-party services), use `+server.ts` routes.
 
 **No.** Every exported function from a `.remote.ts` file generates a reachable HTTP endpoint. There is no "private" mode.
 
-- `.remote.ts` files **cannot** be placed in `src/lib/server/` — the framework prohibits this
-- Security is imperative, not structural — check auth inside the function body
+- `.remote.ts` files **cannot** be placed in `src/lib/server/` - the framework prohibits this
+- Security is imperative, not structural - check auth inside the function body
 
 ```typescript
 import { getRequestEvent } from '$app/server'
@@ -940,19 +940,19 @@ For truly private server-only logic (no HTTP endpoint), use regular modules in `
 
 ### SSR Behavior
 
-During SSR, remote functions execute **directly in-process** — no HTTP round-trip (same optimization as SvelteKit's special `fetch` with `+server.ts`). Results are serialized into the HTML payload, so the client doesn't re-request during hydration.
+During SSR, remote functions execute **directly in-process** - no HTTP round-trip (same optimization as SvelteKit's special `fetch` with `+server.ts`). Results are serialized into the HTML payload, so the client doesn't re-request during hydration.
 
 ### Coexisting with +server.ts Routes
 
 Remote functions and API routes serve different purposes and don't conflict. For shared logic:
 
 ```typescript
-// $lib/server/posts.ts — shared core logic
+// $lib/server/posts.ts - shared core logic
 export async function getPosts(userId?: string) {
   return db.posts.findAll({ where: { userId } })
 }
 
-// routes/blog/data.remote.ts — for SvelteKit app's internal use
+// routes/blog/data.remote.ts - for SvelteKit app's internal use
 import { query } from '$app/server'
 import { getPosts } from '$lib/server/posts'
 import { getRequestEvent } from '$app/server'
@@ -962,7 +962,7 @@ export const posts = query(async () => {
   return getPosts(locals.user?.id)
 })
 
-// routes/api/posts/+server.ts — for external clients (REST API)
+// routes/api/posts/+server.ts - for external clients (REST API)
 import { json } from '@sveltejs/kit'
 import { getPosts } from '$lib/server/posts'
 
@@ -1003,7 +1003,7 @@ If adopting remote functions, pin your SvelteKit version and review changelogs b
 
 ### State Leak Prevention
 
-Module-level state persists across requests on the server. This is one of the most persistently dangerous footguns in SvelteKit — user-specific data stored in a module-level variable can **leak between different users' requests**.
+Module-level state persists across requests on the server. This is one of the most persistently dangerous footguns in SvelteKit - user-specific data stored in a module-level variable can **leak between different users' requests**.
 
 ```typescript
 // stores/counter.svelte.ts
@@ -1025,7 +1025,7 @@ Request B (User Bob):
   counter.count is ALREADY 1 (Alice's data!) <- STATE LEAK
 ```
 
-This affects **any** global mutable state on the server — not just Svelte stores or runes. Any shared variable in a module is a potential leak vector.
+This affects **any** global mutable state on the server - not just Svelte stores or runes. Any shared variable in a module is a potential leak vector.
 
 | State Location         | Created Per            | Shared Across Requests | Safe for SSR |
 | ---------------------- | ---------------------- | ---------------------- | ------------ |
@@ -1265,7 +1265,7 @@ export function getThemeContext() {
 
 ## 13. Snippets & {@render}
 
-Svelte 5 replaces slots with **snippets** — a more powerful, explicit composition model. Snippets are declared with `{#snippet}` and rendered with `{@render}`.
+Svelte 5 replaces slots with **snippets** - a more powerful, explicit composition model. Snippets are declared with `{#snippet}` and rendered with `{@render}`.
 
 ### Basic Snippets (Replace Slots)
 
@@ -1374,9 +1374,9 @@ Snippets can be defined locally for reuse within the same component:
 
 ### Key Differences from Slots
 
-- Snippets are **first-class values** — they can be stored in variables, passed around, conditionally chosen
+- Snippets are **first-class values** - they can be stored in variables, passed around, conditionally chosen
 - Snippets have **explicit parameter types** (TypeScript-friendly)
-- Snippets are **lexically scoped** — they close over the declaring component's state
+- Snippets are **lexically scoped** - they close over the declaring component's state
 - `children` is just a prop (no special `<slot>` element)
 
 ### Typing Snippet Props
@@ -1406,7 +1406,7 @@ For client-only apps or state that doesn't need SSR safety:
 class CartStore {
   items = $state([])
 
-  // Use getters for computed values in classes — they're reactive
+  // Use getters for computed values in classes - they're reactive
   // because they read $state properties
   get total() {
     return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
@@ -1583,7 +1583,7 @@ Subsequent Updates:
   4. $effect (only for relevant effects)
 ```
 
-In Svelte 5 with runes, `beforeUpdate`/`afterUpdate` are replaced by `$effect.pre` and `$effect` which offer granular control — they only react to specific state changes, not every component update.
+In Svelte 5 with runes, `beforeUpdate`/`afterUpdate` are replaced by `$effect.pre` and `$effect` which offer granular control - they only react to specific state changes, not every component update.
 
 ---
 

@@ -1,11 +1,11 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [aws, kubernetes, networking]
+tags: [aws, kubernetes, networking, guide]
 ---
 
 # EKS Networking Guide
 
-## AWS VPC CNI — Pod Networking
+## AWS VPC CNI - Pod Networking
 
 The fundamental difference from most Kubernetes CNI plugins: pods get real VPC IP addresses, not overlay network IPs.
 
@@ -15,17 +15,17 @@ Each EC2 instance (node) has Elastic Network Interfaces (ENIs). The VPC CNI:
 
 1. Attaches secondary ENIs to the node
 2. Allocates secondary IPs on each ENI from the subnet CIDR
-3. Assigns those IPs directly to pods — each pod gets a routable VPC IP
+3. Assigns those IPs directly to pods - each pod gets a routable VPC IP
 
-A pod at `10.0.2.47` is just another IP on the VPC — no encapsulation, no overlay, no tunneling.
+A pod at `10.0.2.47` is just another IP on the VPC - no encapsulation, no overlay, no tunneling.
 
 ### Why This Matters
 
-- **Pod-to-pod across nodes** — regular VPC routing, no overlay overhead. VPC route tables already know how to reach these IPs.
-- **Pod-to-AWS services** — pods talk to RDS, S3 endpoints, etc. directly. Security groups and NACLs work natively.
-- **Pod-to-on-premises** — traffic flows through VPC peering/Transit Gateway/VPN without translation, since pod IPs are part of the VPC CIDR.
-- **ALB/NLB IP targets** — load balancers register pod IPs directly as targets (no node hop needed).
-- **Security groups for pods** — since pods use ENIs, security groups can be attached directly to pods.
+- **Pod-to-pod across nodes** - regular VPC routing, no overlay overhead. VPC route tables already know how to reach these IPs.
+- **Pod-to-AWS services** - pods talk to RDS, S3 endpoints, etc. directly. Security groups and NACLs work natively.
+- **Pod-to-on-premises** - traffic flows through VPC peering/Transit Gateway/VPN without translation, since pod IPs are part of the VPC CIDR.
+- **ALB/NLB IP targets** - load balancers register pod IPs directly as targets (no node hop needed).
+- **Security groups for pods** - since pods use ENIs, security groups can be attached directly to pods.
 
 ### IP Address Consumption
 
@@ -39,15 +39,15 @@ This varies by instance type. A `t3.medium` supports far fewer pods than an `m5.
 
 Mitigations:
 
-- **Prefix delegation** — assigns /28 prefixes instead of individual IPs to ENIs, significantly increasing pod density
-- **Pod subnet isolation** — pods use different subnets than nodes, giving a larger IP pool
-- **Secondary CIDRs** — add a `100.64.0.0/16` (RFC 6598) CIDR to the VPC for pod IPs
+- **Prefix delegation** - assigns /28 prefixes instead of individual IPs to ENIs, significantly increasing pod density
+- **Pod subnet isolation** - pods use different subnets than nodes, giving a larger IP pool
+- **Secondary CIDRs** - add a `100.64.0.0/16` (RFC 6598) CIDR to the VPC for pod IPs
 
 ### Prefix Delegation
 
-Without prefix delegation, each ENI slot holds one IP. With prefix delegation, each slot holds a /28 prefix — 16 IPs per slot.
+Without prefix delegation, each ENI slot holds one IP. With prefix delegation, each slot holds a /28 prefix - 16 IPs per slot.
 
-#### Example (m5.large — 3 ENIs, 10 IP slots per ENI)
+#### Example (m5.large - 3 ENIs, 10 IP slots per ENI)
 
 Without prefix delegation:
 
@@ -63,13 +63,13 @@ With prefix delegation:
 Minus node/ENI primary IPs          = 477 usable pod IPs
 ```
 
-Same number of ENIs, same number of slots — but each slot carries a /28 block instead of a single address.
+Same number of ENIs, same number of slots - but each slot carries a /28 block instead of a single address.
 
 #### How Prefix Delegation Works
 
-An ENI has a fixed number of address slots determined by the instance type. These slots are a VPC/hypervisor-level construct — entries in the ENI's address table that the VPC networking fabric tracks for routing.
+An ENI has a fixed number of address slots determined by the instance type. These slots are a VPC/hypervisor-level construct - entries in the ENI's address table that the VPC networking fabric tracks for routing.
 
-A slot can hold either a single IP address or a /28 prefix. It's the same slot, same hypervisor resource — the difference is what you put in it.
+A slot can hold either a single IP address or a /28 prefix. It's the same slot, same hypervisor resource - the difference is what you put in it.
 
 Without prefix delegation, the VPC routing layer stores individual routes:
 
@@ -85,9 +85,9 @@ With prefix delegation, it stores a single prefix route:
 10.0.2.48/28 → ENI-abc (single prefix route covering 16 IPs)
 ```
 
-The ENI receives the packets either way. Once the packet arrives at the node, the CNI plugin on the host decides which pod's network namespace to deliver it to. The ENI is just a pipe — it doesn't care if it's handling 1 IP or 16 IPs from a prefix.
+The ENI receives the packets either way. Once the packet arrives at the node, the CNI plugin on the host decides which pod's network namespace to deliver it to. The ENI is just a pipe - it doesn't care if it's handling 1 IP or 16 IPs from a prefix.
 
-The instance type limit on slots is about how many routing entries the VPC hypervisor tracks per ENI. A prefix entry and a single-IP entry cost the same — one slot, one routing rule. But a prefix entry covers 16 addresses instead of 1.
+The instance type limit on slots is about how many routing entries the VPC hypervisor tracks per ENI. A prefix entry and a single-IP entry cost the same - one slot, one routing rule. But a prefix entry covers 16 addresses instead of 1.
 
 Subnets need to be large enough to allocate contiguous /28 blocks. If subnets are heavily fragmented or small, prefix allocation can fail even when individual IPs are available. Typically /19 or larger subnets are recommended for production.
 
@@ -108,7 +108,7 @@ In **EKS Auto Mode**, prefix delegation is on by default. Auto Mode also:
 - Calculates max pods per node based on ENIs and IPs per instance type (assuming worst-case fragmentation)
 - Implements a cooldown pool for unused prefixes before releasing them back to the VPC
 
-You cannot configure warm IP/prefix/ENI settings in Auto Mode — AWS manages these automatically.
+You cannot configure warm IP/prefix/ENI settings in Auto Mode - AWS manages these automatically.
 
 #### Warm Pool
 
@@ -129,9 +129,9 @@ Pod scheduled → grab pre-allocated IP from warm pool → pod starts immediatel
 
 In standard EKS, this is tuned with:
 
-- `WARM_PREFIX_TARGET` — how many spare /28 prefixes to keep ready
-- `WARM_IP_TARGET` — how many spare individual IPs to keep ready
-- `MINIMUM_IP_TARGET` — minimum IPs to always have available
+- `WARM_PREFIX_TARGET` - how many spare /28 prefixes to keep ready
+- `WARM_IP_TARGET` - how many spare individual IPs to keep ready
+- `MINIMUM_IP_TARGET` - minimum IPs to always have available
 
 In Auto Mode, the warm pool size scales automatically based on scheduled pods.
 
@@ -143,8 +143,8 @@ When a pod terminates, its IP isn't released back to the VPC immediately. Instea
 
 This serves two purposes:
 
-1. **Reuse optimization** — if a new pod is scheduled shortly after, the IP can be reused from the cooldown pool without a VPC API call. This is common during rolling deployments where pods are constantly replaced.
-2. **Connection draining** — stale connections or DNS caches might still reference the old pod's IP. The cooldown period gives time for those to expire before the IP is returned to the VPC and potentially assigned to something else.
+1. **Reuse optimization** - if a new pod is scheduled shortly after, the IP can be reused from the cooldown pool without a VPC API call. This is common during rolling deployments where pods are constantly replaced.
+2. **Connection draining** - stale connections or DNS caches might still reference the old pod's IP. The cooldown period gives time for those to expire before the IP is returned to the VPC and potentially assigned to something else.
 
 ```
 Pod terminates → IP moves to cooldown pool
@@ -152,7 +152,7 @@ Pod terminates → IP moves to cooldown pool
   → Cooldown expires? → release IP back to VPC
 ```
 
-Together, warm pool and cooldown create a buffer on both sides — pre-allocation for fast startup, delayed release for safe cleanup.
+Together, warm pool and cooldown create a buffer on both sides - pre-allocation for fast startup, delayed release for safe cleanup.
 
 ### Pod Subnet Isolation
 
@@ -161,8 +161,8 @@ By default, pods and nodes share the same subnet. If the node subnet is a `/24` 
 In **standard EKS**, this is done via Custom Networking with `ENIConfig` resources that tell the CNI to attach secondary ENIs (used for pod IPs) to a different subnet:
 
 ```
-Node primary ENI  → Subnet A (10.0.1.0/24) — node IPs
-Pod secondary ENIs → Subnet B (10.0.2.0/20) — pod IPs only
+Node primary ENI  → Subnet A (10.0.1.0/24) - node IPs
+Pod secondary ENIs → Subnet B (10.0.2.0/20) - pod IPs only
 ```
 
 In **EKS Auto Mode**, `ENIConfig` is not supported. Instead, the `NodeClass` resource provides `podSubnetSelectorTerms` and `podSecurityGroupSelectorTerms` fields. When configured, Auto Mode attaches secondary ENIs in the pod subnets and assigns pod IPs from those subnets instead of the node subnets.
@@ -204,15 +204,15 @@ Use cases for pod subnet isolation:
 
 Considerations:
 
-- **Reduced pod density** — the node's primary ENI can't be used for pods in the pod subnet
-- **AZ alignment** — pod subnets must be in the same AZ as the node subnet
-- **Routing** — verify route tables and NACLs allow communication between node and pod subnets
+- **Reduced pod density** - the node's primary ENI can't be used for pods in the pod subnet
+- **AZ alignment** - pod subnets must be in the same AZ as the node subnet
+- **Routing** - verify route tables and NACLs allow communication between node and pod subnets
 
 Auto Mode also exposes `advancedNetworking.ipv4PrefixSize` in the `NodeClass` to control prefix delegation behavior:
 
 ```yaml
 advancedNetworking:
-  ipv4PrefixSize: Auto  # default — /28 prefixes with fallback to /32 on fragmentation
+  ipv4PrefixSize: Auto  # default - /28 prefixes with fallback to /32 on fragmentation
   # ipv4PrefixSize: "32"  # secondary IP mode only (no prefix delegation)
 ```
 
@@ -220,7 +220,7 @@ Setting `ipv4PrefixSize` to `"32"` disables prefix delegation and uses only indi
 
 ### Secondary CIDRs
 
-This solves the problem of a VPC CIDR that is too small or too fragmented for large pod subnets. AWS allows adding secondary CIDR blocks to a VPC. The common pattern is to add `100.64.0.0/16` (RFC 6598 — carrier-grade NAT range, 65,536 IPs) as a secondary CIDR, then create pod subnets from that range:
+This solves the problem of a VPC CIDR that is too small or too fragmented for large pod subnets. AWS allows adding secondary CIDR blocks to a VPC. The common pattern is to add `100.64.0.0/16` (RFC 6598 - carrier-grade NAT range, 65,536 IPs) as a secondary CIDR, then create pod subnets from that range:
 
 ```
 VPC primary CIDR:   10.0.0.0/16   → nodes, RDS, other infra
@@ -241,7 +241,7 @@ One caveat with `100.64.0.0/16`: these IPs aren't routable across VPC peering or
 
 ### ClusterIP and Service CIDR
 
-ClusterIP services get IPs from the service CIDR — this is the same regardless of the networking implementation. The difference is in how traffic gets routed to the backing pods.
+ClusterIP services get IPs from the service CIDR - this is the same regardless of the networking implementation. The difference is in how traffic gets routed to the backing pods.
 
 ### Cluster-Internal Traffic (Pod → Service → Pod)
 
@@ -263,14 +263,14 @@ For traffic from outside the cluster:
    - **Instance target type**: LB → node → service routing → pod
    - **IP target type** (default in Auto Mode): LB → pod IP directly, bypassing node-level service routing
 
-With IP target mode, the load balancer registers pod IPs directly as targets, so external traffic skips ClusterIP translation — it goes straight from the ALB/NLB to the pod.
+With IP target mode, the load balancer registers pod IPs directly as targets, so external traffic skips ClusterIP translation - it goes straight from the ALB/NLB to the pod.
 
 ### ALB Load Balancing Algorithms
 
 ALB supports two algorithms, configurable via the target group:
 
-1. **Round Robin** (default) — requests distributed sequentially across healthy targets. Works well when targets have similar capacity and processing times.
-2. **Least Outstanding Requests (LOR)** — routes to the target with the fewest in-flight requests. Better when pods have varying processing times or uneven capacity.
+1. **Round Robin** (default) - requests distributed sequentially across healthy targets. Works well when targets have similar capacity and processing times.
+2. **Least Outstanding Requests (LOR)** - routes to the target with the fewest in-flight requests. Better when pods have varying processing times or uneven capacity.
 
 Set via Ingress annotation:
 
@@ -280,15 +280,15 @@ alb.ingress.kubernetes.io/target-group-attributes: load_balancing.algorithm.type
 
 Other factors affecting distribution:
 
-- **Slow start** — ramp-up period for new pods:
+- **Slow start** - ramp-up period for new pods:
   ```yaml
   alb.ingress.kubernetes.io/target-group-attributes: slow_start.duration_seconds=30
   ```
-- **Sticky sessions** — pins a client to a specific pod using cookies:
+- **Sticky sessions** - pins a client to a specific pod using cookies:
   ```yaml
   alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.type=lb_cookie
   ```
-- **AZ balancing** — ALB distributes evenly across AZs first, then applies the algorithm within each AZ. Unevenly spread pods across AZs can lead to uneven traffic distribution.
+- **AZ balancing** - ALB distributes evenly across AZs first, then applies the algorithm within each AZ. Unevenly spread pods across AZs can lead to uneven traffic distribution.
 
 ### Summary
 
@@ -303,18 +303,18 @@ Other factors affecting distribution:
 
 EKS Auto Mode replaces self-managed add-ons with AWS-managed equivalents:
 
-- **No kube-proxy** daemonset — service networking is handled natively by the managed data plane
-- **No VPC CNI daemonset** — pod networking is managed by the platform
-- **No CoreDNS deployment** — CoreDNS runs as a system service directly on each node, not as pods
+- **No kube-proxy** daemonset - service networking is handled natively by the managed data plane
+- **No VPC CNI daemonset** - pod networking is managed by the platform
+- **No CoreDNS deployment** - CoreDNS runs as a system service directly on each node, not as pods
 
-The networking model (Services, ClusterIPs, Endpoints, VPC-native pod IPs) remains the same — the implementation is fully managed by AWS rather than running as user-space daemonsets.
+The networking model (Services, ClusterIPs, Endpoints, VPC-native pod IPs) remains the same - the implementation is fully managed by AWS rather than running as user-space daemonsets.
 
 ### NodeClass and NodePool Custom Resources
 
 EKS Auto Mode uses two Custom Resources (CRDs) for node management:
 
-- **NodePool** (`karpenter.sh/v1`) — defines *what* nodes to provision (instance types, capacity type, architecture, taints). Auto Mode uses Karpenter under the hood for node provisioning.
-- **NodeClass** (`eks.amazonaws.com/v1`) — defines *how* nodes are configured (networking, storage, IAM, security). This is EKS-specific and replaces VPC CNI configuration that would normally be done via environment variables on the `aws-node` daemonset.
+- **NodePool** (`karpenter.sh/v1`) - defines *what* nodes to provision (instance types, capacity type, architecture, taints). Auto Mode uses Karpenter under the hood for node provisioning.
+- **NodeClass** (`eks.amazonaws.com/v1`) - defines *how* nodes are configured (networking, storage, IAM, security). This is EKS-specific and replaces VPC CNI configuration that would normally be done via environment variables on the `aws-node` daemonset.
 
 #### Built-in NodePools
 
@@ -340,11 +340,11 @@ The `system` nodepool's taint ensures only workloads with a matching toleration 
 | `securityGroupSelectorTerms` | Selects security groups for nodes |
 | `podSubnetSelectorTerms` | Isolates pod traffic to separate subnets from nodes |
 | `podSecurityGroupSelectorTerms` | Required with pod subnet selector; security groups for pods |
-| `snatPolicy` | Controls source NAT for pod traffic leaving the VPC. `Random` (default) — node rewrites pod source IP to node IP with random port for outbound traffic. `Disabled` — no SNAT; use when a NAT Gateway handles translation |
+| `snatPolicy` | Controls source NAT for pod traffic leaving the VPC. `Random` (default) - node rewrites pod source IP to node IP with random port for outbound traffic. `Disabled` - no SNAT; use when a NAT Gateway handles translation |
 | `networkPolicy` | `DefaultAllow` (default) or `DefaultDeny` for Kubernetes network policies |
 | `networkPolicyEventLogs` | `Enabled` or `Disabled` for network policy event logging |
 | `ephemeralStorage` | Node storage configuration (size, IOPS, throughput, KMS encryption) |
-| `advancedNetworking.ipv4PrefixSize` | `Auto` (default — /28 prefixes with /32 fallback) or `"32"` (secondary IP mode only) |
+| `advancedNetworking.ipv4PrefixSize` | `Auto` (default - /28 prefixes with /32 fallback) or `"32"` (secondary IP mode only) |
 | `role` | IAM role for EC2 instances |
 
 ## Pod Distribution Across Availability Zones
@@ -364,8 +364,8 @@ spec:
           app: my-app
 ```
 
-- `maxSkew: 1` — at most 1 pod difference between AZs
-- `DoNotSchedule` — hard requirement. Use `ScheduleAnyway` for a soft preference.
+- `maxSkew: 1` - at most 1 pod difference between AZs
+- `DoNotSchedule` - hard requirement. Use `ScheduleAnyway` for a soft preference.
 - With 3 replicas across 2 AZs: 2-1 split. With 3 AZs: 1-1-1 split.
 
 ### Pod Anti-Affinity
@@ -412,7 +412,7 @@ spec:
 
 | Approach | Best For |
 |----------|----------|
-| **Topology Spread Constraints** | Most cases — explicit, predictable AZ distribution |
+| **Topology Spread Constraints** | Most cases - explicit, predictable AZ distribution |
 | **Pod Anti-Affinity** | Avoiding co-location on the same node |
 | **Both combined** | Spread across AZs and across nodes within each AZ |
 

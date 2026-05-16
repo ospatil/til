@@ -7,7 +7,7 @@ tags: [kubernetes]
 
 General
 
-- Define the dry run flags as env variable: `DR=”—dry-run=client -o yaml”` and use it as follows: `k run nginx --image=nginx $DR`
+- Define the dry run flags as env variable: `DR=” - dry-run=client -o yaml”` and use it as follows: `k run nginx --image=nginx $DR`
 - Indent in VIM using: `>>` . If you want to indent `4` lines: `4>>`
 - To delete a pod quickly user `--force` : `k delete po my-po --force`
 

@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [aws, networking]
+tags: [aws, networking, guide]
 ---
 
 # AWS Cloud WAN - Step-by-Step Explanation

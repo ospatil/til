@@ -1,22 +1,22 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [kubernetes, networking]
+tags: [kubernetes, networking, guide]
 ---
 
-# Kubernetes Network Infrastructure — L2, BGP, and On-Prem Load Balancing
+# Kubernetes Network Infrastructure - L2, BGP, and On-Prem Load Balancing
 
-A companion to [Kubernetes Services and DNS Guide](k8s-services-dns.md). That doc covers Kubernetes service types, DNS, and traffic policies. This doc goes deeper into the network infrastructure underneath — how traffic actually enters the cluster on-prem, the protocols involved, and the load balancing options available when there's no cloud provider.
+A companion to [Kubernetes Services and DNS Guide](k8s-services-dns.md). That doc covers Kubernetes service types, DNS, and traffic policies. This doc goes deeper into the network infrastructure underneath - how traffic actually enters the cluster on-prem, the protocols involved, and the load balancing options available when there's no cloud provider.
 
 ---
 
 ## 1. The On-Prem Problem
 
-In cloud environments (EKS, GKE, AKS), creating a `LoadBalancer` Service automatically provisions a cloud load balancer. On-prem, there's no cloud API to call — the Service stays in `Pending` state unless something fulfills it.
+In cloud environments (EKS, GKE, AKS), creating a `LoadBalancer` Service automatically provisions a cloud load balancer. On-prem, there's no cloud API to call - the Service stays in `Pending` state unless something fulfills it.
 
 The two main approaches to solve this:
 
-- **L2 Announcements** — a node claims a Virtual IP (VIP) via ARP on the local network segment
-- **BGP Route Advertisement** — nodes advertise VIP routes to upstream routers
+- **L2 Announcements** - a node claims a Virtual IP (VIP) via ARP on the local network segment
+- **BGP Route Advertisement** - nodes advertise VIP routes to upstream routers
 
 Both make `LoadBalancer` Services work on bare-metal clusters by assigning external IPs and making them reachable from outside the cluster.
 
@@ -44,21 +44,21 @@ Client → 192.168.1.100 → Node2 → kube-proxy → Pod (any node)
 When the owning node fails:
 
 1. Another node wins leader election for the VIP
-2. It sends a **gratuitous ARP** — an unsolicited broadcast announcing "192.168.1.100 is now at my MAC"
+2. It sends a **gratuitous ARP** - an unsolicited broadcast announcing "192.168.1.100 is now at my MAC"
 3. All devices on the segment (switches, routers, hosts) update their ARP tables
 4. Traffic seamlessly redirects to the new node
 
 ### Advantages Over NodePort
 
-- Each service gets a **unique IP** — multiple services can use port 80/443
+- Each service gets a **unique IP** - multiple services can use port 80/443
 - Clients don't need to know about individual node IPs
-- Automatic failover — VIP migrates to a healthy node
+- Automatic failover - VIP migrates to a healthy node
 
 ### Limitations
 
-- **Single entry point** — all traffic for a VIP enters through one node (potential bottleneck)
-- **L2 scope only** — only works within a single broadcast domain (VLAN/subnet). The router/gateway for external clients must be on the same L2 segment as the cluster nodes
-- **No true pre-cluster load balancing** — unlike BGP with ECMP
+- **Single entry point** - all traffic for a VIP enters through one node (potential bottleneck)
+- **L2 scope only** - only works within a single broadcast domain (VLAN/subnet). The router/gateway for external clients must be on the same L2 segment as the cluster nodes
+- **No true pre-cluster load balancing** - unlike BGP with ECMP
 
 ### Who Actually Sends the ARP?
 
@@ -69,7 +69,7 @@ Clients outside the cluster don't send ARP directly. The **router/gateway** on t
 3. Router sees VIP is in its local subnet, sends ARP to resolve the MAC
 4. Kubernetes node responds, router forwards the packet
 
-This is why L2 Announcements are described as being for "office or campus networks" — the cluster's gateway must be on the same broadcast domain.
+This is why L2 Announcements are described as being for "office or campus networks" - the cluster's gateway must be on the same broadcast domain.
 
 ---
 
@@ -91,9 +91,9 @@ Node1 → Router: BGP UPDATE "192.168.100.10/32 via 192.168.1.10"
 Router installs route → forwards traffic to Node1
 ```
 
-### ECMP — True Multi-Node Load Balancing
+### ECMP - True Multi-Node Load Balancing
 
-Unlike L2 (single owner), BGP supports **Equal Cost Multi-Path** — multiple nodes advertise the same route:
+Unlike L2 (single owner), BGP supports **Equal Cost Multi-Path** - multiple nodes advertise the same route:
 
 ```
 Node1 → Router: "192.168.100.10/32 via 192.168.1.10"
@@ -112,7 +112,7 @@ When a node fails, its BGP session drops. The router receives a WITHDRAW message
 ### Requirements
 
 - **BGP-capable routers** (Cisco, Juniper, Arista, or open-source FRR)
-- **ASN allocation** (private ASNs 64512–65535 for internal use)
+- **ASN allocation** (private ASNs 64512 - 65535 for internal use)
 - **BGP peering configuration** on both the router and Kubernetes side
 - **Network engineering expertise**
 
@@ -127,7 +127,7 @@ When a node fails, its BGP session drops. The router receives a WITHDRAW message
 
 ---
 
-## 4. L2 vs BGP — When to Use Which
+## 4. L2 vs BGP - When to Use Which
 
 | | L2 Announcements | BGP |
 |---|---|---|
@@ -159,20 +159,20 @@ Three categories of solutions fulfill `LoadBalancer` Services on bare-metal:
 ### MetalLB
 
 - **What it does**: VIP advertisement only (L2 or BGP). Assigns external IPs to Services and announces them.
-- **What it doesn't do**: No data plane — relies entirely on kube-proxy for packet forwarding
+- **What it doesn't do**: No data plane - relies entirely on kube-proxy for packet forwarding
 - **Works with**: Any CNI
 - **Maturity**: Widely deployed, large community
 
 ### Cilium LB-IPAM
 
-- **What it does**: Full load balancing integrated into the CNI — IP allocation, L2/BGP advertisement, and eBPF-based data plane
+- **What it does**: Full load balancing integrated into the CNI - IP allocation, L2/BGP advertisement, and eBPF-based data plane
 - **Advantages over MetalLB**: Better performance (eBPF, no iptables), built-in observability via Hubble, integrated network policy enforcement
 - **Trade-off**: Must use Cilium as your CNI
 
 ### LoxiLB
 
 - **What it does**: Complete eBPF-based load balancer with its own control and data plane
-- **Differentiator**: Designed for telecom — strong SCTP support, active health checks per Service, built-in metrics
+- **Differentiator**: Designed for telecom - strong SCTP support, active health checks per Service, built-in metrics
 - **Works with**: Any CNI (standalone, like MetalLB)
 - **Trade-off**: Smaller community, CNCF sandbox project
 
@@ -191,8 +191,8 @@ Three categories of solutions fulfill `LoadBalancer` Services on bare-metal:
 
 In the context of these load balancers:
 
-- **Control plane** — decides *where* traffic goes: service discovery, endpoint management, health checking, VIP assignment, BGP/ARP advertisement, leader election
-- **Data plane** — actually *forwards* packets: NAT, load balancing to backends, connection tracking, packet filtering
+- **Control plane** - decides *where* traffic goes: service discovery, endpoint management, health checking, VIP assignment, BGP/ARP advertisement, leader election
+- **Data plane** - actually *forwards* packets: NAT, load balancing to backends, connection tracking, packet filtering
 
 MetalLB only has a control plane. Cilium and LoxiLB have both.
 
@@ -213,13 +213,13 @@ Original:  [src: 10.244.0.5 → dst: 10.244.1.8]
 Encapsulated: [src: 192.168.1.10 → dst: 192.168.1.11] wrapping [10.244.0.5 → 10.244.1.8]
 ```
 
-The physical network only sees host-to-host traffic. Pod IPs (`10.244.x.x`) are **not routable** from outside the cluster — external routers have no routes to them.
+The physical network only sees host-to-host traffic. Pod IPs (`10.244.x.x`) are **not routable** from outside the cluster - external routers have no routes to them.
 
 **Consequence**: External load balancers cannot target pod IPs directly. Traffic must enter via NodePort or a VIP on a node.
 
 ### Native/Routed CNI (AWS VPC CNI, Calico BGP mode)
 
-Pods get real IPs from the host network (e.g., VPC subnet). No encapsulation — packets route directly.
+Pods get real IPs from the host network (e.g., VPC subnet). No encapsulation - packets route directly.
 
 ```
 Pod on Node1 (10.0.1.101) → Pod on Node2 (10.0.1.201):
@@ -243,7 +243,7 @@ The network infrastructure knows about pod IPs. External load balancers **can ta
 
 ## 7. External Load Balancers (NGINX, HAProxy)
 
-Traditional load balancers can front a Kubernetes cluster on-prem. The main challenge is **service discovery** — how does the LB know about pod/node endpoints?
+Traditional load balancers can front a Kubernetes cluster on-prem. The main challenge is **service discovery** - how does the LB know about pod/node endpoints?
 
 ### Option 1: Static NodePort Config
 
@@ -277,7 +277,7 @@ upstream backend {
 }
 ```
 
-Each pod backing the service is registered individually in Consul — the LB gets fine-grained endpoint awareness.
+Each pod backing the service is registered individually in Consul - the LB gets fine-grained endpoint awareness.
 
 ### Option 3: External Ingress Controller
 
@@ -307,7 +307,7 @@ Run an ingress controller (HAProxy, NGINX) **outside** the cluster, connected to
 
 ARP resolves IP addresses to MAC addresses on a local network segment.
 
-**ARP Request** — broadcast to `FF:FF:FF:FF:FF:FF` (MAC broadcast, not IP `255.255.255.255`):
+**ARP Request** - broadcast to `FF:FF:FF:FF:FF:FF` (MAC broadcast, not IP `255.255.255.255`):
 
 ```
 Ethernet: dst=FF:FF:FF:FF:FF:FF  src=<requester MAC>
@@ -321,7 +321,7 @@ Ethernet: dst=<requester MAC>  src=<owner MAC>
 ARP:      op=REPLY  sender-ip=192.168.1.100  sender-mac=<owner MAC>
 ```
 
-**Gratuitous ARP** — unsolicited broadcast announcing an IP→MAC mapping. Used during VIP failover to force all devices to update their ARP tables immediately.
+**Gratuitous ARP** - unsolicited broadcast announcing an IP→MAC mapping. Used during VIP failover to force all devices to update their ARP tables immediately.
 
 **Security note**: ARP has no authentication. Any device can claim any IP (ARP spoofing). In Kubernetes, leader election ensures only one node claims each VIP.
 
@@ -344,7 +344,7 @@ Next-Hop:   192.168.1.10               (the advertising node)
 AS-Path:    65001                       (originating AS)
 ```
 
-**Route withdrawal** — when a node stops owning a VIP or its session drops, the router removes the route and stops forwarding traffic to it.
+**Route withdrawal** - when a node stops owning a VIP or its session drops, the router removes the route and stops forwarding traffic to it.
 
 **Path attributes** control how routes propagate: AS-Path (loop prevention), Local-Pref (prefer certain paths), MED (influence inbound traffic), Communities (tagging for policy).
 
@@ -352,9 +352,9 @@ AS-Path:    65001                       (originating AS)
 
 A transport protocol combining TCP reliability with UDP message boundaries:
 
-- **Multi-streaming** — multiple independent data streams in one connection
-- **Multi-homing** — single connection across multiple network paths for redundancy
-- **Message-oriented** — preserves message boundaries (unlike TCP's byte stream)
+- **Multi-streaming** - multiple independent data streams in one connection
+- **Multi-homing** - single connection across multiple network paths for redundancy
+- **Message-oriented** - preserves message boundaries (unlike TCP's byte stream)
 
 Primarily used in telecom (SIP signaling, Diameter, SS7-over-IP). LoxiLB's strong SCTP support is why it's positioned for telecom environments.
 
@@ -368,17 +368,17 @@ Understanding how packets are addressed ties together many concepts in this doc.
 
 A packet sent to a single specific destination. Most network traffic is unicast.
 
-- **BGP peering sessions** — TCP between one node and one router
-- **Pod-to-pod traffic** — one source IP to one destination IP
-- **kube-proxy forwarding** — after DNAT, traffic goes to one specific pod
+- **BGP peering sessions** - TCP between one node and one router
+- **Pod-to-pod traffic** - one source IP to one destination IP
+- **kube-proxy forwarding** - after DNAT, traffic goes to one specific pod
 
 ### Broadcast (one-to-all-on-segment)
 
 A packet sent to all devices on a local network segment.
 
-- **ARP requests** — MAC broadcast `FF:FF:FF:FF:FF:FF`, received by all devices on the L2 segment
-- **Limited broadcast** (`255.255.255.255`) — IP-level broadcast, never forwarded by routers (RFC 919). Used by DHCP discovery.
-- **Directed broadcast** (e.g., `192.168.2.255`) — targets a specific subnet's broadcast address. Routers *can* forward but usually don't (security risk).
+- **ARP requests** - MAC broadcast `FF:FF:FF:FF:FF:FF`, received by all devices on the L2 segment
+- **Limited broadcast** (`255.255.255.255`) - IP-level broadcast, never forwarded by routers (RFC 919). Used by DHCP discovery.
+- **Directed broadcast** (e.g., `192.168.2.255`) - targets a specific subnet's broadcast address. Routers *can* forward but usually don't (security risk).
 
 L2 Announcements rely on ARP broadcast, which is why they're confined to a single broadcast domain.
 
@@ -386,7 +386,7 @@ L2 Announcements rely on ARP broadcast, which is why they're confined to a singl
 
 The same IP address is advertised from **multiple locations**. Routers send traffic to the nearest/best one.
 
-This is exactly what BGP ECMP does in section 3 — multiple nodes advertise the same VIP route:
+This is exactly what BGP ECMP does in section 3 - multiple nodes advertise the same VIP route:
 
 ```
 Node1 → Router: "192.168.100.10/32 via me"
@@ -397,31 +397,31 @@ Router: picks nearest/best path (or load-balances across all)
 ```
 
 Anycast is also used at internet scale:
-- **DNS root servers** — the same IP serves DNS from hundreds of locations worldwide
-- **CDNs (Cloudflare, AWS CloudFront)** — client traffic routes to the nearest edge node
-- **AWS Global Accelerator** — anycast IPs route to the nearest AWS region
+- **DNS root servers** - the same IP serves DNS from hundreds of locations worldwide
+- **CDNs (Cloudflare, AWS CloudFront)** - client traffic routes to the nearest edge node
+- **AWS Global Accelerator** - anycast IPs route to the nearest AWS region
 
 The key property: anycast provides **geographic load balancing and fault tolerance** without the client knowing anything about the topology. If one node goes down, traffic automatically routes to the next nearest.
 
-In Kubernetes terms: L2 Announcements give you a VIP owned by one node (unicast with failover). BGP with ECMP gives you anycast — the same VIP served by multiple nodes simultaneously.
+In Kubernetes terms: L2 Announcements give you a VIP owned by one node (unicast with failover). BGP with ECMP gives you anycast - the same VIP served by multiple nodes simultaneously.
 
 ### Multicast (one-to-group)
 
-A packet sent to a group of interested receivers — not all devices (broadcast), not one (unicast), but a subscribed subset.
+A packet sent to a group of interested receivers - not all devices (broadcast), not one (unicast), but a subscribed subset.
 
 **How it works:**
-- IP range `224.0.0.0/4` (224.0.0.0 – 239.255.255.255) is reserved for multicast
+- IP range `224.0.0.0/4` (224.0.0.0 - 239.255.255.255) is reserved for multicast
 - A sender transmits once to a multicast group address (e.g., `239.1.1.1`)
 - The network replicates the packet only to hosts that have joined that group
-- **IGMP** (Internet Group Management Protocol) handles group membership — hosts tell their local router "I want to receive group 239.1.1.1"
-- **PIM** (Protocol Independent Multicast) handles routing between routers — ensures multicast traffic reaches all network segments with interested receivers
+- **IGMP** (Internet Group Management Protocol) handles group membership - hosts tell their local router "I want to receive group 239.1.1.1"
+- **PIM** (Protocol Independent Multicast) handles routing between routers - ensures multicast traffic reaches all network segments with interested receivers
 - At L2, multicast IP addresses map to special MAC addresses (`01:00:5e:xx:xx:xx`), so switches can forward selectively
 
 **How applications use it:**
-- **Video/audio streaming** — one source, many viewers. The source sends once; the network replicates. Far more efficient than sending individual unicast streams to each viewer.
-- **Financial market data** — stock exchanges publish price feeds to a multicast group. Thousands of trading systems subscribe and receive simultaneously.
-- **Service/cluster discovery** — protocols like mDNS (`224.0.0.251`), VRRP, and older cluster membership systems (JGroups) use multicast to find peers without a central registry.
-- **Gaming** — multiplayer game state updates broadcast to all players in a session.
+- **Video/audio streaming** - one source, many viewers. The source sends once; the network replicates. Far more efficient than sending individual unicast streams to each viewer.
+- **Financial market data** - stock exchanges publish price feeds to a multicast group. Thousands of trading systems subscribe and receive simultaneously.
+- **Service/cluster discovery** - protocols like mDNS (`224.0.0.251`), VRRP, and older cluster membership systems (JGroups) use multicast to find peers without a central registry.
+- **Gaming** - multiplayer game state updates broadcast to all players in a session.
 
 The key advantage: the sender transmits once regardless of how many receivers exist. The network handles replication. With unicast, the sender would need one copy per receiver.
 
@@ -429,9 +429,9 @@ The key advantage: the sender transmits once regardless of how many receivers ex
 
 IP multicast was designed for local/campus networks. It breaks down in distributed scenarios:
 
-- **No multicast routing across the internet** — ISPs don't enable PIM or carry multicast between autonomous systems. There's no global multicast routing table.
-- **Cloud providers don't support it across regions** — AWS VPC multicast only works within a single VPC via Transit Gateway. No cross-region, no cross-cloud.
-- **NAT breaks it** — IGMP group joins don't traverse NAT gateways.
+- **No multicast routing across the internet** - ISPs don't enable PIM or carry multicast between autonomous systems. There's no global multicast routing table.
+- **Cloud providers don't support it across regions** - AWS VPC multicast only works within a single VPC via Transit Gateway. No cross-region, no cross-cloud.
+- **NAT breaks it** - IGMP group joins don't traverse NAT gateways.
 
 In practice, distributed multicast uses one of these approaches:
 
@@ -443,13 +443,13 @@ Source → Relay A (US-East) → Subscribers 1, 2
                             → Relay B (EU-West) → Subscribers 3, 4
 ```
 
-This is how Kafka, NATS, Redis pub/sub, and WebSocket fan-out work — producers write once, the middleware replicates and fans out over unicast.
+This is how Kafka, NATS, Redis pub/sub, and WebSocket fan-out work - producers write once, the middleware replicates and fans out over unicast.
 
 **Multicast-to-unicast gateways:**
 For legacy apps that speak native multicast, a gateway at each site captures multicast traffic and tunnels it (GRE/VXLAN) to remote sites, which re-inject it as local multicast. Common in financial services for bridging stock exchange feeds across data centers.
 
 **Protocols designed for wide-area distribution:**
-MQTT (IoT), AMQP — message protocols built for distributed pub/sub over unicast from the start.
+MQTT (IoT), AMQP - message protocols built for distributed pub/sub over unicast from the start.
 
 The bottom line: once you cross network boundaries, everyone falls back to application-level fan-out over unicast. The sender still transmits once, but replication happens in middleware rather than network routers.
 
@@ -457,19 +457,19 @@ The bottom line: once you cross network boundaries, everyone falls back to appli
 
 Not used in Kubernetes service networking, and most CNIs don't support it:
 
-- **Overlay CNIs (Flannel, Calico VXLAN)** — encapsulate packets in unicast tunnels. Multicast semantics are lost inside the tunnel.
-- **VPC CNI (AWS)** — AWS VPC doesn't support IP multicast between ENIs (except via Transit Gateway multicast domains, a separate feature).
-- **Host networking (`hostNetwork: true`)** — pods share the node's network stack and *can* do multicast if the physical network supports it, but you lose pod isolation.
+- **Overlay CNIs (Flannel, Calico VXLAN)** - encapsulate packets in unicast tunnels. Multicast semantics are lost inside the tunnel.
+- **VPC CNI (AWS)** - AWS VPC doesn't support IP multicast between ENIs (except via Transit Gateway multicast domains, a separate feature).
+- **Host networking (`hostNetwork: true`)** - pods share the node's network stack and *can* do multicast if the physical network supports it, but you lose pod isolation.
 
 #### Approaches that work
 
 **Multicast-capable CNI:**
-- **Weave Net** — supports multicast natively, replicates packets across its overlay via gossip
-- **Macvlan/IPVLAN CNI** — pods get interfaces directly on the physical network, so multicast works if the LAN supports it. But you lose network policy, service mesh, etc.
-- **Calico in BGP mode (unencapsulated)** — if the physical network supports multicast routing (PIM), it can work since pod IPs are routable
+- **Weave Net** - supports multicast natively, replicates packets across its overlay via gossip
+- **Macvlan/IPVLAN CNI** - pods get interfaces directly on the physical network, so multicast works if the LAN supports it. But you lose network policy, service mesh, etc.
+- **Calico in BGP mode (unencapsulated)** - if the physical network supports multicast routing (PIM), it can work since pod IPs are routable
 
 **Application-level workaround:**
-- Replace multicast with a message broker (Kafka, NATS, Redis pub/sub). Publish to a topic, subscribers receive via unicast. Most common approach — redesign the app to not need multicast.
+- Replace multicast with a message broker (Kafka, NATS, Redis pub/sub). Publish to a topic, subscribers receive via unicast. Most common approach - redesign the app to not need multicast.
 
 **Multus + secondary interface:**
 - Use Multus CNI to attach a second network interface to pods
@@ -477,7 +477,7 @@ Not used in Kubernetes service networking, and most CNIs don't support it:
 - Secondary interface: Macvlan/SR-IOV on a multicast-capable network
 - Common in telecom/5G workloads (which is also where SCTP from section 8 shows up)
 
-Most teams running multicast on Kubernetes (telecom, financial services) use the Multus approach — a dedicated multicast network alongside the regular CNI, rather than trying to make the primary CNI support it.
+Most teams running multicast on Kubernetes (telecom, financial services) use the Multus approach - a dedicated multicast network alongside the regular CNI, rather than trying to make the primary CNI support it.
 
 ---
 
@@ -492,10 +492,10 @@ Most teams running multicast on Kubernetes (telecom, financial services) use the
 | Cloud LB direct-to-pod | IP target mode (VPC CNI) | Cloud only |
 
 The progression for on-prem:
-1. **NodePort** — works but exposes cluster topology, port conflicts
-2. **L2 Announcements** — unique VIPs, automatic failover, single broadcast domain
-3. **BGP** — multi-node ECMP, multi-subnet, enterprise-grade
-4. **External LB** — advanced L7 features, hybrid K8s + non-K8s
+1. **NodePort** - works but exposes cluster topology, port conflicts
+2. **L2 Announcements** - unique VIPs, automatic failover, single broadcast domain
+3. **BGP** - multi-node ECMP, multi-subnet, enterprise-grade
+4. **External LB** - advanced L7 features, hybrid K8s + non-K8s
 
 ---
 
@@ -505,9 +505,9 @@ The progression for on-prem:
 
 See [01-k8s-services-dns.md](./01-k8s-services-dns.md) for:
 
-- **Service types** (ClusterIP, NodePort, LoadBalancer, ExternalName, Headless) — detailed specs and traffic flows
-- **IP Target vs Instance Target Mode** — how cloud LBs bypass NodePort with VPC CNI
-- **MetalLB bare-metal section** — how MetalLB fulfills LoadBalancer Services
-- **Ingress & Gateway API** — L7 routing that sits in front of Services
-- **ExternalDNS** — bridging cluster DNS to external DNS providers
-- **Traffic Policies** — `externalTrafficPolicy` and `internalTrafficPolicy` behavior
+- **Service types** (ClusterIP, NodePort, LoadBalancer, ExternalName, Headless) - detailed specs and traffic flows
+- **IP Target vs Instance Target Mode** - how cloud LBs bypass NodePort with VPC CNI
+- **MetalLB bare-metal section** - how MetalLB fulfills LoadBalancer Services
+- **Ingress & Gateway API** - L7 routing that sits in front of Services
+- **ExternalDNS** - bridging cluster DNS to external DNS providers
+- **Traffic Policies** - `externalTrafficPolicy` and `internalTrafficPolicy` behavior

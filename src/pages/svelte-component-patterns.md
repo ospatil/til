@@ -1,11 +1,11 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [svelte, ui, tailwind]
+tags: [svelte, ui, tailwind, guide]
 ---
 
 # Svelte 5 UI Component Libraries & Patterns
 
-Strategies for building interactive, accessible UI components in Svelte 5 — covering DaisyUI, headless libraries (Melt UI, Bits UI), shadcn-svelte, CSS-only patterns, and how to combine them.
+Strategies for building interactive, accessible UI components in Svelte 5 - covering DaisyUI, headless libraries (Melt UI, Bits UI), shadcn-svelte, CSS-only patterns, and how to combine them.
 
 ---
 
@@ -32,7 +32,7 @@ UI components have two layers:
 | **Styling** | Visual appearance, layout, colors, spacing            | DaisyUI, Tailwind, Bootstrap  |
 | **Behavior**| Keyboard navigation, focus management, ARIA, state    | Melt UI, Bits UI, Radix       |
 
-DaisyUI is CSS-only — it gives you beautiful Tailwind-based styling but no JavaScript behavior. When migrating from something like shadcn-svelte (which bundles both), you need a strategy for the behavior layer.
+DaisyUI is CSS-only - it gives you beautiful Tailwind-based styling but no JavaScript behavior. When migrating from something like shadcn-svelte (which bundles both), you need a strategy for the behavior layer.
 
 ---
 
@@ -70,10 +70,10 @@ DaisyUI is CSS-only — it gives you beautiful Tailwind-based styling but no Jav
 
 ### When Each Makes Sense
 
-- **Melt UI** — Maximum control over markup. Best when combining with a CSS library like DaisyUI because there's zero markup opinion to conflict with.
-- **Bits UI** — Less boilerplate than Melt UI while still allowing you to pass your own classes (including DaisyUI classes).
-- **shadcn-svelte** — Best when you want a complete design system out of the box. Don't combine with DaisyUI (two competing visual systems).
-- **DaisyUI alone** — Sufficient for many components (buttons, cards, badges, alerts). Only add a headless library when you need complex interactive behavior.
+- **Melt UI** - Maximum control over markup. Best when combining with a CSS library like DaisyUI because there's zero markup opinion to conflict with.
+- **Bits UI** - Less boilerplate than Melt UI while still allowing you to pass your own classes (including DaisyUI classes).
+- **shadcn-svelte** - Best when you want a complete design system out of the box. Don't combine with DaisyUI (two competing visual systems).
+- **DaisyUI alone** - Sufficient for many components (buttons, cards, badges, alerts). Only add a headless library when you need complex interactive behavior.
 
 ---
 
@@ -608,7 +608,7 @@ New CSS capabilities allow animating elements that change `display`:
 
 ### Why It Matters for Svelte
 
-- Zero hydration cost — interactive before JS loads
+- Zero hydration cost - interactive before JS loads
 - Works with `prerender = true` and `csr = false` pages
 - Reduces bundle size for simple interactions
 - DaisyUI components that use these patterns work even without SvelteKit's client runtime
@@ -643,7 +643,7 @@ CSS-only components lack behavior that keyboard and screen reader users need. He
 
 ### The Practical Rule
 
-If the component involves **focus management**, **arrow key navigation**, or **dynamic ARIA attributes**, you need JavaScript. Use Melt UI or Bits UI for these — don't hand-roll the behavior.
+If the component involves **focus management**, **arrow key navigation**, or **dynamic ARIA attributes**, you need JavaScript. Use Melt UI or Bits UI for these - don't hand-roll the behavior.
 
 For the Svelte 5 runes patterns (Tier 2 above), you get basic interactivity but should add ARIA attributes manually:
 
@@ -707,7 +707,7 @@ export default {
 npm install bits-ui
 ```
 
-No additional config needed — Bits UI is a standard Svelte component library.
+No additional config needed - Bits UI is a standard Svelte component library.
 
 ---
 

@@ -15,5 +15,5 @@ More details here - [https://tailwindcss.com/docs/adding-custom-styles#resolving
 
 The tailwindcss documentation states that:
 
-> When using a CSS variable as an arbitrary value, wrapping your variable in **`var(...)`** isn’t needed — just providing the actual variable name is enough. Ref - [https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values)
+> When using a CSS variable as an arbitrary value, wrapping your variable in **`var(...)`** isn’t needed - just providing the actual variable name is enough. Ref - [https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values)
 >

@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [aws, genai]
+tags: [aws, genai, guide]
 ---
 
 # AWS Generative AI Architecture Quick Reference
@@ -12,23 +12,23 @@ tags: [aws, genai]
 
 ## Table of Contents
 
-**[Part 1: Decision Cheat Sheets](#part-1-decision-cheat-sheets)** — Quick-lookup comparison tables and decision trees
+**[Part 1: Decision Cheat Sheets](#part-1-decision-cheat-sheets)** - Quick-lookup comparison tables and decision trees
 
 Sections flow from data infrastructure → model platforms → intelligent systems → operations:
 
-- [1.1 RAG Architecture Selection](#11-rag-architecture-selection) — which RAG approach for which need
-- [1.2 Vector Database Selection](#12-vector-database-selection) — OpenSearch vs. Aurora vs. Neptune vs. managed
-- [1.3 k-NN Algorithms & Index Methods](#13-k-nn-algorithms--index-methods-opensearch) — FLAT, HNSW, IVF, engines, parameters
-- [1.4 Managing Embeddings at Scale](#14-managing-embeddings-at-scale--size-storage-and-performance) — quantization, Matryoshka, sharding, two-phase search
-- [1.5 Foundation Model Selection](#15-foundation-model-selection) — model choice by use case, multi-model routing patterns
-- [1.6 Bedrock ↔ SageMaker AI](#16-bedrock--sagemaker-ai--the-interplay) — when which, Custom Model Import, lifecycle
-- [1.7 Agent Architecture & Ecosystem](#17-agent-architecture--ecosystem) — Bedrock Agents, Strands, AgentCore, LangChain, CrewAI, MCP
-- [1.8 Orchestration](#18-orchestration--step-functions-bedrock-flows-and-chaining-frameworks) — Step Functions, Prompt Flows, LangGraph, EventBridge
-- [1.9 Cross-Account & Cross-Region](#19-cross-account--cross-region-bedrock-access-patterns) — inference profiles, multi-account patterns, data residency
-- [1.10 Security & Guardrails](#110-security--guardrails-selection) — threats, controls, defense-in-depth
-- [1.11 Cost Optimization](#111-cost-optimization-decisions) — caching, batching, cascading, provisioned throughput
+- [1.1 RAG Architecture Selection](#11-rag-architecture-selection) - which RAG approach for which need
+- [1.2 Vector Database Selection](#12-vector-database-selection) - OpenSearch vs. Aurora vs. Neptune vs. managed
+- [1.3 k-NN Algorithms & Index Methods](#13-k-nn-algorithms--index-methods-opensearch) - FLAT, HNSW, IVF, engines, parameters
+- [1.4 Managing Embeddings at Scale](#14-managing-embeddings-at-scale--size-storage-and-performance) - quantization, Matryoshka, sharding, two-phase search
+- [1.5 Foundation Model Selection](#15-foundation-model-selection) - model choice by use case, multi-model routing patterns
+- [1.6 Bedrock ↔ SageMaker AI](#16-bedrock--sagemaker-ai--the-interplay) - when which, Custom Model Import, lifecycle
+- [1.7 Agent Architecture & Ecosystem](#17-agent-architecture--ecosystem) - Bedrock Agents, Strands, AgentCore, LangChain, CrewAI, MCP
+- [1.8 Orchestration](#18-orchestration--step-functions-bedrock-flows-and-chaining-frameworks) - Step Functions, Prompt Flows, LangGraph, EventBridge
+- [1.9 Cross-Account & Cross-Region](#19-cross-account--cross-region-bedrock-access-patterns) - inference profiles, multi-account patterns, data residency
+- [1.10 Security & Guardrails](#110-security--guardrails-selection) - threats, controls, defense-in-depth
+- [1.11 Cost Optimization](#111-cost-optimization-decisions) - caching, batching, cascading, provisioned throughput
 
-**[Part 2: Scenario-Pattern Cards](#part-2-scenario-pattern-cards)** — Real-world architecture scenarios with full service flows
+**[Part 2: Scenario-Pattern Cards](#part-2-scenario-pattern-cards)** - Real-world architecture scenarios with full service flows
 
 - [Domain 1: FM Integration, Data Management, and Compliance](#domain-1-fm-integration-data-management-and-compliance) (5 cards)
 - [Domain 2: Implementation and Integration](#domain-2-implementation-and-integration) (5 cards)
@@ -36,13 +36,13 @@ Sections flow from data infrastructure → model platforms → intelligent syste
 - [Domain 4: Operational Efficiency and Optimization](#domain-4-operational-efficiency-and-optimization) (3 cards)
 - [Domain 5: Testing, Validation, and Troubleshooting](#domain-5-testing-validation-and-troubleshooting) (4 cards)
 
-**[Part 3: Condensed Reference by Domain](#part-3-condensed-reference-by-domain)** — Detailed explanations with implementation context
+**[Part 3: Condensed Reference by Domain](#part-3-condensed-reference-by-domain)** - Detailed explanations with implementation context
 
-**[Quick Service Reference Card](#quick-service-reference-card)** — One-row-per-capability lookup table
+**[Quick Service Reference Card](#quick-service-reference-card)** - One-row-per-capability lookup table
 
-**[Part 4: Documentation Resource List](#part-4-documentation-resource-list)** — 52 curated public AWS documentation links with study order
+**[Part 4: Documentation Resource List](#part-4-documentation-resource-list)** - 52 curated public AWS documentation links with study order
 
-**[Part 5: From Theory to Practice](#part-5-from-theory-to-practice--specializing-an-llm-for-your-stack)** — How exam concepts translate to real implementation (coding assistant example)
+**[Part 5: From Theory to Practice](#part-5-from-theory-to-practice--specializing-an-llm-for-your-stack)** - How exam concepts translate to real implementation (coding assistant example)
 
 ---
 
@@ -196,7 +196,7 @@ PUT /my-vector-index
 | "low latency" + "high recall" | HNSW |
 | "memory constrained" + "billions of vectors" | IVF / IVFPQ |
 | "combine with keyword filters" | Lucene engine |
-| "training step required" | IVF family (not HNSW — HNSW doesn't need training) |
+| "training step required" | IVF family (not HNSW - HNSW doesn't need training) |
 | "product quantization" or "compressed vectors" | IVFPQ |
 | "graph-based" | HNSW |
 | "partition-based" or "cluster-based" | IVF |
@@ -212,7 +212,7 @@ PUT /my-vector-index
 
 ---
 
-### 1.4 Managing Embeddings at Scale — Size, Storage, and Performance
+### 1.4 Managing Embeddings at Scale - Size, Storage, and Performance
 
 ![Embedding Optimization Techniques](/diagrams/12-embedding-optimization.svg)
 
@@ -246,12 +246,12 @@ At 100M docs → 400 GB. Memory-resident indexes become expensive.
 
 Amazon Titan Embeddings V2 supports configurable output dimensions at inference time:
 ```
-# Titan V2 — choose at embed time (no retraining)
+# Titan V2 - choose at embed time (no retraining)
 dimensions: 256  → fastest search, smallest storage, slight recall loss
 dimensions: 512  → balanced (recommended sweet spot for most RAG)
 dimensions: 1024 → highest recall, largest storage
 ```
-This is a model-level choice — you pick dimensions when generating embeddings. All documents AND queries must use the same dimension. Changing requires full re-embedding.
+This is a model-level choice - you pick dimensions when generating embeddings. All documents AND queries must use the same dimension. Changing requires full re-embedding.
 
 **Matryoshka Embeddings (nested dolls):**
 
@@ -266,12 +266,12 @@ Truncate to 512:   [d1, d2, ..., d512]       ← better quality
 Full 1024:         [d1, d2, ..., d1024]      ← best quality
 ```
 
-**Key insight:** unlike arbitrary truncation, Matryoshka embeddings are *trained* for this — the information is front-loaded. You can:
+**Key insight:** unlike arbitrary truncation, Matryoshka embeddings are *trained* for this - the information is front-loaded. You can:
 - Index at full 1024 dimensions
 - Do coarse search at 256 dimensions (fast)
 - Rerank candidates at 1024 dimensions (accurate)
 
-**Scalar Quantization (SQ) — float32 → int8:**
+**Scalar Quantization (SQ) - float32 → int8:**
 
 Each float32 value (4 bytes) mapped to int8 (1 byte). Per-dimension scaling preserves relative distances.
 
@@ -296,7 +296,7 @@ OpenSearch supports this natively with `data_type: byte` in k-NN field mappings:
 }
 ```
 
-**Binary Quantization (BQ) — float32 → 1 bit:**
+**Binary Quantization (BQ) - float32 → 1 bit:**
 
 Each dimension becomes a single bit: positive → 1, negative → 0.
 
@@ -306,7 +306,7 @@ Binary:     [1, 0, 1, 0, ...]                      (128 bytes for 1024d!)
 Savings:    32x storage reduction
 ```
 
-Distance computed via Hamming distance (XOR + popcount) — extremely fast on hardware.
+Distance computed via Hamming distance (XOR + popcount) - extremely fast on hardware.
 
 **Trade-off:** significant recall loss (~10-15%). Best used as a **first-pass filter**:
 ```
@@ -471,7 +471,7 @@ Classifier options:
 | Small ML model (e.g., distilbert) | ~10ms | Medium-high | Minimal |
 | LLM-as-router (Nova Micro/Haiku) | ~200ms | High | Low per-request |
 
-LLM-as-router example — use a small model to classify:
+LLM-as-router example - use a small model to classify:
 ```
 System: You are a query complexity classifier. Respond with only: SIMPLE, MEDIUM, or COMPLEX.
 SIMPLE = factual lookup, FAQ, greeting
@@ -584,7 +584,7 @@ Implement with Step Functions for visibility, or Lambda with circuit breaker sta
 
 ---
 
-### 1.6 Bedrock ↔ SageMaker AI — The Interplay
+### 1.6 Bedrock ↔ SageMaker AI - The Interplay
 
 ![Bedrock and SageMaker Interplay](/diagrams/10-bedrock-sagemaker.svg)
 
@@ -637,7 +637,7 @@ Bedrock and SageMaker AI are **complementary, not competing**. Bedrock is for co
 | Quick prototype with pre-trained FM | **Bedrock** | Instant access, no deployment needed |
 | A/B test between model versions in production | **SageMaker** (shadow testing, variants) | Built-in traffic splitting |
 
-#### Custom Model Import — Bringing Models INTO Bedrock
+#### Custom Model Import - Bringing Models INTO Bedrock
 
 This is the bridge: train/fine-tune anywhere → import into Bedrock → get unified API access (Converse, InvokeModel, Guardrails, Agents).
 
@@ -672,9 +672,9 @@ This is the bridge: train/fine-tune anywhere → import into Bedrock → get uni
 ```
 
 **Key constraints:**
-- Imported models require **Provisioned Throughput** — no on-demand pricing
+- Imported models require **Provisioned Throughput** - no on-demand pricing
 - Must be a **supported architecture** (decoder-only transformers: Llama, Mistral, etc.)
-- **No Bedrock-specific fine-tuning** after import — fine-tune before importing
+- **No Bedrock-specific fine-tuning** after import - fine-tune before importing
 - Imported models **can** use Guardrails, Agents, Knowledge Bases once imported
 
 **When to import vs. keep on SageMaker endpoint:**
@@ -690,7 +690,7 @@ This is the bridge: train/fine-tune anywhere → import into Bedrock → get uni
 
 #### Bedrock Model Customization (within Bedrock)
 
-These operations happen entirely within Bedrock — no SageMaker needed:
+These operations happen entirely within Bedrock - no SageMaker needed:
 
 | Method | Input | What Changes | Output | Use When |
 |--------|-------|--------------|--------|----------|
@@ -727,7 +727,7 @@ Even if your inference runs on Bedrock, these SageMaker capabilities add value:
 | **Experiments** | Track and compare Bedrock fine-tuning runs with different hyperparameters. | Compare 5 fine-tuning configs, pick best |
 | **JumpStart** | Access models not yet in Bedrock. Quick deploy to SageMaker endpoint. | Deploy a new model day-of-release before Bedrock supports it |
 
-#### SageMaker JumpStart vs. Bedrock — Model Access
+#### SageMaker JumpStart vs. Bedrock - Model Access
 
 Both offer access to foundation models, but differently:
 
@@ -796,7 +796,7 @@ ITERATE
 | "JSONL dataset" + "fine-tuning" | Bedrock Custom Models |
 | "Safetensors" or "GGUF" + "import" | Custom Model Import |
 | "Provisioned throughput required" | Custom Model Import OR Bedrock custom models |
-| "Scale to zero" + "variable traffic" | SageMaker Serverless endpoints (NOT Bedrock — Bedrock on-demand doesn't scale to zero, it's pay-per-token) |
+| "Scale to zero" + "variable traffic" | SageMaker Serverless endpoints (NOT Bedrock - Bedrock on-demand doesn't scale to zero, it's pay-per-token) |
 
 ---
 ### 1.7 Agent Architecture & Ecosystem
@@ -824,7 +824,7 @@ Agent Execution
 
 #### The Full Picture
 
-![Agent Ecosystem — Layered Architecture](/diagrams/08-agent-ecosystem.svg)
+![Agent Ecosystem - Layered Architecture](/diagrams/08-agent-ecosystem.svg)
 
 The AWS agent landscape is layered. Understanding which layer each tool operates at is key to choosing the right combination.
 
@@ -884,7 +884,7 @@ The AWS agent landscape is layered. Understanding which layer each tool operates
 | **CrewAI** | OSS (Python) | Role-based | Core purpose | Limited | Self-managed | Role-playing multi-agent, sequential tasks |
 | **AutoGen** | OSS (Microsoft) | Conversational | Core purpose | Limited | Self-managed | Conversational multi-agent, research workflows |
 
-#### How They Relate (not alternatives — layers)
+#### How They Relate (not alternatives - layers)
 
 ```
 Scenario: Production multi-agent system on AWS
@@ -914,19 +914,19 @@ Tools:       MCP servers on Lambda (reusable across frameworks)
 Safety:      Custom (Comprehend + Lambda pre/post processing)
 ```
 
-#### Bedrock AgentCore — Platform Deep Dive
+#### Bedrock AgentCore - Platform Deep Dive
 
-AgentCore isn't a framework — it's the **runtime platform** that hosts agents built with any framework.
+AgentCore isn't a framework - it's the **runtime platform** that hosts agents built with any framework.
 
 | Feature | What It Does | Why It Matters |
 |---------|--------------|----------------|
 | **AgentCore Runtime** | Hosts agent code as HTTP service (`/invocations`, `/ping`). Auto-scales, manages containers. | Deploy agents without managing infra. One command via starter toolkit. |
 | **Memory (short-term)** | Maintains conversation context within a session | Multi-turn conversations without custom state management |
-| **Memory (long-term)** | Persists user preferences, decisions, patterns across sessions | Agent "remembers" you — personalization without re-prompting |
+| **Memory (long-term)** | Persists user preferences, decisions, patterns across sessions | Agent "remembers" you - personalization without re-prompting |
 | **Identity Propagation** | Built-in OIDC support (Microsoft Entra ID). Passes user identity to tools. | Agent actions respect per-user permissions. No custom auth plumbing. |
 | **Prebuilt MCP Servers** | Ready-to-use connectors for Aurora, S3, common services | Zero custom code for standard data access |
 | **Observability** | Built-in tracing, metrics, invocation logging | Debug agent reasoning without custom instrumentation |
-| **`@app.entrypoint` decorator** | Auto-creates HTTP server on port 8080 with correct endpoints | Write agent logic only — decorator handles infrastructure |
+| **`@app.entrypoint` decorator** | Auto-creates HTTP server on port 8080 with correct endpoints | Write agent logic only - decorator handles infrastructure |
 | **Starter Toolkit** | Automated packaging → containerization → ECR push → deploy | Focus on agent logic, not DevOps |
 
 **When to use AgentCore vs. self-managed:**
@@ -1014,11 +1014,11 @@ What are you building?
 
 ---
 
-### 1.8 Orchestration — Step Functions, Bedrock Flows, and Chaining Frameworks
+### 1.8 Orchestration - Step Functions, Bedrock Flows, and Chaining Frameworks
 
 ![Orchestration Landscape](/diagrams/09-orchestration-landscape.svg)
 
-When you need to coordinate multiple FM calls, tools, or processing steps, you have several orchestration options — from no-code visual builders to full programmatic control.
+When you need to coordinate multiple FM calls, tools, or processing steps, you have several orchestration options - from no-code visual builders to full programmatic control.
 
 #### Orchestration Tools Compared
 
@@ -1069,9 +1069,9 @@ What kind of orchestration?
     → Or Step Functions + custom state management
 ```
 
-#### Bedrock Prompt Flows — Deep Dive
+#### Bedrock Prompt Flows - Deep Dive
 
-Prompt Flows is a **visual, no-code** builder for multi-step FM workflows. Think of it as "Step Functions for prompts" — but simpler and purpose-built for LLM chaining.
+Prompt Flows is a **visual, no-code** builder for multi-step FM workflows. Think of it as "Step Functions for prompts" - but simpler and purpose-built for LLM chaining.
 
 **Node Types:**
 
@@ -1096,7 +1096,7 @@ Prompt Flows is a **visual, no-code** builder for multi-step FM workflows. Think
 - **Version management**: version flows, test before publishing
 - **Guardrails integration**: attach guardrails to prompt nodes
 
-**Architecture Example — Document Processing Flow:**
+**Architecture Example - Document Processing Flow:**
 ```
 Input (PDF URL)
   → Lambda (extract text, split into sections)
@@ -1115,7 +1115,7 @@ Input (PDF URL)
 - Need cycles/loops that depend on external state → LangGraph
 - Need to call non-AWS LLM providers → LangChain/LangGraph
 
-#### Step Functions for GenAI — Patterns & Details
+#### Step Functions for GenAI - Patterns & Details
 
 **Standard vs. Express:**
 
@@ -1194,7 +1194,7 @@ Map State (process 1000 docs)
            quality ≥ threshold → write to S3
 ```
 
-#### EventBridge — Event-Driven AI Patterns
+#### EventBridge - Event-Driven AI Patterns
 
 EventBridge connects business events to AI workflows without tight coupling.
 
@@ -1215,7 +1215,7 @@ EventBridge connects business events to AI workflows without tight coupling.
 - Retry: built-in dead-letter queues for failed deliveries
 - Audit: every event logged
 
-#### LangChain & LangGraph — When and Why
+#### LangChain & LangGraph - When and Why
 
 **LangChain** is the most popular open-source framework for LLM applications. It provides:
 - **Chains**: sequential composition of LLM calls + tools
@@ -1227,7 +1227,7 @@ EventBridge connects business events to AI workflows without tight coupling.
 **LangGraph** extends LangChain with:
 - **Stateful graphs**: nodes = steps, edges = transitions (including cycles)
 - **Checkpointing**: save/resume workflow state (enables human-in-loop)
-- **Cycles**: agent can loop back (retry, reflect, refine) — impossible in pure chains
+- **Cycles**: agent can loop back (retry, reflect, refine) - impossible in pure chains
 - **Parallel branches**: execute multiple paths simultaneously
 - **Subgraphs**: modular, composable workflow components
 
@@ -1244,7 +1244,7 @@ EventBridge connects business events to AI workflows without tight coupling.
 | Provider-agnostic (OpenAI + Anthropic + local) | LangChain/LangGraph | Abstract over any provider |
 | No-code, business users building flows | Bedrock Prompt Flows | Visual builder, no Python needed |
 
-**LangChain on AWS — Integration Pattern:**
+**LangChain on AWS - Integration Pattern:**
 ```
 LangChain app (Python)
   → ChatBedrock (LLM via Bedrock API)
@@ -1254,7 +1254,7 @@ LangChain app (Python)
   → Observe with: LangSmith (paid) or CloudWatch + X-Ray
 ```
 
-**LangGraph on AWS — Stateful Agent:**
+**LangGraph on AWS - Stateful Agent:**
 ```python
 from langgraph.graph import StateGraph, END
 
@@ -1325,7 +1325,7 @@ Enterprise architectures typically centralize AI services in a dedicated account
 
 #### Key Concepts: Inference Profiles
 
-Bedrock uses **Inference Profiles** as the mechanism for both cross-region routing and cost allocation. There are two types — confusingly named but very different:
+Bedrock uses **Inference Profiles** as the mechanism for both cross-region routing and cost allocation. There are two types - confusingly named but very different:
 
 | Type | What It Is | Created By | Purpose |
 |------|-----------|------------|---------|
@@ -1348,7 +1348,7 @@ Application Inference Profile (cost allocation):
     → or reference a specific model in a specific region
 ```
 
-#### Cross-Region Inference — How It Actually Works
+#### Cross-Region Inference - How It Actually Works
 
 ```
 ┌───────────────────────────────────────────────────────────────────┐
@@ -1372,10 +1372,10 @@ Application Inference Profile (cost allocation):
 
 **Key points:**
 - You call the system-defined profile ID (e.g., `us.anthropic.claude-sonnet-4-6-v1`) instead of the region-specific model ID
-- Routing is automatic — Bedrock handles it based on available capacity
+- Routing is automatic - Bedrock handles it based on available capacity
 - Your application doesn't change; response comes back normally
 - Data stays within the geographic boundary (US models stay in US regions)
-- **No cost difference** — same per-token pricing regardless of which region serves the request
+- **No cost difference** - same per-token pricing regardless of which region serves the request
 - Purpose is **availability + throughput**, not data residency
 
 **When to use Cross-Region Inference:**
@@ -1493,7 +1493,7 @@ Some Bedrock resources support resource-based policies, allowing direct cross-ac
 | **Guardrails** | Regional | Create in each region where models are invoked |
 | **Invocation logs** | Regional (S3 bucket / CloudWatch in that region) | Use S3 Cross-Region Replication for centralized audit |
 | **Prompt Management** | Regional | Templates available only in the region created |
-| **Inference Profiles (system)** | Multi-region by design | The whole point — routes across regions |
+| **Inference Profiles (system)** | Multi-region by design | The whole point - routes across regions |
 | **Inference Profiles (application)** | Regional (created in one region) | Tag costs in the region where profile lives |
 
 **Multi-Region RAG pattern:**
@@ -1505,7 +1505,7 @@ Region B: Application calling Bedrock FM
   └─ Option 3: Use Region A for both KB + FM (simplest, single-region)
 ```
 
-#### Inference Profiles vs. Cross-Region Inference — Clearing the Confusion
+#### Inference Profiles vs. Cross-Region Inference - Clearing the Confusion
 
 | Question | Answer |
 |----------|--------|
@@ -1892,8 +1892,8 @@ Agent (MCP Client) → MCP Protocol
 **How it works:**
 1. MCP server is packaged as a **Lambda Layer** (shared code available at `/opt/` in the execution environment)
 2. Client Lambda function spawns the MCP server as a **local subprocess** at invocation time
-3. Communication happens over **STDIO** (stdin/stdout) — no network call, no HTTP overhead
-4. Each Lambda invocation starts fresh — inherently stateless
+3. Communication happens over **STDIO** (stdin/stdout) - no network call, no HTTP overhead
+4. Each Lambda invocation starts fresh - inherently stateless
 5. Uses `StdioServerParameters` from Strands Agents SDK to configure the connection
 
 **Why STDIO over HTTP for co-located:**
@@ -2178,26 +2178,26 @@ High latency?
 ### Domain 1: FM Integration, Data Management, Compliance (31%)
 
 **FM Selection & Configuration**
-- **Bedrock** is the default for managed FM access — provides unified API across multiple model providers (Anthropic, Meta, Mistral, Amazon, Cohere, etc.) without managing infrastructure
-- **SageMaker AI endpoints** are for self-managed models — use when you need custom containers, GPU control, or models not available in Bedrock
-- **Cross-Region Inference** automatically routes requests to other regions when a region is at capacity — enable for production workloads to avoid throttling. This is different from manually deploying in multiple regions
+- **Bedrock** is the default for managed FM access - provides unified API across multiple model providers (Anthropic, Meta, Mistral, Amazon, Cohere, etc.) without managing infrastructure
+- **SageMaker AI endpoints** are for self-managed models - use when you need custom containers, GPU control, or models not available in Bedrock
+- **Cross-Region Inference** automatically routes requests to other regions when a region is at capacity - enable for production workloads to avoid throttling. This is different from manually deploying in multiple regions
 - **Circuit breaker pattern** (via Step Functions): track consecutive failures; after threshold, route to fallback model or cached response to prevent cascading failures
 - **Model customization options:**
   - *Continued pre-training*: extend model knowledge with domain corpus (e.g., medical literature). Most expensive, largest impact
   - *Fine-tuning*: adjust model behavior with labeled examples (input→output pairs). Good for style/format/task-specific behavior
-  - *LoRA / adapters*: parameter-efficient fine-tuning — modify small number of parameters. Cheaper, faster, easier to version
+  - *LoRA / adapters*: parameter-efficient fine-tuning - modify small number of parameters. Cheaper, faster, easier to version
   - *Prompt engineering*: no training needed. Always try this first before customization
 - **SageMaker Model Registry**: version, catalog, and manage custom models with approval workflows. Integrates with CI/CD for automated deployment pipelines
 - **Bedrock model access**: models must be explicitly enabled in your account. Use IAM to control which teams can enable/access which models
 
 **Data Pipelines for FMs**
 - **Glue Data Quality**: define rules (completeness, uniqueness, freshness) that data must pass before entering your RAG pipeline. Alert on quality degradation
-- **Lambda functions**: lightweight custom transforms — normalize dates, clean HTML, extract text from proprietary formats
+- **Lambda functions**: lightweight custom transforms - normalize dates, clean HTML, extract text from proprietary formats
 - **Multimodal pipeline**:
   - Audio → Amazon Transcribe → text for FM
   - Documents/images → Amazon Textract → structured text
   - Images → Bedrock multimodal models (Claude, Nova) → direct understanding without text extraction
-- **Converse API**: Bedrock's model-agnostic API. Normalizes message format across all models — switch providers without changing code. Supports tool use, system prompts, multi-turn conversation out of the box
+- **Converse API**: Bedrock's model-agnostic API. Normalizes message format across all models - switch providers without changing code. Supports tool use, system prompts, multi-turn conversation out of the box
 - **Input formatting matters**: each model has specific token limits, message formats, and system prompt handling. The Converse API abstracts this, but for InvokeModel you must match the model's native format
 
 **Vector Stores**
@@ -2209,15 +2209,15 @@ High latency?
 - **Embedding model selection**:
   - Amazon Titan Text Embeddings V2: 256 / 512 / 1024 dimensions (configurable). Lower dimensions = cheaper storage + faster search with minor recall trade-off
   - Cohere Embed: 1024 dimensions, strong multilingual support
-  - Match embedding model used at indexing time with query time — they must be the same model
-- **Metadata framework**: attach structured metadata to each chunk — source document, page number, timestamp, author, department, access level. Enables filtered search (e.g., "only search HR documents from 2024")
+  - Match embedding model used at indexing time with query time - they must be the same model
+- **Metadata framework**: attach structured metadata to each chunk - source document, page number, timestamp, author, department, access level. Enables filtered search (e.g., "only search HR documents from 2024")
 - **Data sync strategies**:
   - Bedrock KB native sync: scheduled (daily/weekly) or on-demand. Handles diff detection, re-chunking, re-embedding automatically
   - Event-driven (custom): DynamoDB Streams / S3 Event Notifications → Lambda → re-embed + upsert to vector store. Near real-time freshness but more operational overhead
 
 **Retrieval Mechanisms**
 - **Semantic search** (vector similarity): finds contextually related content even if exact words differ. Core of RAG. Uses cosine similarity or dot product on embeddings
-- **Keyword search** (BM25): traditional text matching. Still necessary for exact terms — product IDs, error codes, proper nouns that embeddings might not capture perfectly
+- **Keyword search** (BM25): traditional text matching. Still necessary for exact terms - product IDs, error codes, proper nouns that embeddings might not capture perfectly
 - **Hybrid search**: combines both. Typically weighted (e.g., 0.7 semantic + 0.3 keyword). OpenSearch supports this natively with Neural plugin
 - **Reranking**: after initial retrieval (top-K candidates), a cross-encoder model re-scores results for relevance. Much more accurate than bi-encoder similarity alone. Use Bedrock reranker models. Adds latency (50-200ms) but significantly improves precision
 - **Query expansion**: use an LLM to rephrase/expand the user query before searching. "What's the return policy?" → also search "refund timeframe" + "how to return items". Improves recall
@@ -2287,7 +2287,7 @@ High latency?
 
 **API Patterns**
 - **Synchronous** (InvokeModel / Converse): request → wait → complete response. Simple. Use for: short responses, internal processing, batch pipelines
-- **Streaming** (InvokeModelWithResponseStream / ConverseStream): response arrives token-by-token. Critical for chat UX — user sees text appearing immediately. Time-to-first-token typically 200-500ms vs. 2-10s for full response
+- **Streaming** (InvokeModelWithResponseStream / ConverseStream): response arrives token-by-token. Critical for chat UX - user sees text appearing immediately. Time-to-first-token typically 200-500ms vs. 2-10s for full response
 - **Asynchronous**: decouple request from response. Pattern: client → API Gateway → SQS → Lambda → Bedrock → store result → notify client (webhook/polling). Use for: long-running generations, queue management, spike absorption
 - **WebSocket** (API Gateway WebSocket API): persistent bidirectional connection. Best for: chat interfaces needing streaming + multi-turn state. Client sends messages, server streams tokens back on same connection
 
@@ -2300,7 +2300,7 @@ High latency?
 - **Denied topics**: define topics that should be completely blocked. Example: "Do not discuss competitor products" or "Do not provide legal advice." Uses FM-based classification to detect topic regardless of how it's phrased
 - **Word filters**: exact-match blocking for specific words/phrases. Use for: profanity, competitor names, internal project codenames. Also includes a managed profanity list
 - **Sensitive information filters**: detect and mask/block PII entities (SSN, email, phone, credit card, etc.) plus custom regex patterns (e.g., internal account ID format). Can mask (replace with `[MASKED]`) or block entirely
-- **Contextual grounding check**: compares FM response against retrieved source documents. Scores how well the response is grounded in (supported by) the sources. Set a threshold — responses below it are blocked. Essential for RAG applications in regulated industries
+- **Contextual grounding check**: compares FM response against retrieved source documents. Scores how well the response is grounded in (supported by) the sources. Set a threshold - responses below it are blocked. Essential for RAG applications in regulated industries
 - **Automated Reasoning checks**: validate FM responses against formal logical rules you define. Can detect logical inconsistencies, incorrect calculations, unsupported conclusions. Suggests corrections when violations found
 - **Standard tier vs. Classic tier**: Standard extends detection into code elements (variable names, comments, string literals that might contain harmful content). Use Standard for code-generation use cases
 - **ApplyGuardrail API**: evaluate content against guardrails WITHOUT invoking a model. Useful for: pre-screening user input before sending to FM, checking cached responses, validating external content
@@ -2321,14 +2321,14 @@ High latency?
 
 **Governance & Compliance**
 - **CloudTrail**: captures ALL Bedrock/SageMaker API calls as events. Who invoked which model, when, from where. Non-negotiable for audit readiness
-- **Model invocation logging**: stores full request (prompt) and response content to S3 or CloudWatch Logs. Enable for: compliance audit, debugging, quality monitoring. Be cautious: logs may contain sensitive user data — apply encryption and access controls
-- **SageMaker Model Cards**: structured documentation for each model — intended use, limitations, training data description, evaluation metrics, ethical considerations. Required for many compliance frameworks
+- **Model invocation logging**: stores full request (prompt) and response content to S3 or CloudWatch Logs. Enable for: compliance audit, debugging, quality monitoring. Be cautious: logs may contain sensitive user data - apply encryption and access controls
+- **SageMaker Model Cards**: structured documentation for each model - intended use, limitations, training data description, evaluation metrics, ethical considerations. Required for many compliance frameworks
 - **Data lineage**: Glue Data Catalog tracks where data came from, how it was transformed, and where it ended up. Critical for: "which documents did this RAG response draw from?" and "was any training data from restricted sources?"
 - **Compliance monitoring**: CloudWatch alarms on drift metrics. Example: if grounding score drops below threshold, alert. If a new model version produces different output distributions, flag for review
 
 **Responsible AI**
 - **Transparency**:
-  - Bedrock agent traces: show complete reasoning chain — which tools were called, what information was retrieved, how decisions were made
+  - Bedrock agent traces: show complete reasoning chain - which tools were called, what information was retrieved, how decisions were made
   - Citations: Bedrock KB automatically returns source document references. Show these to users so they can verify claims
   - Confidence scoring: track and display model certainty signals
 - **Fairness evaluation**:
@@ -2336,12 +2336,12 @@ High latency?
   - LLM-as-a-judge: have a separate model evaluate outputs for bias indicators
   - A/B test with diverse user groups and track satisfaction differences
 - **OWASP Top 10 for LLM Applications** (key items):
-  - LLM01: Prompt Injection — adversarial input that overrides system instructions
-  - LLM02: Insecure Output Handling — using FM output unsanitized (e.g., as SQL)
-  - LLM03: Training Data Poisoning — tainted training data leads to biased/harmful outputs
-  - LLM04: Model Denial of Service — crafted inputs that cause excessive resource usage
-  - LLM06: Sensitive Information Disclosure — FM reveals training data or PII
-  - LLM08: Excessive Agency — agent takes actions beyond intended scope
+  - LLM01: Prompt Injection - adversarial input that overrides system instructions
+  - LLM02: Insecure Output Handling - using FM output unsanitized (e.g., as SQL)
+  - LLM03: Training Data Poisoning - tainted training data leads to biased/harmful outputs
+  - LLM04: Model Denial of Service - crafted inputs that cause excessive resource usage
+  - LLM06: Sensitive Information Disclosure - FM reveals training data or PII
+  - LLM08: Excessive Agency - agent takes actions beyond intended scope
 
 ---
 
@@ -2367,7 +2367,7 @@ High latency?
 - **Streaming** reduces perceived latency by 5-10x. Time-to-first-token (200-500ms) vs. time-to-complete-response (2-10s). Essential for chat interfaces. ConverseStream API handles this
 - **Parallel processing**: when a task can be decomposed (e.g., summarize 10 documents), invoke FM in parallel via Step Functions Map state or concurrent Lambda invocations. Reduces wall-clock time linearly
 - **Vector index optimization**:
-  - HNSW parameters: `ef_construction` (higher = better recall at index time), `m` (connections per node — higher = better recall, more memory), `ef_search` (higher = better recall at query time, slower)
+  - HNSW parameters: `ef_construction` (higher = better recall at index time), `m` (connections per node - higher = better recall, more memory), `ef_search` (higher = better recall at query time, slower)
   - Sharding: distribute large indexes across multiple OpenSearch shards for parallel query
   - Warm storage: keep hot indexes in memory; archive old indexes to cold storage
 - **Pre-computation**: for predictable queries (top FAQ, daily report), generate responses during off-peak and cache. Serve instantly at query time
@@ -2392,7 +2392,7 @@ High latency?
   - Hallucination rate: percentage of responses flagged by grounding check
   - Empty retrieval rate: percentage of queries where vector search returns no relevant results
 - **Operational metrics**:
-  - Error rate: 4xx (client errors — bad requests), 5xx (service errors — model failures)
+  - Error rate: 4xx (client errors - bad requests), 5xx (service errors - model failures)
   - Throttling rate: 429 responses indicating capacity limits hit
   - Model availability: track per-region, per-model availability
 - **Business metrics**: task completion rate (agents), user satisfaction score, escalation rate, resolution rate
@@ -2404,7 +2404,7 @@ High latency?
 
 **Evaluation Methods**
 - **Bedrock Model Evaluation** supports three modes:
-  - *Automatic*: metrics computed against reference answers — ROUGE-L (text overlap), cosine similarity (semantic), BERTScore (contextual similarity). Good for: comparing model versions quantitatively
+  - *Automatic*: metrics computed against reference answers - ROUGE-L (text overlap), cosine similarity (semantic), BERTScore (contextual similarity). Good for: comparing model versions quantitatively
   - *Human*: human reviewers score outputs on dimensions you define (helpfulness, accuracy, tone). Good for: subjective quality, nuanced assessment
   - *LLM-as-a-judge*: a separate FM scores outputs. Provides: scalability of automatic + nuance of human. Define evaluation criteria in judge prompt. No ground truth needed
 - **RAG evaluation** (Bedrock): dedicated evaluation for knowledge base pipelines
@@ -2432,7 +2432,7 @@ High latency?
   - Fix: reduce top-K; use reranking to keep only most relevant chunks; summarize context; use model with larger context window
 - **Poor retrieval** (FM responds "I don't have information about that" despite data existing):
   - Cause: embedding mismatch, bad chunking, missing metadata
-  - Diagnose: manually inspect retrieved chunks — are they relevant? Log retrieval scores
+  - Diagnose: manually inspect retrieved chunks - are they relevant? Log retrieval scores
   - Fix: try different embedding model; adjust chunk size (too large = diluted; too small = no context); add metadata filters to narrow search; check if data sync is up-to-date
 - **Hallucination** (FM confidently states incorrect information):
   - Cause: insufficient grounding, high temperature, weak instructions
@@ -2446,7 +2446,7 @@ High latency?
   - If throttled: increase provisioned throughput, request quota increase, implement queuing
 - **Agent infinite loop** (agent keeps calling tools without reaching conclusion):
   - Cause: ambiguous instructions, tool returning errors agent can't handle, circular reasoning
-  - Diagnose: examine agent traces — look for repeated tool calls with same parameters
+  - Diagnose: examine agent traces - look for repeated tool calls with same parameters
   - Fix: add explicit stopping conditions; set max iterations; improve tool error messages; clarify agent instructions about when to give up
 - **Inconsistent outputs** (same input gives different answers each time):
   - Cause: high temperature, non-deterministic model behavior, prompt version mismatch
@@ -2504,7 +2504,7 @@ High latency?
 | 8 | [Enterprise gen AI platform - Layer 2: Model selection](https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/model.html) | Evaluation metrics (ROUGE-L, cosine, METEOR, LLM-as-a-judge), governance committee, model strategy |
 | 9 | [Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html) | Managed RAG: ingestion, chunking, embedding, sync, RetrieveAndGenerate API, structured data stores |
 | 10 | [How Bedrock Knowledge Bases Work](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-it-works.html) | Chunking strategies, embedding process, indexing, vector store integration details |
-| 11 | [Choosing an AWS vector database for RAG](https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-an-aws-vector-database-for-rag-use-cases/introduction.html) | OpenSearch vs. Aurora pgvector vs. Neptune vs. Bedrock managed — comparison framework |
+| 11 | [Choosing an AWS vector database for RAG](https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-an-aws-vector-database-for-rag-use-cases/introduction.html) | OpenSearch vs. Aurora pgvector vs. Neptune vs. Bedrock managed - comparison framework |
 | 12 | [Bedrock Prompt Management](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html) | Parameterized templates, versioning, prompt governance |
 | 13 | [Bedrock Prompt Flows](https://docs.aws.amazon.com/bedrock/latest/userguide/flows.html) | Visual prompt chaining, conditional branching, multi-step orchestration |
 | 14 | [Prompt engineering guidelines (Bedrock)](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html) | Best practices: chain-of-thought, few-shot, structured outputs, system prompts |
@@ -2517,12 +2517,12 @@ High latency?
 | 16 | [Amazon Bedrock AgentCore](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/what-is-bedrock-agentcore.html) | Agent runtime, memory (short + long term), connectors, multi-agent, MCP |
 | 17 | [AgentCore Memory: long-term memory vs RAG](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-ltm-rag.html) | When to use memory vs. RAG; session continuity vs. knowledge retrieval |
 | 18 | [Bedrock Provisioned Throughput](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html) | Dedicated capacity, commitment terms, when to use vs. on-demand |
-| 19 | [Bedrock API Reference](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html) | InvokeModel, Converse, ConverseStream, batch APIs — request/response formats |
+| 19 | [Bedrock API Reference](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html) | InvokeModel, Converse, ConverseStream, batch APIs - request/response formats |
 | 20 | [SageMaker AI Model Deployment](https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html) | Real-time, serverless, async endpoints; custom containers; auto-scaling |
 | 21 | [AWS Step Functions](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html) | Workflow orchestration, error handling, parallel execution, callbacks |
 | 22 | [Amazon Q Business](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/what-is.html) | Enterprise search + gen AI: data source connectors, user permissions, managed Q&A |
 | 23 | [Bedrock Data Automation](https://docs.aws.amazon.com/bedrock/latest/userguide/data-automation.html) | Automated document/data processing workflows |
-| 24 | [Bedrock Inference Types](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-types.html) | On-demand vs. provisioned vs. batch — comparison, pricing implications |
+| 24 | [Bedrock Inference Types](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-types.html) | On-demand vs. provisioned vs. batch - comparison, pricing implications |
 
 ### Domain 3: AI Safety, Security, and Governance
 
@@ -2555,7 +2555,7 @@ High latency?
 |---|----------|---------------|
 | 40 | [Bedrock Model Evaluation (detailed)](https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html) | Automatic metrics, human evaluation, custom evaluation criteria |
 | 41 | [Evaluate RAG Sources](https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation-kb.html) | RAG-specific metrics: context relevance, faithfulness, answer quality |
-| 42 | [LLM-as-a-Judge Evaluation](https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation-judge.html) | Use FM to evaluate FM outputs — no ground truth needed |
+| 42 | [LLM-as-a-Judge Evaluation](https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation-judge.html) | Use FM to evaluate FM outputs - no ground truth needed |
 | 43 | [Bedrock Agent Tracing](https://docs.aws.amazon.com/bedrock/latest/userguide/trace-events.html) | Step-by-step reasoning traces for debugging agent behavior |
 | 44 | [Test and Troubleshoot Agents](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-test.html) | Agent testing workflows and common issues |
 | 45 | [Well-Architected Gen AI Lens - Operational Excellence](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/operational-excellence.html) | Output quality monitoring, lifecycle management, traceability |
@@ -2577,7 +2577,7 @@ High latency?
 ```
 Week 1: Foundation (Resources 1-4)
   Read the enterprise platform guide and RAG architectures guide end-to-end.
-  Skim the Gen AI Lens for structure — return to specific pillars later.
+  Skim the Gen AI Lens for structure - return to specific pillars later.
 
 Week 2: Core Bedrock (Resources 5-14)
   Focus on: Knowledge Bases, Prompt Management, model evaluation.
@@ -2598,7 +2598,7 @@ Week 5: Operations & Testing (Resources 34-45)
 
 ---
 
-## Part 5: From Theory to Practice — Specializing an LLM for Your Stack
+## Part 5: From Theory to Practice - Specializing an LLM for Your Stack
 
 > This section bridges exam/architecture knowledge to hands-on implementation.
 > It demonstrates how RAG, embeddings, MCP, fine-tuning, and model customization
@@ -2606,7 +2606,7 @@ Week 5: Operations & Testing (Resources 34-45)
 
 ### The Problem
 
-You want to tell a coding assistant "Build a dialog to accept user input backed by a REST endpoint" and have it produce idiomatic code using your exact stack (e.g., htmx 4.0 + DaisyUI + Tailwind + Go) — including APIs released after the model's knowledge cutoff.
+You want to tell a coding assistant "Build a dialog to accept user input backed by a REST endpoint" and have it produce idiomatic code using your exact stack (e.g., htmx 4.0 + DaisyUI + Tailwind + Go) - including APIs released after the model's knowledge cutoff.
 
 ### Approaches Compared
 
@@ -2621,7 +2621,7 @@ You want to tell a coding assistant "Build a dialog to accept user input backed 
 
 ### Recommended Layered Setup
 
-Priority order — each layer adds value and maps to exam concepts:
+Priority order - each layer adds value and maps to exam concepts:
 
 **Layer 1: Steering / Skills Files** (= System Prompt engineering)
 ```markdown
@@ -2630,7 +2630,7 @@ Priority order — each layer adds value and maps to exam concepts:
 - Return HTML fragments, not JSON. Use hx-get/hx-post for interactions.
 - Use `hx-on:event` syntax (not `hx-on="event: ..."`)
 ```
-This is prompt engineering in practice — encoding constraints and output format.
+This is prompt engineering in practice - encoding constraints and output format.
 
 **Layer 2: Existing Code as Context** (= Few-shot prompting)
 The model reads your existing code and matches patterns. A few well-written examples of your conventions are worth more than pages of instructions.
@@ -2645,11 +2645,11 @@ AI assistant calls tools when needed → gets current API info
 ```
 
 This is a concrete implementation of:
-- **Chunking** (Domain 1 Task 1.5) — splitting docs for embedding
-- **Embedding models** (Domain 1 Task 1.5) — converting text to vectors
-- **Vector search** (Domain 1 Task 1.4) — finding relevant chunks
-- **MCP protocol** (Domain 2 Task 2.1) — standardized agent-tool interface
-- **On-demand retrieval** — lean context, tools called only when needed
+- **Chunking** (Domain 1 Task 1.5) - splitting docs for embedding
+- **Embedding models** (Domain 1 Task 1.5) - converting text to vectors
+- **Vector search** (Domain 1 Task 1.4) - finding relevant chunks
+- **MCP protocol** (Domain 2 Task 2.1) - standardized agent-tool interface
+- **On-demand retrieval** - lean context, tools called only when needed
 
 **Example MCP Server (Python, using FastMCP):**
 ```python
@@ -2686,8 +2686,8 @@ if __name__ == "__main__":
 | Option | Notes | AWS Equivalent |
 |---|---|---|
 | ChromaDB | Python-native, simple API | Bedrock managed store |
-| LanceDB | Rust-based, fast, no server | — |
-| SQLite-vec | Single-file, minimal deps | — |
+| LanceDB | Rust-based, fast, no server | - |
+| SQLite-vec | Single-file, minimal deps | - |
 | FAISS | Facebook's library, very fast | OpenSearch k-NN engine |
 
 **The embedding model rule** (= embedding drift from Domain 5 troubleshooting):
@@ -2721,9 +2721,9 @@ When training makes sense:
 ```
 
 This maps directly to:
-- **LoRA/adapters** (Domain 1 Task 1.2) — parameter-efficient fine-tuning
-- **Knowledge distillation** (study-notes Section 3) — teacher→student model compression
-- **SageMaker deployment** (Domain 2 Task 2.2) — custom model hosting
+- **LoRA/adapters** (Domain 1 Task 1.2) - parameter-efficient fine-tuning
+- **Knowledge distillation** (study-notes Section 3) - teacher→student model compression
+- **SageMaker deployment** (Domain 2 Task 2.2) - custom model hosting
 
 ### Key Takeaway
 
@@ -2742,7 +2742,7 @@ Every concept in the exam has a direct practical application:
 
 ### References
 
-- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) — Visual walkthrough of transformer architecture
-- [3Blue1Brown - Transformers](https://www.3blue1brown.com/lessons/gpt) — Animated series on attention and GPT
-- [A Visual Guide to LLMs](https://awesomeneuron.substack.com/p/a-visual-guide-to-llms-part-1) — Illustrated tokenization, embeddings, attention
-- [StatQuest Illustrated Guide to Neural Networks](https://www.amazon.com/dp/B0DRS71QVQ) — From basics through transformers with PyTorch
+- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) - Visual walkthrough of transformer architecture
+- [3Blue1Brown - Transformers](https://www.3blue1brown.com/lessons/gpt) - Animated series on attention and GPT
+- [A Visual Guide to LLMs](https://awesomeneuron.substack.com/p/a-visual-guide-to-llms-part-1) - Illustrated tokenization, embeddings, attention
+- [StatQuest Illustrated Guide to Neural Networks](https://www.amazon.com/dp/B0DRS71QVQ) - From basics through transformers with PyTorch

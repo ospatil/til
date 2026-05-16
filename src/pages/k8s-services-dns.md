@@ -1,13 +1,13 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [kubernetes, networking]
+tags: [kubernetes, networking, guide]
 ---
 
 # Kubernetes Services and DNS Guide
 
 ## Service Types
 
-Kubernetes Service types build on each other — each type includes everything the previous one does.
+Kubernetes Service types build on each other - each type includes everything the previous one does.
 
 ### ClusterIP (Base)
 
@@ -26,7 +26,7 @@ Pod → my-svc.default.svc.cluster.local
 
 ### NodePort (ClusterIP + port on every node)
 
-Allocates a static port (30000–32767) on every node. A ClusterIP is still created underneath.
+Allocates a static port (30000 - 32767) on every node. A ClusterIP is still created underneath.
 
 ```
 External client → <any-node-ip>:31234
@@ -38,12 +38,12 @@ Internal pod → ClusterIP still works as before
 
 - Reachable externally via `<node-ip>:<node-port>`
 - DNS: same internal DNS as ClusterIP; no external DNS created
-- The port is opened on all nodes, even those not running the target pods — traffic gets forwarded across nodes
+- The port is opened on all nodes, even those not running the target pods - traffic gets forwarded across nodes
 - Rarely used directly in production; mainly a building block
 
 ### LoadBalancer (NodePort + external LB)
 
-Provisions a cloud load balancer (NLB or ALB on AWS) that routes to the NodePort — or directly to pod IPs in IP target mode.
+Provisions a cloud load balancer (NLB or ALB on AWS) that routes to the NodePort - or directly to pod IPs in IP target mode.
 
 **Instance target mode (traditional):**
 
@@ -58,8 +58,8 @@ Client → AWS NLB/ALB → <node-ip>:<node-port>
 Client → AWS NLB/ALB → pod IP directly (single hop)
 ```
 
-- DNS: AWS assigns a load balancer DNS name (e.g., `abc123.elb.ca-central-1.amazonaws.com`). No Kubernetes DNS — you create a Route 53 alias/CNAME yourself or use external-dns.
-- One LB per Service — gets expensive with many services
+- DNS: AWS assigns a load balancer DNS name (e.g., `abc123.elb.ca-central-1.amazonaws.com`). No Kubernetes DNS - you create a Route 53 alias/CNAME yourself or use external-dns.
+- One LB per Service - gets expensive with many services
 - NLB for TCP/UDP (Layer 4), ALB for HTTP/HTTPS (Layer 7)
 
 #### IP Target vs Instance Target Mode
@@ -97,7 +97,7 @@ MetalLB operates in L2 mode (ARP, single node owns VIP) or BGP mode (multiple no
 
 ### ExternalName (DNS alias)
 
-No ClusterIP, no proxying — purely a DNS CNAME redirect.
+No ClusterIP, no proxying - purely a DNS CNAME redirect.
 
 ```yaml
 apiVersion: v1
@@ -118,7 +118,7 @@ Pod resolves my-database.default.svc.cluster.local
 Use cases:
 
 - Reference external services with in-cluster DNS names
-- Migration path — switch from ExternalName to ClusterIP when bringing a service in-cluster
+- Migration path - switch from ExternalName to ClusterIP when bringing a service in-cluster
 - Cross-namespace references
 
 Limitations:
@@ -148,7 +148,7 @@ Pod resolves my-svc.default.svc.cluster.local
   → Pod connects to one of them directly (client's choice)
 ```
 
-No kube-proxy/eBPF interception — DNS returns the IPs and the pod connects directly.
+No kube-proxy/eBPF interception - DNS returns the IPs and the pod connects directly.
 
 #### Headless Services + StatefulSets
 
@@ -178,21 +178,21 @@ spec:
 The `serviceName` field tells Kubernetes to create per-pod DNS records:
 
 ```
-# Service-level — returns all pod IPs
+# Service-level - returns all pod IPs
 mysql.default.svc.cluster.local → 10.0.2.10, 10.0.2.11, 10.0.2.12
 
-# Per-pod — stable DNS name for each pod
+# Per-pod - stable DNS name for each pod
 mysql-0.mysql.default.svc.cluster.local → 10.0.2.10
 mysql-1.mysql.default.svc.cluster.local → 10.0.2.11
 mysql-2.mysql.default.svc.cluster.local → 10.0.2.12
 ```
 
-Clients can connect to a specific pod (`mysql-0.mysql`) or any pod (`mysql`). The service-level DNS returns all IPs — which one the client picks depends on the DNS client (not true load balancing).
+Clients can connect to a specific pod (`mysql-0.mysql`) or any pod (`mysql`). The service-level DNS returns all IPs - which one the client picks depends on the DNS client (not true load balancing).
 
 A common pattern for databases is two Services:
 
 ```yaml
-# Headless — for per-pod addressing
+# Headless - for per-pod addressing
 apiVersion: v1
 kind: Service
 metadata:
@@ -202,7 +202,7 @@ spec:
   selector:
     app: mysql
 ---
-# Regular ClusterIP — for load-balanced reads
+# Regular ClusterIP - for load-balanced reads
 apiVersion: v1
 kind: Service
 metadata:
@@ -311,7 +311,7 @@ After failover (mysql-0 dies, mysql-1 promoted):
   mysql-2  →  labels: {app: mysql, role: replica}
 ```
 
-This is exactly what MySQL Operator, Vitess, and similar operators do — they watch cluster state and shuffle labels so the services automatically route to the correct pod.
+This is exactly what MySQL Operator, Vitess, and similar operators do - they watch cluster state and shuffle labels so the services automatically route to the correct pod.
 
 #### Headless Service with Manual Endpoints
 
@@ -345,8 +345,8 @@ Use cases:
 
 - External services that only have IPs (ExternalName requires a DNS name)
 - Load balancing across multiple external endpoints
-- Gradual migration — start with manual Endpoints, add a `selector` later when the service moves in-cluster
-- Health-aware routing — update Endpoints to remove unhealthy IPs
+- Gradual migration - start with manual Endpoints, add a `selector` later when the service moves in-cluster
+- Health-aware routing - update Endpoints to remove unhealthy IPs
 
 For newer clusters, `EndpointSlice` is the preferred API:
 
@@ -367,7 +367,7 @@ ports:
 
 ## Ingress
 
-Not a Service type — a separate resource that sits in front of multiple ClusterIP Services, routing by host/path through a shared ALB.
+Not a Service type - a separate resource that sits in front of multiple ClusterIP Services, routing by host/path through a shared ALB.
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -401,7 +401,7 @@ Client → ALB (single LB, shared)
     → /    → frontend-svc pods (IP target)
 ```
 
-- One ALB handles many services — cost-efficient vs one LoadBalancer Service per service
+- One ALB handles many services - cost-efficient vs one LoadBalancer Service per service
 - Layer 7 only (HTTP/HTTPS)
 - TLS termination at the ALB
 - Requires an Ingress controller (built into EKS Auto Mode, or AWS Load Balancer Controller in standard EKS)
@@ -459,11 +459,11 @@ spec:
 
 Advantages over Ingress:
 
-- **Role separation** — platform team manages GatewayClass + Gateway, app teams manage HTTPRoutes
-- **Multi-protocol** — supports TCP, UDP, gRPC, TLS natively via `TCPRoute`, `GRPCRoute`, etc.
-- **Cross-namespace routing** — HTTPRoutes in different namespaces can attach to a shared Gateway
-- **Traffic splitting** — native weighted routing for canary deployments
-- **Standardized** — features expressed in the spec, not vendor-specific annotations
+- **Role separation** - platform team manages GatewayClass + Gateway, app teams manage HTTPRoutes
+- **Multi-protocol** - supports TCP, UDP, gRPC, TLS natively via `TCPRoute`, `GRPCRoute`, etc.
+- **Cross-namespace routing** - HTTPRoutes in different namespaces can attach to a shared Gateway
+- **Traffic splitting** - native weighted routing for canary deployments
+- **Standardized** - features expressed in the spec, not vendor-specific annotations
 
 ## DNS in Kubernetes
 
@@ -500,9 +500,9 @@ my-svc.other-namespace.svc.cluster.local  → fully qualified
 
 Kubernetes provides two ways for pods to discover services:
 
-**DNS (recommended)** — pods resolve service names via CoreDNS. Works for all service types and updates automatically.
+**DNS (recommended)** - pods resolve service names via CoreDNS. Works for all service types and updates automatically.
 
-**Environment variables** — kubelet injects `<SERVICE_NAME>_SERVICE_HOST` and `<SERVICE_NAME>_SERVICE_PORT` into every pod. Only includes services that existed when the pod started. Doesn't update if services change. Mainly a legacy mechanism.
+**Environment variables** - kubelet injects `<SERVICE_NAME>_SERVICE_HOST` and `<SERVICE_NAME>_SERVICE_PORT` into every pod. Only includes services that existed when the pod started. Doesn't update if services change. Mainly a legacy mechanism.
 
 ## Traffic Policies
 
@@ -525,14 +525,14 @@ Applies only to `LoadBalancer` and `NodePort` service types (traffic originating
 
 Controls how traffic from external sources (LoadBalancer, NodePort) is routed to pods.
 
-**Cluster (default)** — traffic can be routed to pods on any node. If the pod isn't on the receiving node, there's an extra hop. Source IP is lost (SNAT'd to the node IP).
+**Cluster (default)** - traffic can be routed to pods on any node. If the pod isn't on the receiving node, there's an extra hop. Source IP is lost (SNAT'd to the node IP).
 
 ```
 Client → Node A (no pod here) → SNAT → Node B (pod here)
 Pod sees source IP: Node A's IP
 ```
 
-**Local** — traffic is only routed to pods on the receiving node. No extra hop, source IP preserved. But if a node has no pods, traffic to that node is dropped.
+**Local** - traffic is only routed to pods on the receiving node. No extra hop, source IP preserved. But if a node has no pods, traffic to that node is dropped.
 
 ```
 Client → Node B (pod here) → Pod
@@ -552,9 +552,9 @@ With IP target mode in EKS, `externalTrafficPolicy` is less relevant since the L
 
 Applies to all service types (traffic originating from within the cluster). Controls how cluster-internal traffic is routed.
 
-**Cluster (default)** — traffic can go to any pod backing the service, on any node.
+**Cluster (default)** - traffic can go to any pod backing the service, on any node.
 
-**Local** — traffic is only routed to pods on the same node as the caller. Useful for node-local caches or DaemonSet services where you want each pod to talk to the local instance.
+**Local** - traffic is only routed to pods on the same node as the caller. Useful for node-local caches or DaemonSet services where you want each pod to talk to the local instance.
 
 ```yaml
 apiVersion: v1
@@ -569,7 +569,7 @@ spec:
 
 ## ExternalDNS
 
-The `cluster.local` DNS is purely internal — CoreDNS only serves it to pods inside the cluster. External clients have no visibility into it. ExternalDNS bridges that gap by watching Kubernetes resources and automatically creating/updating DNS records in an external DNS provider.
+The `cluster.local` DNS is purely internal - CoreDNS only serves it to pods inside the cluster. External clients have no visibility into it. ExternalDNS bridges that gap by watching Kubernetes resources and automatically creating/updating DNS records in an external DNS provider.
 
 ### How It Works
 
@@ -583,10 +583,10 @@ Without ExternalDNS, you'd manually create that DNS record every time you deploy
 
 ### What It Watches
 
-- **LoadBalancer Services** — registers the LB's external DNS name/IP
-- **Ingress resources** — registers based on the `host` field
-- **Gateway API HTTPRoutes** — registers based on `hostnames`
-- **NodePort Services** — registers node IPs (less common)
+- **LoadBalancer Services** - registers the LB's external DNS name/IP
+- **Ingress resources** - registers based on the `host` field
+- **Gateway API HTTPRoutes** - registers based on `hostnames`
+- **NodePort Services** - registers node IPs (less common)
 
 ### Typical Setup with Route 53
 
@@ -616,9 +616,9 @@ The `txt-owner-id` creates TXT records alongside each DNS record to track owners
 
 ### Providers
 
-ExternalDNS supports many providers — Route 53, CloudFlare, Google Cloud DNS, Azure DNS, and others.
+ExternalDNS supports many providers - Route 53, CloudFlare, Google Cloud DNS, Azure DNS, and others.
 
-It also supports CoreDNS as a provider, which is useful in on-prem or air-gapped environments without cloud DNS. In this setup, a separate CoreDNS instance runs on the network segment (outside the cluster) with a backend that supports dynamic updates (commonly etcd, though CoreDNS supports multiple backends including file-based zone files, the kubernetes API, and others). ExternalDNS writes records to the backend, and the external CoreDNS serves them to clients on the network — making Kubernetes service endpoints resolvable from outside the cluster without a cloud DNS provider.
+It also supports CoreDNS as a provider, which is useful in on-prem or air-gapped environments without cloud DNS. In this setup, a separate CoreDNS instance runs on the network segment (outside the cluster) with a backend that supports dynamic updates (commonly etcd, though CoreDNS supports multiple backends including file-based zone files, the kubernetes API, and others). ExternalDNS writes records to the backend, and the external CoreDNS serves them to clients on the network - making Kubernetes service endpoints resolvable from outside the cluster without a cloud DNS provider.
 
 ```
 Cluster:  ExternalDNS watches Services/Ingresses → writes to backend (e.g., etcd)
@@ -645,11 +645,11 @@ The progression: ClusterIP (internal) → NodePort (expose on nodes) → LoadBal
 
 ### Related: Network Infrastructure Deep Dive
 
-See [Kubernetes Network Infrastructure — L2, BGP, and On-Prem Load Balancing](k8s-network-infrastructure.md) for:
+See [Kubernetes Network Infrastructure - L2, BGP, and On-Prem Load Balancing](k8s-network-infrastructure.md) for:
 
-- **L2 Announcements** — how VIPs work via ARP, failover via gratuitous ARP, broadcast domain limitations
-- **BGP Route Advertisement** — peering, ECMP multi-node load balancing, route propagation
-- **MetalLB vs Cilium vs LoxiLB** — on-prem load balancer comparison (control plane vs data plane)
-- **Overlay vs Native CNI** — why Flannel pod IPs aren't externally routable, contrast with VPC CNI
-- **External LBs (NGINX/HAProxy)** — service discovery via Consul, static config, external ingress controllers
-- **Protocol deep dives** — ARP mechanics, BGP message types, SCTP
+- **L2 Announcements** - how VIPs work via ARP, failover via gratuitous ARP, broadcast domain limitations
+- **BGP Route Advertisement** - peering, ECMP multi-node load balancing, route propagation
+- **MetalLB vs Cilium vs LoxiLB** - on-prem load balancer comparison (control plane vs data plane)
+- **Overlay vs Native CNI** - why Flannel pod IPs aren't externally routable, contrast with VPC CNI
+- **External LBs (NGINX/HAProxy)** - service discovery via Consul, static config, external ingress controllers
+- **Protocol deep dives** - ARP mechanics, BGP message types, SCTP
