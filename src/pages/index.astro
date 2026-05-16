@@ -61,7 +61,7 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
             <a href={p.url}>{p.title}</a>
             {p.tags.length > 0 && (
               <span class="item-tags">
-                {p.tags.map(t => <span class="item-tag">{t}</span>)}
+                {p.tags.map(t => <button class="item-tag" data-filter-tag={t}>{t}</button>)}
               </span>
             )}
           </li>
@@ -72,23 +72,29 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
     <script src="/pagefind/pagefind-component-ui.js" type="module" is:inline></script>
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.tag');
+        const navButtons = document.querySelectorAll('.tags .tag');
         const items = document.querySelectorAll('ul li[data-tags]');
 
-        buttons.forEach(btn => {
-          btn.addEventListener('click', () => {
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const tag = btn.dataset.tag;
-            items.forEach(item => {
-              if (!tag) {
-                item.style.display = '';
-              } else {
-                const tags = item.dataset.tags.split(',');
-                item.style.display = tags.includes(tag) ? '' : 'none';
-              }
-            });
+        function filterByTag(tag) {
+          navButtons.forEach(b => b.classList.remove('active'));
+          const activeBtn = document.querySelector(`.tags .tag[data-tag="${tag}"]`);
+          if (activeBtn) activeBtn.classList.add('active');
+          items.forEach(item => {
+            if (!tag) {
+              item.style.display = '';
+            } else {
+              const tags = item.dataset.tags.split(',');
+              item.style.display = tags.includes(tag) ? '' : 'none';
+            }
           });
+        }
+
+        navButtons.forEach(btn => {
+          btn.addEventListener('click', () => filterByTag(btn.dataset.tag));
+        });
+
+        document.querySelectorAll('.item-tag[data-filter-tag]').forEach(btn => {
+          btn.addEventListener('click', () => filterByTag(btn.dataset.filterTag));
         });
       });
     </script>
@@ -196,11 +202,18 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
     padding-right: 0.5rem;
   }
   .item-tag {
+    appearance: none;
+    border: none;
     font-size: 0.6875rem;
     color: #5b4fc7;
     background: #eeecfb;
     padding: 0.125rem 0.4375rem;
     border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .item-tag:hover {
+    background: #ddd8f7;
   }
   @media (max-width: 48rem) {
     body { padding: 1.5rem 1rem; }
