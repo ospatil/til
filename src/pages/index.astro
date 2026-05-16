@@ -51,7 +51,16 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
         <h1>Today I Learned</h1>
         <pagefind-searchbox></pagefind-searchbox>
       </header>
-      <nav class="tags" aria-label="Filter by tag">
+      <div class="filter-bar">
+        <button class="filter-toggle" aria-expanded="false" aria-controls="tag-panel">
+          <span class="filter-label">Filter by tag</span>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="active-filter-badge" hidden></span>
+      </div>
+      <nav class="tags" id="tag-panel" aria-label="Filter by tag">
         <button class="tag active" data-tag="">All</button>
         {allTags.map(tag => <button class="tag" data-tag={tag}>{tag}</button>)}
       </nav>
@@ -72,8 +81,18 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
     <script src="/pagefind/pagefind-component-ui.js" type="module" is:inline></script>
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.querySelector('.filter-toggle');
+        const panel = document.getElementById('tag-panel');
+        const badge = document.querySelector('.active-filter-badge');
         const navButtons = document.querySelectorAll('.tags .tag');
         const items = document.querySelectorAll('ul li[data-tags]');
+
+        toggle.addEventListener('click', () => {
+          const isOpen = panel.classList.contains('open');
+          panel.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', !isOpen);
+          toggle.classList.toggle('open');
+        });
 
         function filterByTag(tag) {
           navButtons.forEach(b => b.classList.remove('active'));
@@ -87,6 +106,12 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
               item.style.display = tags.includes(tag) ? '' : 'none';
             }
           });
+          if (tag) {
+            badge.textContent = tag;
+            badge.hidden = false;
+          } else {
+            badge.hidden = true;
+          }
         }
 
         navButtons.forEach(btn => {
@@ -96,6 +121,8 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
         document.querySelectorAll('.item-tag[data-filter-tag]').forEach(btn => {
           btn.addEventListener('click', () => filterByTag(btn.dataset.filterTag));
         });
+
+        badge.addEventListener('click', () => filterByTag(''));
       });
     </script>
   </body>
@@ -140,11 +167,60 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
   pagefind-searchbox {
     width: 14rem;
   }
-  .tags {
+  .filter-bar {
     display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .filter-toggle {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--muted-foreground);
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    transition: all 0.15s;
+  }
+  .filter-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .filter-toggle .chevron {
+    transition: transform 0.2s;
+  }
+  .filter-toggle.open .chevron {
+    transform: rotate(180deg);
+  }
+  .active-filter-badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+    background: var(--accent);
+    padding: 0.1875rem 0.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+  }
+  .active-filter-badge:hover {
+    opacity: 0.8;
+  }
+  .tags {
     flex-wrap: wrap;
     gap: 0.375rem;
     margin-bottom: 1.25rem;
+    padding: 0.75rem;
+    background: var(--muted);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    display: none;
+  }
+  .tags.open {
+    display: flex;
   }
   .tag {
     appearance: none;
