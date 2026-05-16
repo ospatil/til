@@ -1,0 +1,152 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Agent Ecosystem" id="agent-ecosystem">
+    <mxGraphModel dx="1100" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="AWS Agent Ecosystem — Layered Architecture" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="300" y="10" width="400" height="30" as="geometry" />
+        </mxCell>
+        <!-- FRAMEWORKS Layer -->
+        <mxCell id="fw-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;arcSize=3;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="30" y="50" width="1040" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="fw-label" value="FRAMEWORKS — how you build agent logic" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="55" width="300" height="22" as="geometry" />
+        </mxCell>
+        <!-- AWS Native sub-box -->
+        <mxCell id="aws-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;arcSize=5;dashed=1;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="50" y="85" width="480" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="aws-label" value="AWS-Native" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="88" width="70" height="15" as="geometry" />
+        </mxCell>
+        <!-- Bedrock Agents -->
+        <mxCell id="ba" value="Bedrock Agents&#xa;managed, no-code&#xa;ReAct built-in" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="110" width="130" height="60" as="geometry" />
+        </mxCell>
+        <!-- Strands Agents -->
+        <mxCell id="sa" value="Strands Agents&#xa;open-source SDK&#xa;full control" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="110" width="130" height="60" as="geometry" />
+        </mxCell>
+        <!-- Agent Squad -->
+        <mxCell id="as" value="Agent Squad&#xa;multi-agent&#xa;supervisor pattern" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="370" y="110" width="140" height="60" as="geometry" />
+        </mxCell>
+        <!-- OSS sub-box -->
+        <mxCell id="oss-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;arcSize=5;dashed=1;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="560" y="85" width="490" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="oss-label" value="Open Source" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="570" y="88" width="80" height="15" as="geometry" />
+        </mxCell>
+        <!-- LangChain -->
+        <mxCell id="lc" value="LangChain&#xa;chains + agents&#xa;largest ecosystem" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="110" width="130" height="60" as="geometry" />
+        </mxCell>
+        <!-- LangGraph -->
+        <mxCell id="lg" value="LangGraph&#xa;stateful graphs&#xa;cycles + branching" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="725" y="110" width="130" height="60" as="geometry" />
+        </mxCell>
+        <!-- CrewAI -->
+        <mxCell id="ca" value="CrewAI&#xa;role-based" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="870" y="110" width="80" height="60" as="geometry" />
+        </mxCell>
+        <!-- AutoGen -->
+        <mxCell id="ag" value="AutoGen&#xa;conversational" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="963" y="110" width="80" height="60" as="geometry" />
+        </mxCell>
+        <!-- Bedrock Agents annotations -->
+        <mxCell id="ba-note" value="simplest" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="100" y="175" width="50" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="sa-note" value="most control" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="245" y="175" width="70" height="12" as="geometry" />
+        </mxCell>
+        <!-- Arrow showing spectrum -->
+        <mxCell id="spectrum" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="135" y="197" as="sourcePoint" />
+            <mxPoint x="440" y="197" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="spec-l" value="managed →→→ code-level control" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="190" y="200" width="180" height="12" as="geometry" />
+        </mxCell>
+        <!-- RUNTIME Layer -->
+        <mxCell id="rt-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;arcSize=3;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="30" y="245" width="1040" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="rt-label" value="RUNTIME — where agents execute" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#ea580c;" vertex="1" parent="1">
+          <mxGeometry x="50" y="250" width="250" height="22" as="geometry" />
+        </mxCell>
+        <!-- AgentCore -->
+        <mxCell id="ac" value="Amazon Bedrock AgentCore&#xa;managed hosting • auto-scaling • identity • memory • observability" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#1e1b4b;fontStyle=1;arcSize=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="280" width="450" height="50" as="geometry" />
+        </mxCell>
+        <!-- Self-managed runtimes -->
+        <mxCell id="lam" value="Lambda&#xa;(stateless)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="540" y="280" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs" value="ECS/Fargate&#xa;(stateful)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="660" y="280" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ec2" value="EC2&#xa;(full control)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="780" y="280" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="sf" value="Step Functions&#xa;(orchestrate)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="900" y="280" width="120" height="50" as="geometry" />
+        </mxCell>
+        <!-- "any framework" note under AgentCore -->
+        <mxCell id="ac-note" value="↑ hosts Strands, LangChain, CrewAI, or any framework" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#ea580c;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="335" width="300" height="15" as="geometry" />
+        </mxCell>
+        <!-- PROTOCOLS Layer -->
+        <mxCell id="pr-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f5f3ff;strokeColor=#7c3aed;arcSize=3;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="30" y="390" width="1040" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pr-label" value="PROTOCOLS & TOOLS — how agents access external capabilities" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#7c3aed;" vertex="1" parent="1">
+          <mxGeometry x="50" y="395" width="420" height="22" as="geometry" />
+        </mxCell>
+        <!-- MCP -->
+        <mxCell id="mcp" value="MCP (Model Context Protocol)&#xa;standardized • reusable across frameworks&#xa;STDIO (co-located) or HTTP (remote)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#1e1b4b;arcSize=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="425" width="300" height="60" as="geometry" />
+        </mxCell>
+        <!-- Function Calling -->
+        <mxCell id="fc" value="Function Calling&#xa;model-native JSON output&#xa;direct tool invocation" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#1e1b4b;arcSize=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="380" y="425" width="200" height="60" as="geometry" />
+        </mxCell>
+        <!-- OpenAPI -->
+        <mxCell id="oa" value="OpenAPI Schemas&#xa;Bedrock Agents&#xa;action groups" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#1e1b4b;arcSize=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="425" width="150" height="60" as="geometry" />
+        </mxCell>
+        <!-- AgentCore Connectors -->
+        <mxCell id="conn" value="AgentCore&#xa;Connectors&#xa;(prebuilt)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f5f3ff;strokeColor=#7c3aed;fontColor=#1e1b4b;arcSize=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="425" width="110" height="60" as="geometry" />
+        </mxCell>
+        <!-- Safety -->
+        <mxCell id="safety" value="Guardrails&#xa;(any layer)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;fontColor=#dc2626;fontStyle=1;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="435" width="100" height="45" as="geometry" />
+        </mxCell>
+        <!-- Vertical arrows between layers -->
+        <mxCell id="v1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;startArrow=block;startFill=1;dashed=1;opacity=40;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="230" as="sourcePoint" />
+            <mxPoint x="280" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;startArrow=block;startFill=1;dashed=1;opacity=40;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="350" as="sourcePoint" />
+            <mxPoint x="280" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Legend -->
+        <mxCell id="leg" value="Blue = AWS-native  |  Green = Open source  |  Orange = Runtime  |  Purple = Protocols  |  Red = Safety" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="520" width="500" height="15" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,100 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Orchestration Landscape" id="orchestration-landscape">
+    <mxGraphModel dx="1100" dy="650" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="GenAI Orchestration Landscape — When to Use What" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="250" y="10" width="500" height="30" as="geometry" />
+        </mxCell>
+        <!-- X-axis label -->
+        <mxCell id="xaxis" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="450" as="sourcePoint" />
+            <mxPoint x="1050" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xlabel" value="Complexity / Control →" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="480" y="455" width="160" height="20" as="geometry" />
+        </mxCell>
+        <!-- Y-axis label -->
+        <mxCell id="yaxis" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="450" as="sourcePoint" />
+            <mxPoint x="80" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ylabel" value="Autonomy →" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=2;fontColor=#64748b;rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="30" y="250" width="100" height="20" as="geometry" />
+        </mxCell>
+        <!-- Prompt Flows -->
+        <mxCell id="pf" value="Bedrock&#xa;Prompt Flows" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="130" y="340" width="130" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="pf-note" value="no-code&#xa;prompt chains&#xa;simple branching" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="135" y="400" width="120" height="35" as="geometry" />
+        </mxCell>
+        <!-- EventBridge -->
+        <mxCell id="eb" value="EventBridge&#xa;+ Lambda" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="300" y="350" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="eb-note" value="event-driven&#xa;loose coupling&#xa;async triggers" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="305" y="400" width="110" height="35" as="geometry" />
+        </mxCell>
+        <!-- Step Functions -->
+        <mxCell id="sf" value="Step Functions" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="460" y="250" width="140" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="sf-note" value="stateful workflows&#xa;human-in-loop&#xa;error handling&#xa;audit trail" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="467" y="310" width="125" height="45" as="geometry" />
+        </mxCell>
+        <!-- Bedrock Agents -->
+        <mxCell id="bra" value="Bedrock Agents" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="280" y="150" width="130" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="bra-note" value="managed autonomous&#xa;dynamic tool selection&#xa;ReAct built-in" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="210" width="130" height="35" as="geometry" />
+        </mxCell>
+        <!-- LangChain -->
+        <mxCell id="lch" value="LangChain" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="300" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="lch-note" value="chains + agents&#xa;any LLM provider&#xa;rapid prototyping" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="650" y="350" width="110" height="35" as="geometry" />
+        </mxCell>
+        <!-- LangGraph -->
+        <mxCell id="lgr" value="LangGraph" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="820" y="160" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lgr-note" value="stateful graphs&#xa;cycles + reflection&#xa;checkpoints&#xa;most flexible" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="822" y="215" width="115" height="45" as="geometry" />
+        </mxCell>
+        <!-- Strands + Agent Squad -->
+        <mxCell id="str" value="Strands +&#xa;Agent Squad" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="100" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="str-note" value="AWS SDK + multi-agent&#xa;full code control&#xa;MCP native" style="text;html=1;align=center;verticalAlign=top;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="647" y="160" width="125" height="35" as="geometry" />
+        </mxCell>
+        <!-- Zones -->
+        <mxCell id="zone1" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=none;strokeColor=#4f46e5;arcSize=5;dashed=1;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="110" y="130" width="320" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="z1-label" value="AWS Managed" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#4f46e5;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="115" y="130" width="90" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="zone2" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=none;strokeColor=#16a34a;arcSize=5;dashed=1;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="620" y="80" width="430" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="z2-label" value="Code-Level / OSS" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#16a34a;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="625" y="80" width="120" height="15" as="geometry" />
+        </mxCell>
+        <!-- Overlap zone (Step Functions) -->
+        <mxCell id="overlap-note" value="works with both↑" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#16a34a;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="485" y="240" width="100" height="12" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

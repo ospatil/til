@@ -1,0 +1,125 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Embedding Optimization" id="embedding-optimization">
+    <mxGraphModel dx="1100" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="450" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="Embedding Optimization Techniques" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="320" y="10" width="380" height="30" as="geometry" />
+        </mxCell>
+        <!-- Original embedding -->
+        <mxCell id="orig-label" value="Original: float32 × 1024d = 4096 bytes/vector" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="320" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="orig" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="50" y="75" width="1000" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="orig-size" value="4096 bytes" style="text;html=1;align=right;verticalAlign=middle;fontSize=9;fontColor=#4f46e5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="960" y="55" width="70" height="15" as="geometry" />
+        </mxCell>
+        <!-- Technique 1: Reduce dimensions -->
+        <mxCell id="t1-label" value="① Reduce Dimensions (Titan V2: 1024→512→256)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="50" y="115" width="350" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t1-1024" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="50" y="140" width="500" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t1-512" value="512d = 2048 bytes (2x savings)" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#16a34a;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="560" y="142" width="180" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="t1-256" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="50" y="165" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="t1-256l" value="256d = 1024 bytes (4x savings)" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#16a34a;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="310" y="165" width="180" height="15" as="geometry" />
+        </mxCell>
+        <!-- Technique 2: Scalar Quantization -->
+        <mxCell id="t2-label" value="② Scalar Quantization (float32→int8)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="50" y="195" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d6b656;strokeColor=#d6b656;opacity=70;" vertex="1" parent="1">
+          <mxGeometry x="50" y="220" width="250" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t2-size" value="1024 bytes (4x savings, &lt;2% recall loss)" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#d6b656;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="310" y="222" width="260" height="15" as="geometry" />
+        </mxCell>
+        <!-- Technique 3: Binary Quantization -->
+        <mxCell id="t3-label" value="③ Binary Quantization (float32→1 bit)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="50" y="255" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#dc2626;strokeColor=#dc2626;opacity=70;" vertex="1" parent="1">
+          <mxGeometry x="50" y="280" width="31" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t3-size" value="128 bytes (32x savings! but 10-15% recall loss → needs reranker)" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#dc2626;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="90" y="282" width="380" height="15" as="geometry" />
+        </mxCell>
+        <!-- Technique 4: Matryoshka -->
+        <mxCell id="t4-label" value="④ Matryoshka Embeddings (trained front-loading)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="315" width="350" height="20" as="geometry" />
+        </mxCell>
+        <!-- Matryoshka nested bars -->
+        <mxCell id="t4-full" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="50" y="340" width="500" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="t4-half" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="50" y="340" width="250" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="t4-quarter" value="" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="50" y="340" width="125" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="t4-desc" value="first N dims = most info → truncate to any prefix length" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#9673a6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="560" y="342" width="300" height="15" as="geometry" />
+        </mxCell>
+        <!-- Two-Phase pattern -->
+        <mxCell id="tp-label" value="⑤ Two-Phase Search (best of both worlds)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="50" y="375" width="320" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tp-coarse" value="Binary/Low-d&#xa;(fast, top-1000)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="400" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tp-arrow" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#1e1b4b;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="420" as="sourcePoint" />
+            <mxPoint x="220" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tp-rerank" value="Full precision / Reranker&#xa;(accurate, top-5)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="220" y="400" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tp-arrow2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#1e1b4b;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="380" y="420" as="sourcePoint" />
+            <mxPoint x="420" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tp-result" value="Result:&#xa;speed + accuracy" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="400" width="120" height="40" as="geometry" />
+        </mxCell>
+        <!-- Scale comparison on right -->
+        <mxCell id="scale-title" value="Relative Size" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="820" y="110" width="90" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="sc1" value="float32" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;fontColor=#ffffff;fontSize=9;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="750" y="130" width="256" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="sc2" value="int8 (SQ)" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d6b656;strokeColor=#d6b656;fontColor=#ffffff;fontSize=9;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="750" y="165" width="64" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="sc3" value="binary" style="rounded=0;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#dc2626;strokeColor=#dc2626;fontColor=#ffffff;fontSize=9;opacity=80;" vertex="1" parent="1">
+          <mxGeometry x="750" y="200" width="8" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="sc3l" value="←" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="760" y="203" width="10" height="15" as="geometry" />
+        </mxCell>
+        <!-- 4x, 32x labels -->
+        <mxCell id="red4" value="4× smaller" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#d6b656;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="820" y="168" width="60" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="red32" value="32× smaller" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#dc2626;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="775" y="203" width="70" height="15" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

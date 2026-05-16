@@ -1,0 +1,148 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Bedrock SageMaker Interplay" id="bedrock-sagemaker">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="550" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="Bedrock ↔ SageMaker AI — Complementary Roles" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="280" y="10" width="450" height="30" as="geometry" />
+        </mxCell>
+        <!-- Application layer -->
+        <mxCell id="app" value="Your GenAI Application" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;fontStyle=1;arcSize=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="370" y="50" width="260" height="40" as="geometry" />
+        </mxCell>
+        <!-- Bedrock Box -->
+        <mxCell id="br-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="450" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="br-title" value="Amazon Bedrock" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="130" width="150" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="br-sub" value="Consume &amp; Customize FMs (serverless)" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="70" y="152" width="250" height="15" as="geometry" />
+        </mxCell>
+        <!-- Bedrock components -->
+        <mxCell id="br-api" value="Converse API&#xa;InvokeModel" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="175" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="br-kb" value="Knowledge&#xa;Bases (RAG)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="200" y="175" width="100" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="br-ag" value="Agents&#xa;AgentCore" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="320" y="175" width="95" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="br-guard" value="Guardrails" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="430" y="175" width="60" height="45" as="geometry" />
+        </mxCell>
+        <!-- Bedrock Models -->
+        <mxCell id="br-models" value="Foundation Models (managed)&#xa;Claude • Llama • Nova • Mistral • Titan" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=10;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="240" width="320" height="40" as="geometry" />
+        </mxCell>
+        <!-- Bedrock Custom Models -->
+        <mxCell id="br-custom" value="Custom Models (in Bedrock)&#xa;Fine-tune • Continued Pre-Training • Distillation" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=10;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="295" width="320" height="40" as="geometry" />
+        </mxCell>
+        <!-- Custom Model Import -->
+        <mxCell id="br-import" value="Custom Model Import&#xa;(Safetensors / GGUF from S3)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;fontStyle=1;arcSize=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="355" width="230" height="45" as="geometry" />
+        </mxCell>
+        <!-- Provisioned Throughput note -->
+        <mxCell id="pt" value="Provisioned Throughput&#xa;(required for custom/imported)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#64748b;arcSize=10;fontSize=9;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="420" width="180" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="br-eval" value="Model&#xa;Evaluation" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="295" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="br-pm" value="Prompt&#xa;Management" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="240" width="80" height="40" as="geometry" />
+        </mxCell>
+        <!-- SageMaker Box -->
+        <mxCell id="sm-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="120" width="490" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-title" value="Amazon SageMaker AI" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="580" y="130" width="200" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-sub" value="Build, Train &amp; Host Models (full control)" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="580" y="152" width="260" height="15" as="geometry" />
+        </mxCell>
+        <!-- SageMaker components -->
+        <mxCell id="sm-train" value="Training Jobs&#xa;(any algorithm,&#xa;distributed, GPU)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="180" width="130" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-jump" value="JumpStart&#xa;(model zoo)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="730" y="180" width="100" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-nb" value="Notebooks&#xa;Experiments" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="850" y="180" width="100" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-reg" value="Model Registry&#xa;(version, approve,&#xa;stage transitions)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="260" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-ep" value="Endpoints&#xa;Real-time / Serverless&#xa;Async / A/B variants" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="760" y="260" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-clarify" value="Clarify&#xa;(bias / explain)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="340" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-monitor" value="Model Monitor&#xa;(drift detection)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="710" y="340" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-gt" value="Ground Truth&#xa;(labeling)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="850" y="340" width="100" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-dw" value="Data Wrangler&#xa;(prep data)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="405" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-cards" value="Model Cards&#xa;(documentation)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="710" y="405" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="sm-proc" value="Processing&#xa;Jobs (batch)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="850" y="405" width="100" height="40" as="geometry" />
+        </mxCell>
+        <!-- THE BRIDGE ARROW (Custom Model Import) -->
+        <mxCell id="bridge" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="580" y="287" as="sourcePoint" />
+            <mxPoint x="300" y="370" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="530" y="320" />
+              <mxPoint x="440" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bridge-label" value="Custom Model Import&#xa;(train in SM → import to Bedrock)" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="350" y="395" width="200" height="25" as="geometry" />
+        </mxCell>
+        <!-- Arrows from app -->
+        <mxCell id="app-br" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="90" as="sourcePoint" />
+            <mxPoint x="300" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="app-sm" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="90" as="sourcePoint" />
+            <mxPoint x="750" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Train to Registry arrow -->
+        <mxCell id="tr-reg" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645" y="235" as="sourcePoint" />
+            <mxPoint x="645" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Registry to Endpoints arrow -->
+        <mxCell id="reg-ep" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="287" as="sourcePoint" />
+            <mxPoint x="760" y="287" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

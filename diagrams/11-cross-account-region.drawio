@@ -1,0 +1,159 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Cross Account Region" id="cross-account-region">
+    <mxGraphModel dx="1100" dy="650" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="Cross-Account &amp; Cross-Region Bedrock Access" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="280" y="10" width="440" height="30" as="geometry" />
+        </mxCell>
+        <!-- Organization boundary -->
+        <mxCell id="org" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;arcSize=3;dashed=1;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="30" y="45" width="1040" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="org-label" value="AWS Organization" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="40" y="48" width="130" height="18" as="geometry" />
+        </mxCell>
+        <!-- Central AI Account -->
+        <mxCell id="central" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;arcSize=5;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="280" y="70" width="520" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="central-label" value="Central AI Account" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="300" y="78" width="160" height="20" as="geometry" />
+        </mxCell>
+        <!-- Bedrock in central -->
+        <mxCell id="bedrock" value="Amazon Bedrock" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#4f46e5;fontStyle=1;arcSize=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="105" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Models -->
+        <mxCell id="models" value="FMs (Claude, Nova, Llama...)&#xa;+ Custom/Imported Models" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=10;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="155" width="200" height="40" as="geometry" />
+        </mxCell>
+        <!-- KB -->
+        <mxCell id="kb" value="Knowledge&#xa;Bases" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="105" width="80" height="40" as="geometry" />
+        </mxCell>
+        <!-- Guardrails -->
+        <mxCell id="guard" value="Guardrails" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;fontColor=#dc2626;fontStyle=1;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="630" y="105" width="80" height="40" as="geometry" />
+        </mxCell>
+        <!-- IAM Roles -->
+        <mxCell id="roles" value="IAM Roles&#xa;(per-consumer)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;fontStyle=1;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="160" width="110" height="40" as="geometry" />
+        </mxCell>
+        <!-- VPC Endpoint -->
+        <mxCell id="vpce" value="VPC Endpoint&#xa;(PrivateLink)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="160" width="100" height="40" as="geometry" />
+        </mxCell>
+        <!-- Invocation Logs -->
+        <mxCell id="logs" value="Invocation Logs&#xa;(centralized S3)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="210" width="120" height="40" as="geometry" />
+        </mxCell>
+        <!-- Inference Profiles -->
+        <mxCell id="profiles" value="Inference Profiles&#xa;(per-team tags)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="210" width="130" height="40" as="geometry" />
+        </mxCell>
+        <!-- Cross-Region routing -->
+        <mxCell id="xregion" value="Cross-Region&#xa;Inference" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="215" width="110" height="40" as="geometry" />
+        </mxCell>
+        <!-- Regions -->
+        <mxCell id="r1" value="us-east-1" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="740" y="215" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="us-west-2" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="740" y="250" width="70" height="30" as="geometry" />
+        </mxCell>
+        <!-- Arrows to regions -->
+        <mxCell id="xr1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="230" as="sourcePoint" />
+            <mxPoint x="740" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xr2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="245" as="sourcePoint" />
+            <mxPoint x="740" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Consumer Accounts -->
+        <mxCell id="team-a" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=10;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="50" y="350" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ta-label" value="Team A Account (chatbot)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="65" y="358" width="175" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="ta-app" value="Chat App&#xa;→ AssumeRole" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="390" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="team-b" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=10;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="290" y="350" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="tb-label" value="Team B Account (analytics)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="305" y="358" width="175" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="tb-app" value="Analytics App&#xa;→ AssumeRole" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="320" y="390" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="team-c" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=10;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="530" y="350" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="tc-label" value="Team C Account (code gen)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="545" y="358" width="175" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="tc-app" value="IDE Plugin&#xa;→ AssumeRole" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="390" width="100" height="40" as="geometry" />
+        </mxCell>
+        <!-- Arrows from consumer accounts to central -->
+        <mxCell id="aa" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="380" as="sourcePoint" />
+            <mxPoint x="400" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ab" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="380" as="sourcePoint" />
+            <mxPoint x="500" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ac" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="380" as="sourcePoint" />
+            <mxPoint x="600" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- STS labels -->
+        <mxCell id="sts1" value="STS" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="340" width="30" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="sts2" value="STS" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="340" width="30" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="sts3" value="STS" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="340" width="30" height="15" as="geometry" />
+        </mxCell>
+        <!-- SCP -->
+        <mxCell id="scp" value="SCP: deny unless VPC endpoint + guardrail attached" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;fontColor=#dc2626;fontStyle=1;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="780" y="380" width="260" height="40" as="geometry" />
+        </mxCell>
+        <!-- Tag annotations -->
+        <mxCell id="tag-a" value="tag: team=alpha" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="440" width="90" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="tag-b" value="tag: team=beta" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="325" y="440" width="85" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="tag-c" value="tag: team=gamma" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="560" y="440" width="95" height="12" as="geometry" />
+        </mxCell>
+        <!-- Legend -->
+        <mxCell id="leg" value="Blue = Central Bedrock  |  Yellow = Consumer accounts  |  Green = Cross-region  |  Red = Enforcement" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="495" width="480" height="12" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
