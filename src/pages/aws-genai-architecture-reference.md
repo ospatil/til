@@ -20,7 +20,7 @@ Sections flow from data infrastructure → model platforms → intelligent syste
 - [1.2 Vector Database Selection](#12-vector-database-selection) — OpenSearch vs. Aurora vs. Neptune vs. managed
 - [1.3 k-NN Algorithms & Index Methods](#13-k-nn-algorithms--index-methods-opensearch) — FLAT, HNSW, IVF, engines, parameters
 - [1.4 Managing Embeddings at Scale](#14-managing-embeddings-at-scale--size-storage-and-performance) — quantization, Matryoshka, sharding, two-phase search
-- [1.5 Foundation Model Selection](#15-foundation-model-selection) — model choice by use case, cascading
+- [1.5 Foundation Model Selection](#15-foundation-model-selection) — model choice by use case, multi-model routing patterns
 - [1.6 Bedrock ↔ SageMaker AI](#16-bedrock--sagemaker-ai--the-interplay) — when which, Custom Model Import, lifecycle
 - [1.7 Agent Architecture & Ecosystem](#17-agent-architecture--ecosystem) — Bedrock Agents, Strands, AgentCore, LangChain, CrewAI, MCP
 - [1.8 Orchestration](#18-orchestration--step-functions-bedrock-flows-and-chaining-frameworks) — Step Functions, Prompt Flows, LangGraph, EventBridge
@@ -451,13 +451,136 @@ Starting point: too much memory / storage / latency?
 | Multimodal understanding | Claude / Nova | Image+text input support |
 | Reranking retrieved results | Bedrock reranker models | Improve RAG precision without changing retrieval |
 
-**Model Cascading Pattern:**
+#### Multi-Model Routing Patterns
+
+**Pattern 1: Upfront Classification (Model Cascading)**
+
+A classifier determines complexity *before* calling any FM. Routes to the cheapest capable model.
+
 ```
-User Query → Complexity Classifier (small model / rules)
+User Query → Complexity Classifier
 ├─ Simple → Nova Micro (cheapest)
 ├─ Medium → Nova Pro (balanced)
 └─ Complex → Claude Opus (highest quality)
 ```
+
+Classifier options:
+| Approach | Latency | Accuracy | Cost |
+|----------|---------|----------|------|
+| Rule-based (regex, keyword, length) | ~0ms | Low-medium | Free |
+| Small ML model (e.g., distilbert) | ~10ms | Medium-high | Minimal |
+| LLM-as-router (Nova Micro/Haiku) | ~200ms | High | Low per-request |
+
+LLM-as-router example — use a small model to classify:
+```
+System: You are a query complexity classifier. Respond with only: SIMPLE, MEDIUM, or COMPLEX.
+SIMPLE = factual lookup, FAQ, greeting
+MEDIUM = summarization, explanation, single-step reasoning
+COMPLEX = multi-step reasoning, analysis, creative writing, code generation
+
+User: {query}
+```
+
+**Pattern 2: Response-Based Escalation**
+
+Call the cheapest model first, evaluate the response quality, escalate only if needed. Higher latency but avoids paying for expensive models unless necessary.
+
+```
+User Query → Small Model (Nova Micro)
+  → Evaluate Response (confidence / quality check)
+  ├─ Sufficient → Return response
+  └─ Insufficient → Large Model (Claude) → Return response
+```
+
+Quality evaluation signals:
+- Model's own confidence score (if available)
+- Response length vs expected (too short may indicate inability)
+- Presence of hedging language ("I'm not sure", "I don't have enough information")
+- Semantic similarity to the question (is it actually answering?)
+- Rule-based checks (does it contain required structure/format?)
+
+Trade-off: worst-case latency doubles (both models called), but average cost drops significantly because most queries are answered by the cheap model.
+
+**Pattern 3: Bedrock Intelligent Prompt Routing (Managed)**
+
+AWS-managed routing within a single model family. Bedrock analyzes the prompt and predicts which model will produce adequate quality.
+
+```
+User Query → Bedrock Prompt Router
+  → Predicts response quality per model
+  ├─ Quality difference < threshold → Cheaper model (fallback)
+  └─ Quality difference ≥ threshold → Stronger model
+```
+
+| Aspect | Detail |
+|--------|--------|
+| Scope | Same family only (Claude↔Claude, Llama↔Llama, Nova↔Nova) |
+| Models per router | Exactly 2 |
+| Configuration | Set `responseQualityDifference` threshold (e.g., 0.5) |
+| Routing cost | $1 per 1,000 requests + standard model pricing |
+| Claimed savings | Up to 30% cost reduction |
+| Limitations | English only; no app-specific learning; no cross-family |
+
+Supported families:
+- **Claude:** Haiku 3/3.5, Sonnet 3.5 v1/v2
+- **Meta Llama:** 3.1 (8B, 70B), 3.2 (11B, 90B), 3.3 70B
+- **Amazon Nova:** Lite, Pro
+
+Usage:
+```bash
+aws bedrock create-prompt-router \
+  --prompt-router-name my-claude-router \
+  --models '[{"modelArn": "...claude-3-5-sonnet..."}]' \
+  --fallback-model '[{"modelArn": "...claude-3-5-haiku..."}]' \
+  --routing-criteria '{"responseQualityDifference": 0.5}'
+```
+
+**Pattern 4: GenAI Gateway with Dynamic Routing**
+
+Centralized Lambda handles routing logic across model families with full control. Most flexible but requires custom implementation.
+
+```
+Client → API Gateway → Lambda (router)
+  → AppConfig (routing rules - hot-reloadable)
+  → Route to: Bedrock Model A / Model B / SageMaker endpoint / fallback
+```
+
+Routing dimensions:
+| Dimension | Example Rule |
+|-----------|-------------|
+| Content-based | PII detected → model with guardrails; code → code-specialized model |
+| Cost-based | Budget remaining < 20% → downgrade to cheaper model |
+| Latency-based | Real-time chat → fast model; async batch → quality model |
+| Tenant-based | Premium tier → best model; free tier → cheapest model |
+| Load-based | Throttling on primary → failover to secondary region/model |
+
+AppConfig enables changing routing rules without redeployment.
+
+**Pattern 5: Fallback Chains**
+
+Sequential failover for reliability, not just cost. Combined with circuit breaker pattern.
+
+```
+User Query → Primary Model (Claude Sonnet)
+  ├─ Success → Return
+  ├─ Throttled/Timeout → Fallback 1 (Nova Pro, different region)
+  │   ├─ Success → Return
+  │   └─ Failure → Fallback 2 (cached response / degraded mode)
+  └─ Circuit open (consecutive failures) → Skip primary, go direct to fallback
+```
+
+Implement with Step Functions for visibility, or Lambda with circuit breaker state in DynamoDB/ElastiCache.
+
+#### Routing Pattern Selection
+
+| Situation | Best Pattern |
+|-----------|-------------|
+| Same-family, want managed simplicity | Bedrock Intelligent Prompt Routing |
+| Cross-family routing needed | GenAI Gateway (Lambda) |
+| Maximize cost savings, latency tolerant | Response-based escalation |
+| Predictable traffic, clear complexity signals | Upfront classification |
+| High availability requirement | Fallback chains |
+| Multi-tenant with different SLAs | GenAI Gateway with tenant-based rules |
 
 ---
 
