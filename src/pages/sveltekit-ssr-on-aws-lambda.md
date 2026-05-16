@@ -135,6 +135,13 @@ const connection = postgres('', connectOpts)
 export const db = drizzle(connection, { schema })
 ```
 
+**migrator/local-runner.mjs** - run migrations on local db:
+
+```ts
+import { handler } from './main.mjs' // main.mjs is created by migrate:bundle command
+await handler(null)
+```
+
 > Since db.ts is a separate file, you can import it in a `queries.ts` and test queries directly with vitest.
 
 ### Authentication - hooks.server.ts
@@ -188,6 +195,29 @@ export async function handleProtectedRoute(event: any, resolve: any) {
   }
   return redirect(302, '/')
 }
+
+async function userIsValid(locals: any, cookies: Cookies): Promise<boolean> {
+  const lastAuthUser = cookies.get(
+    `CognitoIdentityServiceProvider.${env.PUBLIC_COGNITO_USER_POOL_CLIENT_ID}.LastAuthUser`
+  )
+
+  if (lastAuthUser) {
+    const accessToken = cookies.get(getCognitoCookieKey('accessToken', lastAuthUser?.replace('@', '%40')))
+    const idToken = cookies.get(getCognitoCookieKey('idToken', lastAuthUser?.replace('@', '%40')))
+
+    if (accessToken && idToken) {
+      if (await validateToken(idToken, 'id') && await validateToken(accessToken, 'access')) {
+        locals.user = { username: lastAuthUser?.split('@')?.[0] }
+        return true
+      }
+    }
+  }
+  return false
+}
+
+function getCognitoCookieKey(key: 'accessToken' | 'idToken' | 'clockDrift' | 'refreshToken' | 'signInDetails', userId: string): string {
+  return `CognitoIdentityServiceProvider.${env.PUBLIC_COGNITO_USER_POOL_CLIENT_ID}.${userId}.${key}`
+}
 ```
 
 ### Amplify Configuration with CookieStorage
@@ -221,6 +251,101 @@ if (browser) {
 }
 ```
 
+### Routes
+
+**routes/+layout.svelte** - token refresh on navigation:
+
+```svelte
+<script lang='ts'>
+  import { beforeNavigate, goto } from '$app/navigation'
+  import { loading, loadingMessage, loadingProgress } from '$lib/stores/ui'
+  import { user } from '$lib/stores/user'
+  import { fetchAuthSession } from 'aws-amplify/auth'
+  import '../app.postcss'
+  import '$lib/auth/amplify'
+
+  beforeNavigate(async ({ cancel, to }) => {
+    if ($user.tokenRefreshAt * 1000 - Date.now() <= 0) {
+      cancel()
+      const res = (await fetchAuthSession({ forceRefresh: true })).tokens?.accessToken
+
+      if (to?.url && res?.payload.exp) {
+        $user.tokenRefreshAt = res?.payload.exp
+        $loading = true
+        $loadingProgress = -1
+        $loadingMessage = 'Refreshing credentials...'
+        await goto(to?.url)
+      }
+      $loading = false
+      $loadingProgress = -1
+    }
+  })
+</script>
+
+<section class='flex flex-col h-screen w-full'>
+  <slot />
+</section>
+```
+
+**routes/+layout.ts** - client-side session check:
+
+```ts
+import type { LayoutLoad } from './$types'
+import { browser } from '$app/environment'
+import { user } from '$lib/stores/user'
+import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth'
+
+export const ssr = true
+
+export const load: LayoutLoad = async () => {
+  if (browser) {
+    try {
+      const session = await fetchAuthSession()
+      const currentUser = await getCurrentUser()
+      const refreshAt = session.tokens?.accessToken.payload.exp ?? 0
+      user.set({
+        id: currentUser.userId,
+        username: currentUser.username,
+        tokenRefreshAt: refreshAt,
+      })
+    } catch (err) {
+      // User isn't authenticated
+    }
+  }
+}
+```
+
+**routes/+page.svelte** - login with Cognito/Azure AD:
+
+```svelte
+<script lang='ts'>
+  import { Button } from '$lib/components/ui/button/index.js'
+  import { signingIn } from '$lib/stores/ui'
+  import { getCurrentUser, signInWithRedirect } from 'aws-amplify/auth'
+
+  async function login() {
+    try {
+      signingIn.set(true)
+      await signInWithRedirect({ provider: { custom: 'AzureAD' } })
+    } catch (err) {}
+  }
+
+  (async function redirectIfLoggedIn() {
+    if (!$signingIn) {
+      try {
+        signingIn.set(true)
+        await getCurrentUser()
+        window.location.href = '/dashboard'
+      } catch (error) {
+        signingIn.set(false)
+      }
+    }
+  })()
+</script>
+
+<Button on:click={login}>Sign in</Button>
+```
+
 ### OAC - Signing API Requests
 
 Since CloudFront OAC protects the SSR Lambda, API requests need SHA256 signing:
@@ -228,9 +353,20 @@ Since CloudFront OAC protects the SSR Lambda, API requests need SHA256 signing:
 ```ts
 import { Sha256 } from '@aws-crypto/sha256-browser'
 import { fetchAuthSession } from 'aws-amplify/auth'
+import { user } from '$lib/stores/user'
+import { loading } from '$lib/stores/ui'
+import { get } from 'svelte/store'
 
 export async function prefetch(payload?: any): Promise<{ headers: Headers }> {
-  await fetchAuthSession({ forceRefresh: true })
+  const res = (await fetchAuthSession({ forceRefresh: true })).tokens?.idToken
+
+  if (get(user).tokenRefreshAt * 1000 - Date.now() <= 0) {
+    if (res?.payload.exp) {
+      user.set({ ...get(user), tokenRefreshAt: res?.payload.exp })
+      loading.set(true)
+    }
+    loading.set(false)
+  }
 
   if (payload) {
     const sha256 = new Sha256()
@@ -244,10 +380,39 @@ export async function prefetch(payload?: any): Promise<{ headers: Headers }> {
 }
 ```
 
-Usage:
-- GET: `await prefetch()` - just refreshes session
-- POST JSON: `const { headers } = await prefetch(JSON.stringify(body))`
-- POST FormData: compute SHA256 of URL-encoded payload
+**Usage - GET requests:**
+
+```ts
+await prefetch() // just refreshes session
+```
+
+**Usage - POST with JSON:**
+
+```ts
+const body = JSON.stringify({ user: $user.username, selected: selected.value })
+const { headers } = await prefetch(body)
+const res = await fetch('api/something', { method: 'POST', body, headers })
+await res.json()
+```
+
+**Usage - POST with FormData (superforms):**
+
+```ts
+onSubmit({ customRequest }) {
+  customRequest(async (input: Parameters<SubmitFunction>[0]) => {
+    const formData = input.formData
+    const encodedPayload = new URLSearchParams(
+      formData as unknown as Record<string, string>
+    ).toString()
+    const { headers } = await prefetch(encodedPayload)
+    return fetch(input.action, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encodedPayload,
+    })
+  })
+}
+```
 
 ### SvelteKit Config
 
