@@ -24,7 +24,9 @@ const htmlLinks = Object.entries(htmlRaw).map(([p, raw]) => {
   const title = content.match(/<h1[^>]*>(.*?)<\/h1>/i)?.[1]
     || content.match(/<title>(.*?)<\/title>/i)?.[1]
     || file.split('/').pop().replace(/\.html$/, '')
-  return { url: file, title, tags: [] }
+  const tagsMatch = content.match(/<meta\s+name="tags"\s+content="([^"]*)"/i)
+  const tags = tagsMatch ? tagsMatch[1].split(',').map(t => t.trim()).filter(Boolean) : []
+  return { url: file, title, tags }
 })
 
 // Merge both sources and sort alphabetically by title
