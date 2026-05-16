@@ -8,14 +8,19 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && pagefind --site dist/client --output-path dist/client/pagefind",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate-types": "wrangler types"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^13.5.1",
     "astro": "^6.3.3",
     "github-markdown-css": "^5.9.0",
-    "pagefind": "^1.5.2"
+    "pagefind": "^1.5.2",
+    "wrangler": "^4.92.0"
   },
-  "devDependencies": {}
+  "overrides": {
+    "vite": "^7"
+  }
 }

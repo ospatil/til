@@ -2,6 +2,8 @@
 import { defineConfig } from 'astro/config';
 import { visit } from 'unist-util-visit';
 
+import cloudflare from '@astrojs/cloudflare';
+
 function rehypeRewriteMdLinks() {
   return (tree) => {
     visit(tree, 'element', (node) => {
@@ -16,4 +18,6 @@ export default defineConfig({
   markdown: {
     rehypePlugins: [rehypeRewriteMdLinks],
   },
+
+  adapter: cloudflare()
 });

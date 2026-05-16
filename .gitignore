@@ -1,6 +1,6 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
-# Created by https://www.toptal.com/developers/gitignore/api/astro,macos,node
-# Edit at https://www.toptal.com/developers/gitignore?templates=astro,macos,node
+# Created by https://www.toptal.com/developers/gitignore/api/node,macos,astro
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,astro
 
 ### Astro ###
 # Gitignore template for Astro projects
@@ -180,7 +180,11 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-# End of https://www.toptal.com/developers/gitignore/api/astro,macos,node
+# End of https://www.toptal.com/developers/gitignore/api/node,macos,astro
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
+
+# Wrangler
+.wrangler/
+worker-configuration.d.ts
