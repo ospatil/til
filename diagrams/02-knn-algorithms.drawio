@@ -1,0 +1,252 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="k-NN Algorithms" id="knn-algorithms">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="k-NN Index Algorithms Compared" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="350" y="10" width="300" height="30" as="geometry" />
+        </mxCell>
+        <!-- FLAT Section -->
+        <mxCell id="flat-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=10;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="320" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="flat-title" value="FLAT (Brute Force)" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="90" y="70" width="180" height="25" as="geometry" />
+        </mxCell>
+        <!-- FLAT dots - query vector -->
+        <mxCell id="fq" value="Q" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#dc2626;strokeColor=#dc2626;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="140" width="30" height="30" as="geometry" />
+        </mxCell>
+        <!-- FLAT - scattered dots -->
+        <mxCell id="fd1" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="110" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd2" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="150" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd3" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="120" y="100" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd4" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="200" y="180" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd5" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="250" y="120" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd6" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="280" y="170" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd7" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="fd8" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="230" y="210" width="12" height="12" as="geometry" />
+        </mxCell>
+        <!-- FLAT - comparison lines from Q to all dots -->
+        <mxCell id="fl1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=1;dashed=1;dashPattern=2 2;endArrow=none;opacity=50;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="155" as="sourcePoint" />
+            <mxPoint x="56" y="116" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fl2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=1;dashed=1;dashPattern=2 2;endArrow=none;opacity=50;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="155" as="sourcePoint" />
+            <mxPoint x="96" y="156" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fl3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=1;dashed=1;dashPattern=2 2;endArrow=none;opacity=50;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="155" as="sourcePoint" />
+            <mxPoint x="256" y="126" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- FLAT label -->
+        <mxCell id="flat-desc" value="Compares Q to EVERY vector.&#xa;100% recall. O(n) latency." style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="230" width="220" height="25" as="geometry" />
+        </mxCell>
+        <!-- HNSW Section -->
+        <mxCell id="hnsw-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;arcSize=10;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="370" y="60" width="340" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="hnsw-title" value="HNSW (Graph-based)" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="450" y="70" width="180" height="25" as="geometry" />
+        </mxCell>
+        <!-- HNSW Layer labels -->
+        <mxCell id="hl2" value="Layer 2 (coarse)" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="380" y="95" width="90" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="hl1" value="Layer 1" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="380" y="145" width="50" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="hl0" value="Layer 0 (fine)" style="text;html=1;align=left;verticalAlign=middle;fontSize=9;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="380" y="195" width="80" height="15" as="geometry" />
+        </mxCell>
+        <!-- HNSW nodes Layer 2 -->
+        <mxCell id="h2a" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="480" y="100" width="14" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="h2b" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="580" y="100" width="14" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="h2c" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="660" y="100" width="14" height="14" as="geometry" />
+        </mxCell>
+        <!-- HNSW edges Layer 2 -->
+        <mxCell id="he2a" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="494" y="107" as="sourcePoint" />
+            <mxPoint x="580" y="107" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="he2b" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="594" y="107" as="sourcePoint" />
+            <mxPoint x="660" y="107" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- HNSW nodes Layer 1 -->
+        <mxCell id="h1a" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="460" y="150" width="14" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="h1b" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="530" y="150" width="14" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="h1c" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="600" y="150" width="14" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="h1d" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="670" y="150" width="14" height="14" as="geometry" />
+        </mxCell>
+        <!-- HNSW edges Layer 1 -->
+        <mxCell id="he1a" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="474" y="157" as="sourcePoint" />
+            <mxPoint x="530" y="157" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="he1b" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="544" y="157" as="sourcePoint" />
+            <mxPoint x="600" y="157" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="he1c" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="614" y="157" as="sourcePoint" />
+            <mxPoint x="670" y="157" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- HNSW nodes Layer 0 (more dense) -->
+        <mxCell id="h0a" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="440" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="h0b" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="480" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="h0c" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="520" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="h0d" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="560" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="h0e" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="600" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="h0f" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="640" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="h0g" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="680" y="200" width="12" height="12" as="geometry" />
+        </mxCell>
+        <!-- HNSW vertical connections (layer traversal) -->
+        <mxCell id="hv1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;dashed=1;endArrow=block;endFill=1;opacity=60;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="487" y="114" as="sourcePoint" />
+            <mxPoint x="470" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hv2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;dashed=1;endArrow=block;endFill=1;opacity=60;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="164" as="sourcePoint" />
+            <mxPoint x="526" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- HNSW description -->
+        <mxCell id="hnsw-desc" value="Traverses graph layers top→bottom.&#xa;~95-99% recall. O(log n) latency." style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="230" width="250" height="25" as="geometry" />
+        </mxCell>
+        <!-- IVF Section -->
+        <mxCell id="ivf-box" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;arcSize=10;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="740" y="60" width="320" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="ivf-title" value="IVF (Partition-based)" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="820" y="70" width="180" height="25" as="geometry" />
+        </mxCell>
+        <!-- IVF clusters -->
+        <mxCell id="c1" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="770" y="100" width="100" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="880" y="95" width="90" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="840" y="160" width="110" height="80" as="geometry" />
+        </mxCell>
+        <!-- IVF dots in clusters -->
+        <mxCell id="iv1" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="800" y="125" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv2" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="830" y="135" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv3" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="810" y="150" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv4" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="910" y="115" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv5" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#9673a6;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="930" y="135" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv6" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d6b656;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="875" y="185" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv7" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d6b656;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="900" y="200" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iv8" value="" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d6b656;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="920" y="185" width="10" height="10" as="geometry" />
+        </mxCell>
+        <!-- IVF query -->
+        <mxCell id="ivq" value="Q" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#dc2626;strokeColor=#dc2626;fontColor=#ffffff;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="175" width="25" height="25" as="geometry" />
+        </mxCell>
+        <!-- IVF arrow to nearest cluster -->
+        <mxCell id="iva1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="980" y="188" as="sourcePoint" />
+            <mxPoint x="950" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- IVF cluster labels -->
+        <mxCell id="cl1" value="nlist=3" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#9673a6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="980" y="100" width="60" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="cl2" value="nprobes=1" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#dc2626;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="970" y="210" width="70" height="15" as="geometry" />
+        </mxCell>
+        <!-- IVF description -->
+        <mxCell id="ivf-desc" value="Only searches nearest cluster(s).&#xa;Tunable recall via nprobes. Lower memory." style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="780" y="230" width="260" height="25" as="geometry" />
+        </mxCell>
+        <!-- Bottom comparison bar -->
+        <mxCell id="comp" value="&lt;table style='font-size:11px;'&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;FLAT&lt;/th&gt;&lt;th&gt;HNSW&lt;/th&gt;&lt;th&gt;IVF&lt;/th&gt;&lt;th&gt;IVFPQ&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;Recall&lt;/b&gt;&lt;/td&gt;&lt;td&gt;100%&lt;/td&gt;&lt;td&gt;~95-99%&lt;/td&gt;&lt;td&gt;Tunable&lt;/td&gt;&lt;td&gt;Lower&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;Latency&lt;/b&gt;&lt;/td&gt;&lt;td&gt;High&lt;/td&gt;&lt;td&gt;Low&lt;/td&gt;&lt;td&gt;Medium&lt;/td&gt;&lt;td&gt;Low&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;Memory&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Low&lt;/td&gt;&lt;td&gt;High&lt;/td&gt;&lt;td&gt;Medium&lt;/td&gt;&lt;td&gt;Lowest&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;b&gt;Training&lt;/b&gt;&lt;/td&gt;&lt;td&gt;None&lt;/td&gt;&lt;td&gt;None&lt;/td&gt;&lt;td&gt;Required&lt;/td&gt;&lt;td&gt;Required&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="text;html=1;align=center;verticalAlign=middle;fillColor=#f8fafc;strokeColor=#e2e8f0;rounded=1;sketch=1;curveFitting=1;jiggle=2;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="280" width="700" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

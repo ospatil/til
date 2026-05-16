@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="MCP Lambda Layer" id="mcp-lambda-layer">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="MCP Server as Lambda Layer (STDIO Transport)" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="450" height="30" as="geometry" />
+        </mxCell>
+        <!-- Lambda Execution Environment -->
+        <mxCell id="env" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#4f46e5;strokeWidth=2;arcSize=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="60" width="650" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="env-label" value="Lambda Execution Environment" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="140" y="70" width="220" height="20" as="geometry" />
+        </mxCell>
+        <!-- Client Lambda -->
+        <mxCell id="client" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="150" y="100" width="280" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="client-label" value="Client Lambda (handler)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="170" y="110" width="180" height="20" as="geometry" />
+        </mxCell>
+        <!-- Agent Logic -->
+        <mxCell id="agent" value="Agent Logic&#xa;(Strands SDK)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="180" y="140" width="120" height="50" as="geometry" />
+        </mxCell>
+        <!-- MCP Client -->
+        <mxCell id="mcp-client" value="MCP Client&#xa;(StdioServerParameters)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="180" y="200" width="160" height="50" as="geometry" />
+        </mxCell>
+        <!-- Arrow agent to mcp-client -->
+        <mxCell id="a1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="agent" target="mcp-client" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Lambda Layer -->
+        <mxCell id="layer" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="490" y="100" width="250" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-label" value="Lambda Layer (/opt/)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="510" y="110" width="160" height="20" as="geometry" />
+        </mxCell>
+        <!-- MCP Server -->
+        <mxCell id="mcp-server" value="MCP Server&#xa;(FastMCP)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="530" y="140" width="130" height="50" as="geometry" />
+        </mxCell>
+        <!-- Tools -->
+        <mxCell id="tool1" value="search_docs()" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="205" width="100" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="tool2" value="lookup_api()" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="635" y="205" width="90" height="35" as="geometry" />
+        </mxCell>
+        <!-- Arrow server to tools -->
+        <mxCell id="a2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="mcp-server" target="tool1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="mcp-server" target="tool2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- STDIO Arrow (bidirectional) -->
+        <mxCell id="stdio" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=3;endArrow=block;endFill=1;startArrow=block;startFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="225" as="sourcePoint" />
+            <mxPoint x="530" y="165" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <!-- STDIO Label -->
+        <mxCell id="stdio-label" value="stdin / stdout&#xa;(STDIO transport)" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="370" y="170" width="130" height="30" as="geometry" />
+        </mxCell>
+        <!-- subprocess label -->
+        <mxCell id="subprocess" value="spawned as subprocess" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="380" y="200" width="130" height="15" as="geometry" />
+        </mxCell>
+        <!-- Benefits -->
+        <mxCell id="benefits" value="✓ No network overhead  ✓ No port management  ✓ Process lifecycle = connection lifecycle" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#16a34a;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="300" width="500" height="20" as="geometry" />
+        </mxCell>
+        <!-- Invocation arrow -->
+        <mxCell id="invoke" value="" style="shape=flexArrow;sketch=1;curveFitting=1;jiggle=2;fillColor=#4f46e5;strokeColor=#4f46e5;endWidth=8;endSize=4;width=4;opacity=60;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="180" as="sourcePoint" />
+            <mxPoint x="150" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="invoke-label" value="Lambda&#xa;Invoke" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#4f46e5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="195" width="60" height="25" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

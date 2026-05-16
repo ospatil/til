@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Defense in Depth" id="defense-in-depth">
+    <mxGraphModel dx="900" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Title -->
+        <mxCell id="title" value="Defense-in-Depth for Generative AI" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="250" y="10" width="350" height="30" as="geometry" />
+        </mxCell>
+        <!-- Layer 6 (outermost) - Network -->
+        <mxCell id="l6" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="800" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="l6-label" value="① NETWORK — VPC Endpoints (PrivateLink), no public internet" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="70" y="55" width="400" height="20" as="geometry" />
+        </mxCell>
+        <!-- Layer 5 - Identity -->
+        <mxCell id="l5" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff7ed;strokeColor=#ea580c;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="100" y="85" width="700" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="l5-label" value="② IDENTITY — IAM roles per use-case, least privilege" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#ea580c;" vertex="1" parent="1">
+          <mxGeometry x="120" y="90" width="360" height="20" as="geometry" />
+        </mxCell>
+        <!-- Layer 4 - Input -->
+        <mxCell id="l4" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fefce8;strokeColor=#ca8a04;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="150" y="120" width="600" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="l4-label" value="③ INPUT — Guardrails content filters + custom pre-processing" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#ca8a04;" vertex="1" parent="1">
+          <mxGeometry x="170" y="125" width="380" height="20" as="geometry" />
+        </mxCell>
+        <!-- Layer 3 - Model -->
+        <mxCell id="l3" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ecfdf5;strokeColor=#16a34a;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="200" y="155" width="500" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="l3-label" value="④ MODEL — Denied topics + grounding checks" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="220" y="160" width="320" height="20" as="geometry" />
+        </mxCell>
+        <!-- Layer 2 - Output -->
+        <mxCell id="l2" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;arcSize=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="190" width="400" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="l2-label" value="⑤ OUTPUT — Guardrails + post-processing Lambda" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#4f46e5;" vertex="1" parent="1">
+          <mxGeometry x="270" y="195" width="340" height="20" as="geometry" />
+        </mxCell>
+        <!-- Layer 1 (innermost) - Audit -->
+        <mxCell id="l1" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f5f3ff;strokeColor=#7c3aed;arcSize=10;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="300" y="225" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="l1-label" value="⑥ AUDIT — CloudTrail + invocation logs + CloudWatch" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#7c3aed;" vertex="1" parent="1">
+          <mxGeometry x="310" y="235" width="280" height="20" as="geometry" />
+        </mxCell>
+        <!-- FM in center -->
+        <mxCell id="fm" value="Foundation&#xa;Model" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#7c3aed;strokeColor=#7c3aed;fontColor=#ffffff;fontStyle=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="390" y="265" width="120" height="45" as="geometry" />
+        </mxCell>
+        <!-- Request flow arrow -->
+        <mxCell id="req" value="Request →" style="text;html=1;align=right;verticalAlign=middle;fontSize=10;fontColor=#dc2626;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="270" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="resp" value="← Response" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#4f46e5;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="270" width="80" height="20" as="geometry" />
+        </mxCell>
+        <!-- Service annotations on right -->
+        <mxCell id="svc1" value="PrivateLink" style="text;html=1;align=right;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="720" y="55" width="80" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="svc2" value="IAM, SCP" style="text;html=1;align=right;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="680" y="90" width="70" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="svc3" value="Guardrails, Comprehend" style="text;html=1;align=right;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="600" y="125" width="140" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="svc4" value="Guardrails policies" style="text;html=1;align=right;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="570" y="160" width="120" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="svc5" value="Lambda, Guardrails" style="text;html=1;align=right;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="530" y="195" width="120" height="15" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

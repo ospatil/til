@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="GenAI Gateway" id="genai-gateway">
+    <mxGraphModel dx="900" dy="550" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="GenAI Gateway Pattern" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="310" y="10" width="240" height="30" as="geometry" />
+        </mxCell>
+        <!-- Team Apps -->
+        <mxCell id="t1" value="Team A" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="70" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="Team B" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="140" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="Team C" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="210" width="80" height="40" as="geometry" />
+        </mxCell>
+        <!-- API Gateway -->
+        <mxCell id="apigw" value="API Gateway&#xa;• Auth (Cognito)&#xa;• Rate limiting&#xa;• Request validation" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;align=left;spacingLeft=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="160" y="80" width="160" height="100" as="geometry" />
+        </mxCell>
+        <!-- Routing Lambda -->
+        <mxCell id="router" value="Routing Lambda&#xa;(AppConfig rules)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="100" width="140" height="60" as="geometry" />
+        </mxCell>
+        <!-- Models -->
+        <mxCell id="m1" value="Claude" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="600" y="55" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="Nova Pro" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="600" y="110" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="Nova Micro" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="600" y="165" width="90" height="40" as="geometry" />
+        </mxCell>
+        <!-- Bedrock label -->
+        <mxCell id="bedrock" value="Amazon Bedrock" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="595" y="40" width="100" height="15" as="geometry" />
+        </mxCell>
+        <!-- Observability -->
+        <mxCell id="obs" value="Observability&#xa;• X-Ray traces&#xa;• CloudWatch metrics&#xa;• Invocation logs&#xa;• Cost per team" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;fontColor=#1e1b4b;align=left;spacingLeft=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="300" y="240" width="150" height="100" as="geometry" />
+        </mxCell>
+        <!-- Arrows teams to APIGW -->
+        <mxCell id="at1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="t1" target="apigw" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="at2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="t2" target="apigw" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="at3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="t3" target="apigw" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Arrow APIGW to Router -->
+        <mxCell id="ar" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="apigw" target="router" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Arrows Router to Models -->
+        <mxCell id="rm1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="router" target="m1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rm2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="router" target="m2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rm3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="router" target="m3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Arrow to observability -->
+        <mxCell id="ao" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" edge="1" source="router" target="obs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Streaming label -->
+        <mxCell id="stream" value="← streaming response (WebSocket/SSE)" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#9673a6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="560" y="210" width="200" height="15" as="geometry" />
+        </mxCell>
+        <!-- Benefits -->
+        <mxCell id="benefits" value="Single entry point • Model switching without code changes • Per-team cost allocation • Unified guardrails" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#4f46e5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="130" y="360" width="600" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

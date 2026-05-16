@@ -11,7 +11,9 @@
     "build": "astro build && pagefind --site dist/client --output-path dist/client/pagefind",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "diagrams:export": "./scripts/export-diagrams.sh",
+    "diagrams:watch": "fswatch -o diagrams/*.drawio | xargs -n1 -I{} ./scripts/export-diagrams.sh"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.5.1",

@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Bedrock Agent" id="bedrock-agent">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Bedrock Agent Orchestration" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="320" y="10" width="300" height="30" as="geometry" />
+        </mxCell>
+        <!-- User -->
+        <mxCell id="user" value="User" style="shape=actor;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;" vertex="1" parent="1">
+          <mxGeometry x="30" y="140" width="50" height="70" as="geometry" />
+        </mxCell>
+        <!-- Agent -->
+        <mxCell id="agent" value="Bedrock Agent&#xa;(ReAct Orchestration)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="150" y="130" width="180" height="80" as="geometry" />
+        </mxCell>
+        <!-- Arrow user to agent -->
+        <mxCell id="ua" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="user" target="agent" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Action Group 1 -->
+        <mxCell id="ag1" value="Action Group 1&#xa;Calendar API" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="430" y="60" width="130" height="55" as="geometry" />
+        </mxCell>
+        <!-- Action Group 2 -->
+        <mxCell id="ag2" value="Action Group 2&#xa;Email API" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="430" y="140" width="130" height="55" as="geometry" />
+        </mxCell>
+        <!-- Knowledge Base -->
+        <mxCell id="kb" value="Knowledge Base&#xa;(company policies)" style="shape=cylinder3;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;size=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="220" width="140" height="70" as="geometry" />
+        </mxCell>
+        <!-- Lambda icons -->
+        <mxCell id="lam1" value="λ" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;fontColor=#ffffff;fontStyle=1;fontSize=16;arcSize=30;" vertex="1" parent="1">
+          <mxGeometry x="620" y="70" width="40" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="lam2" value="λ" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#16a34a;strokeColor=#16a34a;fontColor=#ffffff;fontStyle=1;fontSize=16;arcSize=30;" vertex="1" parent="1">
+          <mxGeometry x="620" y="150" width="40" height="35" as="geometry" />
+        </mxCell>
+        <!-- External APIs -->
+        <mxCell id="api1" value="Calendar&#xa;Service" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="60" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="api2" value="Email&#xa;Service" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="140" width="90" height="50" as="geometry" />
+        </mxCell>
+        <!-- Arrows from agent -->
+        <mxCell id="a1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="agent" target="ag1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="agent" target="ag2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="agent" target="kb" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Arrows AG to Lambda -->
+        <mxCell id="a4" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="ag1" target="lam1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="ag2" target="lam2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Arrows Lambda to APIs -->
+        <mxCell id="a6" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="lam1" target="api1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="lam2" target="api2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Guardrails -->
+        <mxCell id="guard" value="Guardrails" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fef2f2;strokeColor=#dc2626;fontColor=#dc2626;fontStyle=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="180" y="240" width="100" height="35" as="geometry" />
+        </mxCell>
+        <!-- Arrow guardrails -->
+        <mxCell id="ag" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" edge="1" source="agent" target="guard" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Response -->
+        <mxCell id="resp" value="Response&#xa;+ Citations" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="150" y="310" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ar" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="guard" target="resp" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Labels -->
+        <mxCell id="lbl1" value="OpenAPI&#xa;schema" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="370" y="90" width="55" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl2" value="tool selection&#xa;via reasoning" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="340" y="155" width="80" height="25" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Model Cascading" id="model-cascading">
+    <mxGraphModel dx="900" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="350" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Model Cascading — Route by Complexity" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="240" y="10" width="380" height="30" as="geometry" />
+        </mxCell>
+        <!-- User Query -->
+        <mxCell id="query" value="User&#xa;Query" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;fontStyle=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="30" y="130" width="90" height="60" as="geometry" />
+        </mxCell>
+        <!-- Classifier -->
+        <mxCell id="classifier" value="Complexity&#xa;Classifier" style="rhombus;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="110" width="130" height="100" as="geometry" />
+        </mxCell>
+        <!-- Arrow query to classifier -->
+        <mxCell id="qc" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="query" target="classifier" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Nova Micro -->
+        <mxCell id="micro" value="Nova Micro&#xa;(cheapest)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="420" y="50" width="120" height="50" as="geometry" />
+        </mxCell>
+        <!-- Nova Pro -->
+        <mxCell id="pro" value="Nova Pro&#xa;(balanced)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="420" y="130" width="120" height="50" as="geometry" />
+        </mxCell>
+        <!-- Claude -->
+        <mxCell id="claude" value="Claude Opus&#xa;(highest quality)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="420" y="210" width="120" height="50" as="geometry" />
+        </mxCell>
+        <!-- Arrows from classifier -->
+        <mxCell id="cm" value="simple&#xa;(~60%)" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="classifier" target="micro" parent="1">
+          <mxGeometry x="0.1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cp" value="medium&#xa;(~25%)" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="classifier" target="pro" parent="1">
+          <mxGeometry x="0.1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cc" value="complex&#xa;(~15%)" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="classifier" target="claude" parent="1">
+          <mxGeometry x="0.1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <!-- Response -->
+        <mxCell id="resp" value="Response" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;fontStyle=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="640" y="130" width="90" height="50" as="geometry" />
+        </mxCell>
+        <!-- Arrows to response -->
+        <mxCell id="mr" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="micro" target="resp" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pr" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="pro" target="resp" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cr" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="claude" target="resp" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Cost annotation -->
+        <mxCell id="cost" value="Result: 40-70% cost savings&#xa;by routing majority to cheaper models" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="280" y="290" width="300" height="30" as="geometry" />
+        </mxCell>
+        <!-- Classifier note -->
+        <mxCell id="cnote" value="rules-based, small model,&#xa;or keyword/length heuristics" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="175" y="215" width="160" height="25" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
