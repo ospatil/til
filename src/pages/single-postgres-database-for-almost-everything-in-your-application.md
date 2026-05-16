@@ -7,4 +7,4 @@ tags: [database,postgres]
 
 [https://x.com/imsh4yy/status/1809032371586367695](https://x.com/imsh4yy/status/1809032371586367695)
 
-![postgres.png](postgres.png)
+![postgres.png](/images/postgres.png)

@@ -9,7 +9,7 @@ Great decision matrix for choosing a state management solution for React
 
 Source: [https://www.reddit.com/r/reactjs/comments/1gio4kj/comment/lv6nn54/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button](https://www.reddit.com/r/reactjs/comments/1gio4kj/comment/lv6nn54/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
 
-![react-state-management-matrix.png](react-state-management-matrix.png)
+![react-state-management-matrix.png](/images/react-state-management-matrix.png)
 
 Also, for forms [https://www.react-hook-form.com/](https://www.react-hook-form.com/) with Zod seems to be the best choice.
 

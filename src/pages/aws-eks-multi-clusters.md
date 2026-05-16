@@ -19,4 +19,4 @@ https://medium.com/@ajaypan2/multi-region-eks-cluster-for-active-failover-scenar
 
 You think using a single K8s is complex? It is. But you can also deploy to multiple clusters. This is not for most people, but, AWS Load Balancer Controller v2.10+ introduced support for cross-cluster traffic. Before, load balancing traffic accross clusters using the same LBs was very difficult. Now, you have native support. A new parameter, multiClusterTargetGroup, allows the NLB to handle targets across multiple clusters. It's as simple as load balacing in a single cluster. Why would you ever do this? - You like complexity - Blue-green upgrades - Cluster upgrades and add-on updates - Workload resilience - Failover and disaster recovery If you are interested in the steps to configure it, they are detailed in the blog post: Building Resilient Multi-cluster Applications with Amazon EKS, Part 1: Implementing Cross-cluster Load Balancing with NLB.
 
-![eks-alb-multi-cluster.jpeg](eks-alb-multi-cluster.jpeg)
+![eks-alb-multi-cluster.jpeg](/images/eks-alb-multi-cluster.jpeg)
