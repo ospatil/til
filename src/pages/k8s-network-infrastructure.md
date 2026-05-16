@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [kubernetes, networking]
 ---
 
 # Kubernetes Network Infrastructure — L2, BGP, and On-Prem Load Balancing

@@ -13,7 +13,10 @@ const { frontmatter } = Astro.props
     <title>{frontmatter?.title || 'Document'}</title>
   </head>
   <body>
-    <article class="markdown-body">
+    <article class="markdown-body" data-pagefind-body>
+      {frontmatter?.tags?.map(tag => (
+        <span data-pagefind-filter="tag" class="visually-hidden">{tag}</span>
+      ))}
       <slot />
     </article>
   </body>
@@ -30,5 +33,16 @@ const { frontmatter } = Astro.props
     .markdown-body {
       padding: 1rem;
     }
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>

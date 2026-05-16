@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [kubernetes, networking]
 ---
 
 # Kubernetes Services and DNS Guide

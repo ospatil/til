@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [aws, genai]
 ---
 
 # AWS Generative AI Architecture Quick Reference

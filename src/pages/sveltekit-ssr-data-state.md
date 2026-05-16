@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [svelte, sveltekit, ssr]
 ---
 
 # SvelteKit SSR, Data Loading & State

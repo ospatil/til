@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [aws, kubernetes, networking]
 ---
 
 # EKS Networking Guide

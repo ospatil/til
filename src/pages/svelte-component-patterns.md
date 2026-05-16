@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [svelte, ui, tailwind]
 ---
 
 # Svelte 5 UI Component Libraries & Patterns

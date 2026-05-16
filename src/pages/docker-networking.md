@@ -1,5 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
+tags: [docker, networking]
 ---
 
 # Docker Networking Guide
