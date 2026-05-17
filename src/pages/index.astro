@@ -32,6 +32,19 @@ const htmlLinks = Object.entries(htmlRaw).map(([p, raw]) => {
 // Merge both sources and sort alphabetically by title
 const links = [...mdLinks, ...htmlLinks].sort((a, b) => a.title.localeCompare(b.title))
 
+// Split into guides and TILs
+const guides = links.filter(l => l.tags.includes('guide'))
+const tils = links.filter(l => !l.tags.includes('guide'))
+
+// Group TILs by first letter
+const tilGroups = tils.reduce((acc, item) => {
+  const letter = (item.title[0] || '#').toUpperCase()
+  if (!acc[letter]) acc[letter] = []
+  acc[letter].push(item)
+  return acc
+}, {} as Record<string, typeof tils>)
+const sortedLetters = Object.keys(tilGroups).sort()
+
 // Collect all unique tags sorted alphabetically
 const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
 ---
@@ -64,18 +77,43 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
         <button class="tag active" data-tag="">All</button>
         {allTags.map(tag => <button class="tag" data-tag={tag}>{tag}</button>)}
       </nav>
-      <ul>
-        {links.map(p => (
-          <li data-tags={p.tags.join(',')}>
-            <a href={p.url}>{p.title}</a>
-            {p.tags.length > 0 && (
-              <span class="item-tags">
-                {p.tags.map(t => <button class="item-tag" data-filter-tag={t}>{t}</button>)}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+
+      <section class="guides-section">
+        <h2 class="section-title sticky-section-title">Guides</h2>
+        <ul class="guides-list">
+          {guides.map(p => (
+            <li data-tags={p.tags.join(',')}>
+              <a href={p.url}>{p.title}</a>
+              {p.tags.length > 0 && (
+                <span class="item-tags">
+                  {p.tags.filter(t => t !== 'guide').map(t => <button class="item-tag" data-filter-tag={t}>{t}</button>)}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="tils-section">
+        <h2 class="section-title">Notes</h2>
+        <div class="tils-list">
+          {sortedLetters.map(letter => (
+            <>
+              <h3 class="letter-heading" data-letter={letter}>{letter}</h3>
+              {tilGroups[letter].map(p => (
+                <div class="til-item" data-tags={p.tags.join(',')} data-letter-group={letter}>
+                  <a href={p.url}>{p.title}</a>
+                  {p.tags.length > 0 && (
+                    <span class="item-tags">
+                      {p.tags.map(t => <button class="item-tag" data-filter-tag={t}>{t}</button>)}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </>
+          ))}
+        </div>
+      </section>
     </main>
     <link href="/pagefind/pagefind-component-ui.css" rel="stylesheet">
     <script src="/pagefind/pagefind-component-ui.js" type="module" is:inline></script>
@@ -85,7 +123,10 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
         const panel = document.getElementById('tag-panel');
         const badge = document.querySelector('.active-filter-badge');
         const navButtons = document.querySelectorAll('.tags .tag');
-        const items = document.querySelectorAll('ul li[data-tags]');
+        const items = document.querySelectorAll('[data-tags]');
+        const letterHeadings = document.querySelectorAll('.letter-heading[data-letter]');
+        const guidesSection = document.querySelector('.guides-section');
+        const tilsSection = document.querySelector('.tils-section');
 
         toggle.addEventListener('click', () => {
           const isOpen = panel.classList.contains('open');
@@ -98,6 +139,7 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
           navButtons.forEach(b => b.classList.remove('active'));
           const activeBtn = document.querySelector(`.tags .tag[data-tag="${tag}"]`);
           if (activeBtn) activeBtn.classList.add('active');
+
           items.forEach(item => {
             if (!tag) {
               item.style.display = '';
@@ -106,6 +148,23 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
               item.style.display = tags.includes(tag) ? '' : 'none';
             }
           });
+
+          // Hide empty letter headings
+          letterHeadings.forEach(heading => {
+            const letter = heading.dataset.letter;
+            const groupItems = document.querySelectorAll(`.til-item[data-letter-group="${letter}"]`);
+            const hasVisible = [...groupItems].some(el => el.style.display !== 'none');
+            heading.style.display = (!tag || hasVisible) ? '' : 'none';
+          });
+
+          // Hide guides section if no visible items
+          if (tag) {
+            const visibleGuides = guidesSection.querySelectorAll('[data-tags]:not([style*="display: none"])');
+            guidesSection.style.display = visibleGuides.length > 0 ? '' : 'none';
+          } else {
+            guidesSection.style.display = '';
+          }
+
           if (tag) {
             badge.textContent = tag;
             badge.hidden = false;
@@ -147,7 +206,7 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
     padding: 2.5rem 1rem;
   }
   .container {
-    max-width: 42rem;
+    max-width: 60rem;
     margin: 0 auto;
   }
   h1 {
@@ -243,13 +302,69 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
     border-color: var(--accent);
     color: white;
   }
+  .section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 1.5rem 0 0.5rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sticky-section-title {
+    position: sticky;
+    top: 0;
+    background: var(--background);
+    z-index: 2;
+    padding-top: 0.375rem;
+  }
+  .guides-section .section-title {
+    margin-top: 0.5rem;
+  }
+  .tils-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.0625rem;
+  }
+  .letter-heading {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    margin: 0.75rem 0 0.25rem;
+    padding: 0.25rem 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    background: var(--background);
+    z-index: 1;
+  }
+  .til-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .til-item a {
+    display: block;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius);
+    color: var(--foreground);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    flex: 1;
+  }
+  .til-item a:hover {
+    background: var(--muted);
+    border-color: var(--border);
+    color: var(--accent);
+  }
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
+    gap: 0.0625rem;
   }
   li {
     display: flex;
@@ -258,7 +373,7 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
   }
   li a {
     display: block;
-    padding: 0.625rem 0.875rem;
+    padding: 0.5rem 0.875rem;
     border-radius: var(--radius);
     color: var(--foreground);
     text-decoration: none;
@@ -270,6 +385,9 @@ const allTags = [...new Set(links.flatMap(l => l.tags))].sort()
     background: var(--muted);
     border-color: var(--border);
     color: var(--accent);
+  }
+  .guides-list li a {
+    font-weight: 500;
   }
   .item-tags {
     display: flex;
