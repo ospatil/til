@@ -411,7 +411,7 @@ Before dup:
 
 After: new_fd = dup(3)  →  returns fd 4
   fd 3 ──┐
-          ├──► [Socket object]  (same object, shared position, shared state)
+         ├──► [Socket object]  (same object, shared position, shared state)
   fd 4 ──┘
 ```
 
@@ -463,7 +463,7 @@ if (fork() == 0) {      // Child 2: runs "grep foo"
 
 | User | What they do |
 |------|-------------|
-| **Shells** (bash, zsh) | I/O redirection (`>`, `<`, `|`) — swap stdin/stdout/stderr before exec |
+| **Shells** (bash, zsh) | I/O redirection (`>`, `<`, `\|`) — swap stdin/stdout/stderr before exec |
 | **Daemons** | Redirect stdin/stdout/stderr to /dev/null or log files after daemonizing |
 | **inetd/systemd** | Accept a network connection, dup2 the socket fd onto fd 0 and 1, exec the handler — handler just reads stdin/writes stdout |
 | **Logging** | dup stderr to a log file so all error output goes to both |
@@ -844,11 +844,11 @@ UDS:
 ```
 Client                         Server
   │                              │  (listening, accept queue empty)
-  │──── SYN (seq=x) ──────────►│  → SYN queue (half-open)
+  │──── SYN (seq=x) ────────────►│  → SYN queue (half-open)
   │                              │
-  │◄─── SYN-ACK (seq=y,ack=x+1)│
+  │◄─── SYN-ACK (seq=y,ack=x+1)  │
   │                              │
-  │──── ACK (ack=y+1) ─────────►│  → moved to accept queue
+  │──── ACK (ack=y+1) ──────────►│  → moved to accept queue
   │                              │
   │    ESTABLISHED               │  accept() returns new fd
 ```
@@ -1210,19 +1210,19 @@ This solves the "regular files are always ready" limitation from section 1 — i
 
 ```
     Userspace                          Kernel
-┌─────────────────┐              ┌─────────────────┐
+┌──────────────────┐              ┌─────────────────┐
 │ Submission Queue │    mmap'd    │                 │
-│   Ring (SQR)     │◄────shared───►  Kernel reads   │
-│                  │   memory     │  SQEs from here  │
-│  [SQE][SQE][SQE]│              │                 │
-└─────────────────┘              └─────────────────┘
+│   Ring (SQR)     │◄────shared──►│  Kernel reads   │
+│                  │   memory     │  SQEs from here │
+│  [SQE][SQE][SQE] │              │                 │
+└──────────────────┘              └─────────────────┘
 
-┌─────────────────┐              ┌─────────────────┐
+┌──────────────────┐              ┌─────────────────┐
 │ Completion Queue │    mmap'd    │                 │
 │   Ring (CQR)     │◄────shared───►  Kernel writes  │
-│                  │   memory     │  CQEs to here    │
-│  [CQE][CQE][CQE]│              │                 │
-└─────────────────┘              └─────────────────┘
+│                  │   memory     │  CQEs to here   │
+│  [CQE][CQE][CQE] │              │                 │
+└──────────────────┘              └─────────────────┘
 ```
 
 **Submission Queue Entry (SQE):** 64-byte struct — opcode, fd, buffer address, offset, length, user_data for correlation.
