@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="MCP vs A2A" id="mcp-a2a">
+    <mxGraphModel dx="920" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="920" pageHeight="330" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Agent Interoperability — MCP (agent ↔ tool) vs A2A (agent ↔ agent)" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="120" y="10" width="680" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="panelL" value="MCP — agent uses tools" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;dashed=1;verticalAlign=top;fontColor=#4f46e5;fontStyle=1;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="380" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="mAgent" value="Agent" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="80" y="150" width="100" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="mTools" value="Tools&#xa;(DB, API, files)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="270" y="148" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mEdge" value="MCP" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontStyle=1;fontColor=#16a34a;" edge="1" source="mAgent" target="mTools" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="panelR" value="A2A — agents collaborate" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;dashed=1;verticalAlign=top;fontColor=#4f46e5;fontStyle=1;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="460" y="60" width="430" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="aA" value="Agent A&#xa;(framework X)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="490" y="110" width="140" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="aB" value="Agent B&#xa;(framework Y / vendor)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="710" y="110" width="160" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="aEdge" value="A2A" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;startArrow=block;startFill=1;endArrow=block;endFill=1;fontSize=10;fontStyle=1;fontColor=#9673a6;" edge="1" source="aA" target="aB" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="aTools" value="MCP tools" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="500" y="200" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="aEdge2" value="MCP (internal)" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;fontSize=9;fontColor=#64748b;" edge="1" source="aA" target="aTools" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="aNote" value="Discovery • task delegation • messaging across frameworks/vendors" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="640" y="195" width="230" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="foot" value="MCP = how an agent uses a tool.   A2A = how one agent delegates to another — even across teams/frameworks. They compose." style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="60" y="292" width="800" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

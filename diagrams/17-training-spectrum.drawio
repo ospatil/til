@@ -1,0 +1,41 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="Training Spectrum" id="training-spectrum">
+    <mxGraphModel dx="960" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="340" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Training &amp; Customization Spectrum" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="560" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="grad" value="Provider-owned, costly  ──────────────────────────►  You can do, cheaper" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="120" y="52" width="720" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="pretrain" value="Pretraining&#xa;(base model)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="30" y="90" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cpt" value="Continued&#xa;Pre-Training" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="200" y="90" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sft" value="Instruction / SFT" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="370" y="90" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="align" value="Alignment&#xa;(RLHF / DPO)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="540" y="90" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="distill" value="Distillation&#xa;(student model)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="90" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="pretrain" target="cpt" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="cpt" target="sft" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="sft" target="align" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="s4" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="align" target="distill" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ladder" value="Adaptation ladder — start cheapest:&#xa;Prompt engineering  →  RAG / tools  →  Fine-tuning (LoRA)  →  Continued Pre-Training  →  Distillation" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="720" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="Most &quot;the model doesn't know X&quot; problems are RAG problems, not training problems." style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="120" y="285" width="720" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

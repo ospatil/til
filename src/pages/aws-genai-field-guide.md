@@ -3,14 +3,22 @@ layout: ../layouts/GistLayout.astro
 tags: [aws, genai, guide]
 ---
 
-# AWS Generative AI Architecture Quick Reference
+# AWS Generative AI Field Guide
 
-> Aligned with AWS Certified Generative AI Developer - Professional (AIP-C01) domains.
-> Focused on real-world architectural decisions and patterns.
+> A practitioner's field guide to designing and building generative AI on AWS.
+> Organized around the AWS Certified Generative AI Developer - Professional (AIP-C01) exam domains, with real-world depth that goes beyond the exam.
+> Sections marked **_Beyond exam scope_** add foundational or production depth not required for AIP-C01 - skip them if you're optimizing purely for the exam.
 
 ---
 
 ## Table of Contents
+
+**[Part 0: GenAI Foundations](#part-0-genai-foundations)** - _Beyond exam scope_ - the basics the rest of the guide assumes
+
+- [0.1 How LLMs Work](#01-how-llms-work) - tokens, embeddings, attention, context window + KV cache
+- [0.2 Training and Customization Spectrum](#02-training-and-customization-spectrum) - pretraining → SFT → RLHF/DPO → distillation
+- [0.3 Decoding and Inference Basics](#03-decoding-and-inference-basics) - sampling, temperature, TTFT, throughput
+- [0.4 Model Landscape Concepts](#04-model-landscape-concepts) - model size, dense vs MoE, knowledge cutoff, modalities
 
 **[Part 1: Decision Cheat Sheets](#part-1-decision-cheat-sheets)** - Quick-lookup comparison tables and decision trees
 
@@ -27,6 +35,15 @@ Sections flow from data infrastructure → model platforms → intelligent syste
 - [1.9 Cross-Account & Cross-Region](#19-cross-account--cross-region-bedrock-access-patterns) - inference profiles, multi-account patterns, data residency
 - [1.10 Security & Guardrails](#110-security--guardrails-selection) - threats, controls, defense-in-depth
 - [1.11 Cost Optimization](#111-cost-optimization-decisions) - caching, batching, cascading, provisioned throughput
+- [1.12 Multimodal GenAI](#112-multimodal-genai) - multimodal embeddings, RAG, generation (Nova Canvas/Reel/Sonic), image safety
+- [1.13 Advanced Data Processing and RAG](#113-advanced-data-processing-and-rag) - Bedrock Data Automation, Kendra GenAI Index, managed GraphRAG, contextual retrieval
+- [1.14 Amazon Q Family](#114-amazon-q-family) - Q Business, Q Developer, Q Apps, Q in QuickSight
+- [1.15 Latency-Optimized Inference and Throughput](#115-latency-optimized-inference-and-throughput) - speed and capacity levers
+- [1.16 Agent Interoperability with MCP and A2A](#116-agent-interoperability-with-mcp-and-a2a) - agent-to-tool vs agent-to-agent protocols
+- [1.17 Reasoning Models and Test-Time Compute](#117-reasoning-models-and-test-time-compute) - extended thinking, when to spend compute
+- [1.18 Structured Outputs and Tool Use](#118-structured-outputs-and-tool-use) - JSON schemas, function calling, Converse toolConfig
+- [1.19 Advanced Prompting and Reasoning Techniques](#119-advanced-prompting-and-reasoning-techniques) - self-consistency, ToT, step-back, chaining
+- [1.20 Hallucination Taxonomy and Red Teaming](#120-hallucination-taxonomy-and-red-teaming) - failure modes and adversarial testing
 
 **[Part 2: Scenario-Pattern Cards](#part-2-scenario-pattern-cards)** - Real-world architecture scenarios with full service flows
 
@@ -43,6 +60,85 @@ Sections flow from data infrastructure → model platforms → intelligent syste
 **[Part 4: Documentation Resource List](#part-4-documentation-resource-list)** - 52 curated public AWS documentation links with study order
 
 **[Part 5: From Theory to Practice](#part-5-from-theory-to-practice--specializing-an-llm-for-your-stack)** - How exam concepts translate to real implementation (coding assistant example)
+
+**[Appendix: Glossary and Acronyms](#appendix-glossary-and-acronyms)** - quick definitions for the dense terminology
+
+---
+
+## Part 0: GenAI Foundations
+
+> **_Beyond exam scope_** - this part explains the fundamentals the rest of the guide assumes. Skip it if you already think in tokens, embeddings, and attention.
+
+### 0.1 How LLMs Work
+
+![How LLMs Work - tokens to embeddings to attention to next-token prediction](/diagrams/16-llm-foundations.svg)
+
+A large language model is a next-token predictor. Everything else - chat, RAG, agents - is built on that one mechanic.
+
+| Concept | What it is | Why it matters in practice |
+|---------|-----------|----------------------------|
+| **Token** | Sub-word unit (~3/4 of a word). Models read and bill per token. | Token limits and per-token pricing flow from here; "100 words" ≠ "100 tokens" |
+| **Tokenizer** | Splits text into tokens (BPE-style); each model family has its own | Same text = different token counts across models; affects cost and context budgeting |
+| **Embedding** | A vector placing text in semantic space, so "near" = "similar in meaning" | The basis of vector search / RAG (see 1.2-1.4) |
+| **Attention / Transformer** | Each token attends to others to build context-aware meaning, layer by layer | Why models capture long-range meaning - and why compute grows with sequence length |
+| **Context window** | Max tokens (prompt + output) attended to at once | The hard budget you manage in RAG and chat (see 1.4) |
+| **KV cache** | The model's saved attention state ("keys/values") for already-processed tokens, so they aren't recomputed each step | Explains streaming, prompt caching (1.11), and why long prompts cost latency + memory |
+
+**The generation loop:** prompt → tokenize → embed → transformer layers (attention) → probability distribution over the vocabulary → sample one token → append → repeat until a stop condition. The first token is slow (process the whole prompt); later tokens are fast (KV cache). That is why **time-to-first-token** and **tokens/sec** are separate metrics (see 0.3, Domain 4).
+
+### 0.2 Training and Customization Spectrum
+
+![Training and Customization Spectrum - pretraining through alignment to adaptation](/diagrams/17-training-spectrum.svg)
+
+Models are built in stages, and you adapt them at the cheapest stage that solves your problem.
+
+| Stage | What happens | Who does it | Your lever |
+|-------|--------------|-------------|-----------|
+| **Pretraining** | Learn language/world knowledge from massive unlabeled corpora → a *base* model | Providers (huge cost) | Rarely you |
+| **Continued pre-training (CPT)** | Extend a base model with a domain corpus | You (Bedrock Custom Models) | Domain knowledge |
+| **Instruction / SFT** | Supervised fine-tuning on prompt→response pairs to follow instructions | Providers; you (fine-tuning) | Behavior / format |
+| **Alignment (RLHF / DPO / Constitutional AI)** | Tune to human preferences for helpfulness/harmlessness | Mostly providers | Rarely you - it's what makes chat models follow instructions |
+| **Distillation** | Train a small "student" to mimic a large "teacher" | You (Bedrock Distillation) | Cost / latency |
+
+**Adaptation ladder - always start at the top (cheapest):**
+
+```
+Prompt engineering          → no training; instructions + examples (Domain 1, 1.19)
+RAG / tools                 → no training; inject knowledge at runtime (1.1, 1.13)
+Fine-tuning (SFT/PEFT/LoRA) → change behavior/style with labeled pairs (1.6)
+Continued pre-training      → add domain knowledge with raw text (1.6)
+Distillation                → bake teacher behavior into a small model (1.6)
+```
+
+Rule of thumb: prompt → RAG → fine-tune → CPT, in that order. Most "the model doesn't know X" problems are RAG problems, not training problems.
+
+### 0.3 Decoding and Inference Basics
+
+How the model turns probabilities into text - the knobs you set at inference time.
+
+| Parameter | Controls | Low = | High = |
+|-----------|----------|-------|--------|
+| **temperature** | Randomness of sampling | Factual, deterministic (→0) | Creative, varied (0.7-1.0) |
+| **top_p** (nucleus) | Sample from smallest token set summing to p | Focused (0.1-0.5) | Diverse (0.9+) |
+| **top_k** | Limit to k most likely tokens | Predictable | Varied |
+| **max_tokens** | Output length cap (includes the thinking budget for reasoning models, see 1.17) | Short, cost-controlled | Long outputs |
+| **stop sequences** | Strings that end generation | - | - |
+
+**Two latency metrics (don't conflate):**
+- **Time-to-first-token (TTFT)** - prompt processing + first token; dominated by prompt length. Streaming hides it.
+- **Tokens/sec (throughput)** - generation speed after the first token; dominated by output length and model size.
+
+For determinism: `temperature=0` + pinned model version + pinned prompt (see Domain 5). Greedy decoding ≈ temperature 0.
+
+### 0.4 Model Landscape Concepts
+
+| Concept | What it means | Practical impact |
+|---------|---------------|------------------|
+| **Parameters / size** | Weight count (e.g., 8B, 70B); bigger ≈ more capable, slower, costlier | Drives the cascading decisions in 1.5 / 1.11 |
+| **Dense vs Mixture-of-Experts (MoE)** | Dense activates all weights per token; MoE routes to a few "expert" sub-networks | MoE = large-model quality at lower active compute (e.g., Mixtral, DeepSeek) |
+| **Knowledge cutoff** | Latest date in training data; model is blind to later events | Why RAG / tools / web grounding exist (Part 5) |
+| **Modalities** | Input/output types: text, image, audio, video | See 1.12 Multimodal |
+| **Base vs instruct/chat** | Base = raw predictor; instruct = aligned to follow prompts | Use instruct/chat for apps; base for fine-tuning |
 
 ---
 
@@ -91,7 +187,7 @@ Need RAG?
 
 ![k-NN Algorithms Compared](/diagrams/02-knn-algorithms.svg)
 
-Vector search in OpenSearch uses k-Nearest Neighbor (k-NN) algorithms to find vectors closest to a query vector. Understanding these algorithms is critical for choosing the right performance/accuracy trade-off.
+Vector search in OpenSearch uses k-Nearest Neighbor (k-NN) algorithms to find the vectors closest to a query vector. The core trade-off is **recall vs. cost**: *recall* is the fraction of the true nearest neighbors an algorithm actually returns (100% = it never misses one). Exact search gives perfect recall but compares against every vector; **approximate** algorithms (ANN) give up a little recall for large gains in latency and memory. The tables below compare the algorithms on recall, search latency, memory, and index build time - choosing the right one is choosing where you sit on that trade-off.
 
 #### Algorithms Compared
 
@@ -130,11 +226,15 @@ Vector search in OpenSearch uses k-Nearest Neighbor (k-NN) algorithms to find ve
 
 **Space types (distance metrics):**
 
+The *space type* is the function k-NN uses to measure how "close" two vectors are - it's the scoring rule behind every algorithm above. You set it in the same index `method` block as the algorithm and engine (see the config example below, where `space_type` sits alongside `name` and `engine`), and it must match what your **embedding model** was trained for (see 1.4). Picking the wrong metric silently degrades relevance.
+
 | Space Type | Use When | Notes |
 |-----------|----------|-------|
-| `l2` (Euclidean) | Default; general purpose | Measures straight-line distance between points |
-| `cosinesimil` (Cosine similarity) | Text embeddings, normalized vectors | Measures angle between vectors; magnitude-independent |
-| `innerproduct` (Dot product) | When vectors are pre-normalized | Fastest computation; equivalent to cosine on normalized vectors |
+| `l2` (Euclidean) | General-purpose default | Straight-line distance between points; sensitive to vector magnitude |
+| `cosinesimil` (Cosine similarity) | Text embeddings (the usual choice for RAG) | Compares direction, not length - ignores magnitude, so it captures semantic similarity well |
+| `innerproduct` (Dot product) | Vectors already normalized to unit length | Fastest to compute; gives the same ranking as cosine *when* vectors are normalized |
+
+**Rule of thumb:** for text-embedding RAG (Titan, Cohere), use `cosinesimil` - or `innerproduct` if you normalize vectors yourself for speed. Embedding model docs state the metric they expect; follow it, and use the same metric at index and query time.
 
 #### Algorithm Selection Decision Tree
 
@@ -238,7 +338,7 @@ At 100M docs → 400 GB. Memory-resident indexes become expensive.
 | **Binary quantization (BQ)** | Convert each dimension to single bit (>0 = 1, ≤0 = 0) | 32x | Moderate (5-15% loss) | Massive scale, coarse first-pass retrieval + reranker |
 | **Product quantization (PQ)** | Split vector into sub-vectors, quantize each to codebook entry | 8-32x | Moderate (tunable) | IVF indexes (IVFPQ in Faiss/OpenSearch) |
 | **Dimension truncation (post-hoc)** | Simply drop trailing dimensions from any embedding | Variable | Unpredictable (depends on model) | Only with Matryoshka-trained models; otherwise DO NOT use |
-| **Multi-vector (ColBERT-style)** | One vector per token instead of one per document. More vectors but each smaller. | Size increases but precision improves | Better recall | Precision-critical, latency-tolerant use cases |
+| **Multi-vector (ColBERT-style)** | Many small per-token vectors instead of one per chunk; scored by "late interaction" (sum of best token-to-token matches) | Increases storage - listed here as the opposite trade-off | Better recall/precision | Precision-critical, and storage/latency-tolerant |
 
 #### Technique Deep Dives
 
@@ -1476,7 +1576,7 @@ Some Bedrock resources support resource-based policies, allowing direct cross-ac
 | Requirement | Pattern | Why |
 |-------------|---------|-----|
 | Share fine-tuned custom models across accounts | Resource Policy on custom model | Avoids retraining in each account |
-| Centralized guardrails enforcement | Cross-account role + SCP (must include guardrail) | Single point of control |
+| Centralized guardrails enforcement | Cross-account role + SCP (Service Control Policy; must enforce guardrail) | Single point of control |
 | Centralized logging & audit | Cross-account role (logs stay in central) | Compliance needs single audit trail |
 | Cost allocation per team/account | Application Inference Profiles (tags) | Each account/team gets tagged usage |
 | Maximum team independence | Independent accounts (Pattern 3) | No cross-account complexity |
@@ -1612,6 +1712,452 @@ Region B: Application calling Bedrock FM
 | **Prompt compression** | 20-40% token reduction | Slight quality risk |
 | **Semantic caching** | High for repeated queries | Cache invalidation complexity |
 | **Smaller embeddings dimensions** | Storage + compute savings | Minor recall trade-off |
+
+---
+
+### 1.12 Multimodal GenAI
+
+![Multimodal GenAI - Crossmodal Embeddings, RAG and Generation](/diagrams/13-multimodal-genai.svg)
+
+Most patterns above assume text. AWS GenAI is now natively multimodal across the whole stack - embeddings, retrieval, generation, and safety. This section covers choosing multimodal embeddings, building multimodal RAG, generating non-text media, and applying safety to images and video.
+
+#### Multimodal Embedding Models
+
+| Model | Modalities | Notes |
+|-------|-----------|-------|
+| **Amazon Nova Multimodal Embeddings** | Text, document, image, video, audio (single unified model) | Crossmodal retrieval - query in one modality, match another. Newest, broadest. |
+| **Amazon Titan Multimodal Embeddings** | Text + image (shared vector space) | Image search, image+text product search. Established. |
+| **Cohere Embed (multimodal)** | Text + image | Strong multilingual support |
+| Titan Text Embeddings V2 / Cohere Embed (text) | Text only | See 1.4 for dimension/quantization tuning |
+
+**The embedding-model rule still applies - and now spans modalities:** the same multimodal model must embed both indexed content and queries. A query image and indexed text only match if they were embedded by the *same* multimodal model into the *same* vector space.
+
+#### Multimodal RAG in Bedrock Knowledge Bases
+
+Bedrock Knowledge Bases can ingest, index, and retrieve across text, images, video, and audio in one managed workflow:
+
+```
+Mixed-media sources (PDFs with charts/images, slides, video, audio)
+  → Bedrock Data Automation OR FM-based parser (extract text + visual/audio content)
+  → Multimodal embedding model (Nova / Titan)
+  → Vector store (OpenSearch / Aurora / managed)
+Query (text OR image) → multimodal retrieve → FM (grounded) → answer + citations to source media
+```
+
+**Key points:**
+- Visual content inside documents (charts, diagrams, scanned tables) becomes retrievable - not just the surrounding text
+- Parsing uses Bedrock Data Automation (see 1.13) or FM-based parsing for complex layouts
+- Multimodal support is for **unstructured** data sources only (not structured stores)
+- Citations point back to the source media, preserving grounding/traceability
+
+#### Generation Models Beyond Text
+
+| Need | Model | Notes |
+|------|-------|-------|
+| Image generation (enterprise) | **Amazon Nova Canvas** / Titan Image Generator | Editing, variation, background removal; embeds invisible watermark |
+| Image generation (creative) | **Stability AI** | Artistic styles, creative flexibility |
+| Video generation | **Amazon Nova Reel** | Short-form video from text/image prompts |
+| Real-time voice (speech-to-speech) | **Amazon Nova Sonic** (Nova 2 Sonic = newer) | Natural bidirectional voice conversations |
+| Speech-to-text (ingestion) | **Amazon Transcribe** | Transcription for downstream FM/embedding |
+| Text-to-speech (output) | **Amazon Polly** | Voice responses |
+| Document → structured text | **Amazon Textract** | OCR, forms, tables |
+
+#### Multimodal Data Pipeline
+
+Extends the "Multimodal pipeline" notes in Domain 1:
+
+```
+Audio              → Transcribe → text → FM / embedding
+Video              → Bedrock Data Automation (transcript, scenes, frames) → text + visual → embedding
+Images/scans/PDFs  → Textract (OCR/forms) OR BDA OR multimodal FM (Claude/Nova direct understanding)
+Speech I/O         → Transcribe (in) / Polly (out) / Nova Sonic (both, real-time)
+```
+
+#### Multimodal Safety and Provenance
+
+- **Guardrails image content filters**: the content-filter categories (Hate, Insults, Sexual, Violence, Misconduct) plus prompt-attack detection now apply to **images** as well as text - block harmful images in both prompts and responses.
+- **Watermarking**: Amazon Nova Canvas and Titan Image Generator embed an **invisible watermark** in generated images; Bedrock offers watermark **detection** to verify AWS-generated content (content provenance, anti-deepfake).
+- **AI Service Cards**: AWS-published responsible-AI documentation per model/service (intended use, limitations, fairness considerations). Distinct from **SageMaker Model Cards**, which document *your own* models. Use AI Service Cards to assess a Bedrock model; Model Cards to document a custom model.
+
+#### Decision Tree
+
+```
+Working with non-text data?
+├─ Search across images/video/audio + text together?
+│   → Multimodal embeddings (Nova Multimodal) + multimodal Bedrock KB
+├─ Just image + text product / visual search?
+│   → Titan Multimodal Embeddings
+├─ Need to GENERATE media?
+│   ├─ Image → Nova Canvas / Titan Image (enterprise + watermark) or Stability (creative)
+│   ├─ Video → Nova Reel
+│   └─ Real-time voice → Nova Sonic
+├─ Extract content from complex documents/media for RAG?
+│   → Bedrock Data Automation (see 1.13)
+└─ Must filter or verify generated images?
+    → Guardrails image filters + watermark detection
+```
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Search images and text in one index" or "crossmodal" | Multimodal embeddings (Nova) + multimodal KB |
+| "Image + text product search" | Titan Multimodal Embeddings |
+| "Generate video" | Nova Reel |
+| "Real-time voice" or "speech-to-speech" | Nova Sonic |
+| "Generate enterprise images" + "provenance" | Nova Canvas / Titan Image + watermark detection |
+| "Block harmful images" | Guardrails image content filters |
+| "Responsible-AI doc for a Bedrock model" | AI Service Card (NOT SageMaker Model Card) |
+| "Transcribe audio before the FM" | Amazon Transcribe |
+| "OCR / extract tables from scanned PDFs" | Amazon Textract (or Bedrock Data Automation) |
+
+---
+
+### 1.13 Advanced Data Processing and RAG
+
+![Advanced RAG - Managed Extraction, Shared Index, GraphRAG](/diagrams/14-advanced-rag.svg)
+
+Beyond the managed defaults in 1.1, AWS offers managed multimodal extraction (Bedrock Data Automation), an alternative managed index (Kendra GenAI Index), graph-augmented RAG (managed GraphRAG), and a retrieval-accuracy technique (contextual retrieval).
+
+#### Bedrock Data Automation (BDA)
+
+Managed service that turns **unstructured multimodal content** (documents, images, audio, video) into **structured output** (text, summaries, transcripts, scene/shot data, extracted fields) via configurable blueprints.
+
+- Replaces hand-rolled Textract + Transcribe + Lambda pipelines for many cases
+- Integrates directly with Bedrock Knowledge Bases for multimodal ingestion (see 1.12)
+- Output is normalized JSON you can embed, index, or feed to FMs
+
+| Need | Use | Why |
+|------|-----|-----|
+| Managed extraction across modalities | **Bedrock Data Automation** | One service vs. Textract+Transcribe+Lambda glue |
+| Custom / edge extraction logic | Lambda + Textract/Transcribe | Full control over each step |
+| Direct media ingestion into RAG | **BDA → Bedrock KB** | Single managed workflow |
+
+#### Managed Index Options for RAG
+
+Extends 1.1/1.2 - Bedrock KB and Amazon Q can sit on different retrieval backends:
+
+| Index / Retriever | Best For | Trade-off |
+|-------------------|----------|-----------|
+| **OpenSearch Serverless** | Hybrid search + full control | Operational complexity (see 1.2) |
+| **Aurora pgvector / Neptune** | SQL teams / graph data | See 1.2 |
+| **Amazon Kendra GenAI Index** | High-accuracy managed semantic retrieval + 40+ enterprise connectors; reusable across Bedrock KB **and** Amazon Q | Managed/opinionated; less low-level control than OpenSearch |
+| **Bedrock managed vector store** | Simplest path | Tied to KB lifecycle |
+
+**Kendra GenAI Index** is a managed, RAG-optimized index with strong out-of-the-box relevance and built-in connectors (SharePoint, Confluence, S3, etc.). Its differentiator: the **same index can back both a Bedrock Knowledge Base and Amazon Q Business**. Choose it when you want managed retrieval quality + connectors without operating OpenSearch.
+
+#### Managed GraphRAG (Neptune Analytics)
+
+Bedrock KB **GraphRAG** automatically builds a **knowledge graph in Neptune Analytics** during ingestion, then combines graph traversal with vector search at query time.
+
+- Captures relationships across documents → better multi-hop, "connect the dots" answers than pure vector RAG
+- Distinct from raw **Neptune Analytics** (1.2): GraphRAG is the *managed* KB feature that builds and queries the graph for you
+- Use when: answers depend on relationships spanning multiple documents (entities, lineage, dependencies)
+
+#### Contextual Retrieval (accuracy technique)
+
+Model-agnostic technique: before embedding each chunk, prepend a short, LLM-generated description of how the chunk fits within the whole document. Reduces "lost context" retrieval failures.
+
+- Pair with hybrid (BM25 + vector) search + reranking for best recall/precision
+- Trade-off: one-time generation cost at ingestion; improves retrieval quality without changing the FM
+- Complements the chunking strategies in Domain 1 (parent-child / hierarchical)
+
+#### Decision Tree
+
+```
+RAG retrieval design beyond defaults?
+├─ Ingesting messy multimodal files? → Bedrock Data Automation → KB
+├─ Want managed relevance + enterprise connectors, reused across KB + Q?
+│   → Amazon Kendra GenAI Index
+├─ Answers need cross-document relationships / multi-hop?
+│   → Bedrock KB GraphRAG (Neptune Analytics)
+├─ Retrieval misses context-dependent chunks?
+│   → Contextual retrieval + hybrid + rerank
+└─ Need full low-level control / custom scoring? → OpenSearch (see 1.2)
+```
+
+#### More Retrieval Techniques
+
+| Technique | What It Does | Use When |
+|-----------|--------------|----------|
+| **HyDE** (Hypothetical Document Embeddings) | LLM drafts a hypothetical answer, then embeds *that* to retrieve | Short/vague queries that don't match document phrasing |
+| **Agentic / Self-RAG** | Agent decides whether to retrieve, what to query, and when it has enough | Complex queries needing iterative retrieval |
+| **Corrective RAG (CRAG)** | Grade retrieved chunks; if weak, re-query or fall back (e.g., web) | Recall-critical; tolerant of extra latency |
+| **Sentence-window / small-to-big** | Retrieve precise small chunks, expand to parent context for the FM | Precise matching + enough context to answer |
+
+These complement (don't replace) the chunking and hybrid + rerank patterns in Domain 1.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Managed extraction of text/tables/audio/video" | Bedrock Data Automation |
+| "Managed RAG index + connectors, shared with Amazon Q" | Kendra GenAI Index |
+| "Relationships across documents" or "multi-hop" | Bedrock KB GraphRAG (Neptune Analytics) |
+| "Add chunk context before embedding to improve retrieval" | Contextual retrieval |
+| "Build the graph automatically during ingestion" | GraphRAG (managed), not raw Neptune |
+| "Embed a hypothetical answer to retrieve" | HyDE |
+| "Agent decides whether/what to retrieve" | Agentic / Self-RAG |
+| "Grade chunks, re-query if weak" | Corrective RAG (CRAG) |
+| "Small precise chunk + parent context" | Sentence-window / small-to-big |
+
+---
+
+### 1.14 Amazon Q Family
+
+"Amazon Q" is a family of managed assistants. Knowing which Q to pick - versus building your own on Bedrock - is a common decision.
+
+| Product | What It Is | Use When |
+|---------|-----------|----------|
+| **Amazon Q Business** | Managed enterprise RAG assistant: 40+ connectors, per-user ACL, web UI | End-user enterprise search/Q&A over SaaS + docs with minimal build |
+| **Amazon Q Developer** | AI coding assistant (formerly CodeWhisperer): inline code, agent for features, code transformation, AWS expertise in IDE/CLI/console | Developer productivity, code generation, AWS troubleshooting, modernization |
+| **Amazon Q Apps** | Build lightweight internal apps from natural language (within Q Business) | Citizen-developer task apps on top of Q Business data |
+| **Amazon Q in QuickSight** | Natural language → BI: dashboards, data Q&A, executive summaries | Analytics/BI natural-language layer |
+
+#### Q vs. Build-Your-Own (Bedrock)
+
+| Situation | Choice | Why |
+|-----------|--------|-----|
+| Fastest enterprise assistant, no build | **Amazon Q Business** | Managed ACL + connectors + UI |
+| Full control of retrieval/prompt/UX | **Bedrock KB + your app** | Developer-facing API |
+| Coding help in IDE/CLI | **Amazon Q Developer** | Not a build choice |
+| Custom agent logic / tools | **Bedrock Agents / AgentCore + Strands** | See 1.7 |
+
+Q Business and a Bedrock Knowledge Base can share a **Kendra GenAI Index** (see 1.13) - Q for the managed end-user app, KB for the developer API, same retrieval underneath.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Enterprise search, per-user permissions, SaaS connectors, no build" | Amazon Q Business |
+| "AI coding assistant" / "CodeWhisperer" / "code transformation" | Amazon Q Developer |
+| "Natural-language BI / dashboards" | Amazon Q in QuickSight |
+| "Let business users build small apps from a prompt" | Amazon Q Apps |
+| "Developer API + full control over RAG" | Bedrock Knowledge Bases (not Q) |
+
+---
+
+### 1.15 Latency-Optimized Inference and Throughput
+
+Section 1.11 covered cost. This covers **speed and capacity** - a separate axis that is frequently tested and often confused with cost levers.
+
+| Lever | What It Does | Trade-off / Notes |
+|-------|--------------|-------------------|
+| **Latency-optimized inference** (Bedrock) | Optimized hardware/software path for faster token generation on supported models (e.g., Amazon Nova Pro, Anthropic Claude) via cross-region | Opt-in (request `latency: optimized`); only select models/Regions |
+| **Streaming** (ConverseStream) | Cuts time-to-first-token | Improves *perceived* latency, not total (see Domain 4) |
+| **Cross-region inference profile** | Higher aggregate throughput, fewer 429s (see 1.9) | Availability/throughput, not per-token speed |
+| **Provisioned Throughput** | Reserved capacity → predictable latency + no throttling | Commitment cost (see 1.6 / Domain 2) |
+| **Prompt caching** | Skips re-processing cached prefix → lower latency + cost (see 1.11) | Repeated context only |
+| **Smaller/faster model (cascading)** | Cheapest, fastest path for simple queries (see 1.5/1.11) | Routing complexity |
+
+#### Decision Tree
+
+```
+Latency / throughput problem?
+├─ Per-request token speed too slow?
+│   → Latency-optimized inference (if model/Region supported) + streaming
+├─ Hitting 429 / capacity limits?
+│   → Cross-region inference profile, or Provisioned Throughput (guaranteed)
+├─ Repeated large system prompt?
+│   → Prompt caching
+└─ Many simple requests dominating cost/latency?
+    → Model cascading to a smaller model
+```
+
+#### Serving Internals (how the speed-ups work)
+
+> **_Beyond exam scope_** - useful background for the levers above.
+
+| Mechanism | What It Does | Why It Helps |
+|-----------|--------------|--------------|
+| **KV cache** | Reuse key/value tensors for already-processed tokens | Avoids recomputing the prompt each step; underpins prompt caching (1.11) |
+| **Continuous batching** | Pack many requests through the GPU, swapping sequences as they finish | Higher throughput / better $/token under load |
+| **Speculative decoding** | A small draft model proposes tokens; the big model verifies in parallel | Faster generation with identical output |
+| **Weight quantization** | Serve weights at INT8/FP8 vs FP32 - distinct from embedding quantization (1.4) | Lower memory + latency + cost, small quality cost (GGUF in Custom Model Import, 1.6) |
+| **Mixture-of-Experts (MoE)** | Activate only a few expert sub-networks per token | Large-model quality at lower active compute (see 0.4) |
+
+Managed Bedrock abstracts these; they explain *why* latency-optimized inference and provisioned throughput behave as they do.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Lowest token-generation latency on a supported model" | Latency-optimized inference |
+| "Guaranteed capacity / no throttling / predictable latency" | Provisioned Throughput |
+| "Avoid throttling via routing" | Cross-region inference profile (NOT latency-optimized) |
+| "Reduce time-to-first-token" | Streaming (ConverseStream) |
+
+---
+
+### 1.16 Agent Interoperability with MCP and A2A
+
+![Agent Interoperability - MCP agent-to-tool vs A2A agent-to-agent](/diagrams/15-mcp-a2a.svg)
+
+Section 1.7 covered building agents and using MCP for agent-to-tool access. As multi-agent systems span teams and vendors, a second protocol axis matters: agent-to-agent.
+
+| Protocol | Connects | Purpose | Status on AWS |
+|----------|----------|---------|---------------|
+| **MCP** (Model Context Protocol) | Agent ↔ tools / data / resources | Standardized tool access (see 1.7, Card 2.5) | Native in Strands + AgentCore; broad adoption |
+| **A2A** (Agent2Agent) | Agent ↔ agent (across frameworks/vendors) | Discovery, task delegation, and messaging between independent agents | Emerging open standard; AWS signaling support via Strands / AgentCore |
+
+**Key distinction:**
+- MCP = "how an agent uses a tool."
+- A2A = "how one agent delegates to or talks to another agent" - even one built by a different team or framework.
+- They compose: an agent exposed over A2A can itself use MCP tools internally.
+
+#### When Each Applies
+
+```
+Building agent capabilities?
+├─ Agent needs to call a tool / DB / API → MCP
+├─ Independent agents (different teams/vendors) must collaborate → A2A
+└─ Single multi-agent app you fully own → framework-native (Agent Squad / Strands)
+    is usually enough; reach for A2A when crossing org/framework boundaries
+```
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Standardized agent-to-tool interface" | MCP |
+| "Agents from different frameworks/vendors collaborate" | A2A |
+| "Delegate a task to another independent agent" | A2A |
+| "Reuse tools across agent frameworks" | MCP |
+
+---
+
+### 1.17 Reasoning Models and Test-Time Compute
+
+![Reasoning Models - standard vs extended-thinking path and the cost/latency tradeoff](/diagrams/18-reasoning-models.svg)
+
+Reasoning models spend extra tokens "thinking" before answering (**test-time compute**). More thinking → better accuracy on hard problems, at higher latency and cost. On Bedrock this is **extended thinking** / **model reasoning**.
+
+| Aspect | Detail |
+|--------|--------|
+| Models (Bedrock) | Anthropic Claude (extended thinking, 3.7 Sonnet onward), Amazon Nova 2 (low/medium/high thinking budget), DeepSeek-R1 |
+| How to enable | Converse `additionalModelRequestFields` with a `reasoningConfig` (type + token budget); also configurable in Knowledge Bases `RetrieveAndGenerate` |
+| Thinking budget | Counts against `max_tokens` (Claude enforces prompt + max_tokens ≤ context window); Nova exposes low/medium/high tiers |
+| Default | Usually **off** - it adds latency/cost; turn it on only when the task needs it |
+
+**When to use a reasoning model (vs. a standard model + CoT prompt):**
+
+```
+Hard, multi-step problem (math, logic, planning, complex code, deep analysis)?
+├─ Yes, accuracy > latency/cost  → reasoning model, raise thinking budget
+├─ Sometimes                     → standard model + "think step by step" (CoT, 1.19) first
+└─ No (lookup, FAQ, format, extract) → standard model, reasoning OFF
+```
+
+**Watch out for:**
+- Reasoning ≠ always better: on simple tasks it wastes tokens/latency and can over-think.
+- Budget the thinking tokens - they are billed and count toward the output limit.
+- Combine with cascading (1.5 / 1.11): cheap model for easy queries, reasoning model only for the hard ones.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Multi-step reasoning / math / planning, accuracy critical" | Reasoning model + thinking budget |
+| "Model over-thinks simple queries / cost too high" | Disable reasoning or cascade to a standard model |
+| "Enable thinking on Claude in Bedrock" | `reasoningConfig` via additionalModelRequestFields |
+| "Thinking tokens exceed limit / validation error" | max_tokens includes the thinking budget |
+
+---
+
+### 1.18 Structured Outputs and Tool Use
+
+Machine-readable, schema-valid output is foundational to agents, pipelines, and integrations. Bedrock offers three escalating levels of control.
+
+| Approach | How | Use When |
+|----------|-----|----------|
+| **Prompt engineering** | Ask for JSON in the prompt; parse + validate yourself | Simple, low-stakes; quick prototype |
+| **Tool use / function calling** (Converse `toolConfig`) | Define tools as JSON-schema `ToolSpec`; model returns a structured tool-call; `toolChoice` can force a specific tool | Agent actions, reliable structured extraction |
+| **Structured Outputs** (Bedrock) | Constrain responses to a user-defined JSON schema - validated, schema-compliant output | Zero-validation pipelines, reliable agentic function calls |
+
+**Tool-use (function calling) loop:**
+
+```
+1. You send messages + toolConfig (tool schemas) to Converse
+2. Model returns a tool-use request (which tool, with JSON args)
+3. You run the tool (client-side) and return the result
+4. Model uses the result to produce the final answer
+```
+
+Function calling is **client-side** with Converse / InvokeModel - the model decides *what* to call; your code actually calls it.
+
+**Why it matters:** structured outputs remove brittle string-parsing and retry logic, make agent tool-calls reliable, and are the contract between the FM and the rest of your system.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Reliable JSON / schema-valid output, no parsing" | Bedrock Structured Outputs |
+| "Model decides which function/tool to call" | Tool use via Converse `toolConfig` |
+| "Force the model to call a specific tool" | `toolChoice` in toolConfig |
+| "Who executes the tool?" | Your code (client-side tool calling) |
+
+---
+
+### 1.19 Advanced Prompting and Reasoning Techniques
+
+Beyond the system-prompt / few-shot / chain-of-thought basics in Domain 1, these techniques trade tokens for quality.
+
+| Technique | How It Works | Use When |
+|-----------|--------------|----------|
+| **Chain-of-Thought (CoT)** | "Think step by step" before answering | Math, logic, multi-step (baseline) |
+| **Self-consistency** | Sample multiple CoT paths, take the majority answer | Accuracy-critical; tolerant of extra cost |
+| **Tree-of-Thought (ToT)** | Explore/branch multiple reasoning paths, prune weak ones | Search / planning problems |
+| **Step-back prompting** | Derive the general principle first, then solve | Abstract or knowledge-heavy questions |
+| **Least-to-most** | Decompose into sub-problems, solve in order | Complex tasks with dependencies |
+| **Self-refine / Reflexion** | Model critiques and revises its own answer | Quality-critical; pairs with eval (Card 5.2) |
+| **Prompt chaining** | Split one big prompt into a sequence of focused steps | Multi-stage workflows (see 1.8 Prompt Flows) |
+
+**Trade-off:** every technique here spends more tokens (and latency) for accuracy. On modern **reasoning models** (1.17) some of this is internalized - don't stack heavy CoT on top of extended thinking.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Sample multiple answers, take majority" | Self-consistency |
+| "Branch and explore reasoning paths" | Tree-of-Thought |
+| "Derive the general principle first" | Step-back prompting |
+| "Model critiques and improves its own output" | Self-refine / Reflexion |
+| "Break a big prompt into focused steps" | Prompt chaining (Prompt Flows) |
+
+---
+
+### 1.20 Hallucination Taxonomy and Red Teaming
+
+"Hallucination" is several distinct failure modes - knowing which one you have points to the fix.
+
+| Type | What it looks like | Primary Fix |
+|------|--------------------|-------------|
+| **Factual / confabulation** | Confident, made-up facts | RAG grounding + contextual grounding check (1.10), citations |
+| **Faithfulness (ungrounded)** | Answer not supported by the retrieved context | Guardrails grounding threshold; "answer only from context" |
+| **Reasoning error** | Wrong logic/math despite right facts | Reasoning model (1.17) or CoT; Automated Reasoning checks |
+| **Sycophancy** | Agrees with a wrong premise to please the user | Neutral prompting; don't embed assumptions in the question |
+| **Outdated** | Correct but stale (past knowledge cutoff) | RAG / tools / web grounding |
+| **Over/under-refusal** | Refuses safe asks or answers unsafe ones | Tune Guardrails strength; denied topics |
+
+**Mitigation stack (defense in depth):** grounding (RAG) → contextual grounding check → citations → low temperature → automated reasoning → human review for high-stakes (see Cards 3.2, 5.3).
+
+#### Red Teaming
+
+> **_Beyond exam scope_** (practice, lightly tested) - systematically attack your own app before adversaries do.
+
+- **Adversarial prompts:** jailbreaks, prompt injection, role-play bypasses (maps to OWASP LLM01, Domain 3).
+- **Coverage:** harmful content, PII leakage, denied-topic bypass, tool misuse (excessive agency, LLM08).
+- **Method:** curated adversarial test set + automated red-team prompts, run as a quality gate in CI (Domain 5); re-run after model/prompt changes.
+
+#### Key Exam Signals
+
+| Signal in Question | Answer Points To |
+|--------------------|-----------------|
+| "Confident but false facts" | RAG grounding + grounding check + citations |
+| "Response not supported by sources" | Contextual grounding check (threshold) |
+| "Correct facts, wrong logic/math" | Reasoning model / CoT / Automated Reasoning |
+| "Agrees with a false premise" | Sycophancy - neutral prompting |
+| "Adversarial testing before launch" | Red teaming (CI quality gate) |
 
 ---
 
@@ -1825,7 +2371,7 @@ Customer Query → Lambda (classify priority)
 Team Apps → API Gateway (auth, rate limit, request validation)
   → Lambda (routing logic: model selection based on content/cost)
   → Bedrock InvokeModelWithResponseStream
-  → API Gateway WebSocket / SSE → Client
+  → API Gateway WebSocket / SSE (Server-Sent Events) → Client
 Observability: X-Ray traces, CloudWatch metrics, invocation logs
 ```
 
@@ -2205,7 +2751,7 @@ High latency?
   - *Fixed-size* (e.g., 512 tokens with 20% overlap): simple, predictable. Works for uniform content. Risk: splits mid-paragraph
   - *Hierarchical*: preserves document structure (section → subsection → paragraph). Good for structured docs (manuals, policies). Enables parent-child retrieval
   - *Semantic*: splits at natural boundaries (topic shifts). Best quality but more expensive to compute. Use Bedrock's semantic chunking option
-  - *Rule*: overlap between chunks (10-20%) helps capture concepts split across boundaries
+  - *Overlap* (applies to all strategies): 10-20% overlap between adjacent chunks helps capture concepts that span a boundary
 - **Embedding model selection**:
   - Amazon Titan Text Embeddings V2: 256 / 512 / 1024 dimensions (configurable). Lower dimensions = cheaper storage + faster search with minor recall trade-off
   - Cohere Embed: 1024 dimensions, strong multilingual support
@@ -2477,6 +3023,13 @@ High latency?
 | Audit | CloudTrail + invocation logs | Config rules | CloudTrail = API events; invocation logs = full content |
 | Embeddings | Bedrock (Titan V2) | Cohere Embed / SageMaker | Titan V2 = configurable dimensions (256/512/1024) |
 | Data processing | Bedrock Data Automation | Glue + Lambda | Data Automation = managed extraction/processing pipelines |
+| Multimodal embeddings | Bedrock (Nova / Titan Multimodal) | Cohere Embed | Crossmodal search; same model at index + query time |
+| Multimodal RAG | Bedrock Knowledge Bases (multimodal) | Custom + Bedrock Data Automation | Ingest text/image/video/audio; unstructured sources only |
+| Media generation | Nova Canvas (image) / Nova Reel (video) / Nova Sonic (speech) | Titan Image, Stability AI | Nova Canvas/Titan embed invisible watermark |
+| Managed RAG index | Kendra GenAI Index | OpenSearch Serverless | One index shared by Bedrock KB + Amazon Q |
+| Graph RAG | Bedrock KB GraphRAG (Neptune Analytics) | Neptune Analytics (raw) | Auto-builds graph at ingest; graph + vector at query |
+| Enterprise assistant | Amazon Q Business | Bedrock KB + custom app | Q = managed end-user app; KB = developer API |
+| Coding assistant | Amazon Q Developer | Claude via Bedrock | IDE/CLI code gen + AWS expertise (formerly CodeWhisperer) |
 
 ---
 
@@ -2645,10 +3198,10 @@ AI assistant calls tools when needed → gets current API info
 ```
 
 This is a concrete implementation of:
-- **Chunking** (Domain 1 Task 1.5) - splitting docs for embedding
-- **Embedding models** (Domain 1 Task 1.5) - converting text to vectors
-- **Vector search** (Domain 1 Task 1.4) - finding relevant chunks
-- **MCP protocol** (Domain 2 Task 2.1) - standardized agent-tool interface
+- **Chunking** (1.4, Part 3 Domain 1) - splitting docs for embedding
+- **Embedding models** (1.4, Part 3 Domain 1) - converting text to vectors
+- **Vector search** (1.2-1.3) - finding relevant chunks
+- **MCP protocol** (1.7, 1.16, Card 2.5) - standardized agent-tool interface
 - **On-demand retrieval** - lean context, tools called only when needed
 
 **Example MCP Server (Python, using FastMCP):**
@@ -2721,9 +3274,9 @@ When training makes sense:
 ```
 
 This maps directly to:
-- **LoRA/adapters** (Domain 1 Task 1.2) - parameter-efficient fine-tuning
-- **Knowledge distillation** (study-notes Section 3) - teacher→student model compression
-- **SageMaker deployment** (Domain 2 Task 2.2) - custom model hosting
+- **LoRA/adapters** (0.2, 1.6) - parameter-efficient fine-tuning
+- **Knowledge distillation** (0.2, 1.6) - teacher→student model compression
+- **SageMaker deployment** (1.6, Card 2.2) - custom model hosting
 
 ### Key Takeaway
 
@@ -2746,3 +3299,41 @@ Every concept in the exam has a direct practical application:
 - [3Blue1Brown - Transformers](https://www.3blue1brown.com/lessons/gpt) - Animated series on attention and GPT
 - [A Visual Guide to LLMs](https://awesomeneuron.substack.com/p/a-visual-guide-to-llms-part-1) - Illustrated tokenization, embeddings, attention
 - [StatQuest Illustrated Guide to Neural Networks](https://www.amazon.com/dp/B0DRS71QVQ) - From basics through transformers with PyTorch
+
+---
+
+## Appendix: Glossary and Acronyms
+
+| Term | Meaning |
+|------|---------|
+| **A2A** | Agent2Agent - protocol for agent-to-agent collaboration (1.16) |
+| **ANN** | Approximate Nearest Neighbor search (1.3) |
+| **BDA** | Bedrock Data Automation - managed multimodal extraction (1.13) |
+| **BM25** | Keyword ranking function used in hybrid search |
+| **CoT** | Chain-of-Thought prompting (0.2, 1.19) |
+| **CPT** | Continued Pre-Training (0.2, 1.6) |
+| **CRAG** | Corrective RAG (1.13) |
+| **Embedding** | Vector representation of meaning (0.1) |
+| **FM** | Foundation Model |
+| **GGUF** | Quantized model file format from llama.cpp (1.6) |
+| **GraphRAG** | RAG augmented with a knowledge graph (1.13) |
+| **Guardrails** | Bedrock input/output safety controls (1.10) |
+| **HNSW** | Hierarchical Navigable Small World - graph ANN index (1.3) |
+| **HyDE** | Hypothetical Document Embeddings (1.13) |
+| **IVF / IVFPQ** | Inverted File (+ Product Quantization) ANN indexes (1.3) |
+| **KB** | (Bedrock) Knowledge Bases - managed RAG (1.1) |
+| **KV cache** | Cached attention key/value tensors (0.1, 1.15) |
+| **LoRA** | Low-Rank Adaptation - parameter-efficient fine-tuning (0.2, 1.6) |
+| **MCP** | Model Context Protocol - agent-to-tool interface (1.7, 1.16) |
+| **MoE** | Mixture-of-Experts model architecture (0.4, 1.15) |
+| **PEFT** | Parameter-Efficient Fine-Tuning (0.2) |
+| **PQ / SQ / BQ** | Product / Scalar / Binary Quantization of vectors (1.4) |
+| **RAG** | Retrieval-Augmented Generation (1.1) |
+| **RLHF / DPO** | Reinforcement Learning from Human Feedback / Direct Preference Optimization (0.2) |
+| **SCP** | Service Control Policy - org-wide guardrail in AWS Organizations (1.9) |
+| **SFT** | Supervised Fine-Tuning (0.2) |
+| **Test-time compute** | Extra inference compute spent "thinking" (1.17) |
+| **Token** | Sub-word unit models read/generate/bill on (0.1) |
+| **ToT** | Tree-of-Thought prompting (1.19) |
+| **TTFT** | Time-To-First-Token (0.3) |
+| **Inference profile** | Bedrock cross-region routing / cost-allocation construct (1.9) |

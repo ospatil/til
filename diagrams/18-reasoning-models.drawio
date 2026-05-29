@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="Reasoning Models" id="reasoning-models">
+    <mxGraphModel dx="900" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="320" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Reasoning Models — Test-Time Compute" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="130" y="10" width="640" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="query" value="Query" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="30" y="120" width="90" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="dec" value="Hard,&#xa;multi-step?" style="rhombus;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="103" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="standard" value="Standard model&#xa;(reasoning off)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="350" y="60" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="reason" value="Reasoning model&#xa;(extended thinking)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="350" y="160" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="think" value="Thinking tokens&#xa;(budget low/med/high)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="550" y="160" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="answer" value="Answer" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;fontStyle=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="770" y="105" width="100" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="q1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="query" target="dec" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d1" value="no → fast/cheap" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=2;endArrow=block;endFill=1;fontSize=9;fontColor=#64748b;" edge="1" source="dec" target="standard" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d2" value="yes" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;fontSize=9;fontColor=#64748b;" edge="1" source="dec" target="reason" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d3" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="reason" target="think" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d4" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="standard" target="answer" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d5" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=1;endArrow=block;endFill=1;" edge="1" source="think" target="answer" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="trade" value="More thinking → higher accuracy, higher latency + cost" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="330" y="225" width="430" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bnote" value="Bedrock: reasoningConfig via additionalModelRequestFields; budget counts toward max_tokens" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="300" y="250" width="490" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

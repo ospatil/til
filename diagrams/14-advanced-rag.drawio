@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="Advanced RAG" id="advanced-rag">
+    <mxGraphModel dx="900" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="350" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Advanced RAG — Managed Extraction, Shared Index, GraphRAG" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="130" y="10" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="media" value="Mixed media&#xa;sources" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="30" y="100" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="bda" value="Bedrock Data&#xa;Automation" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="190" y="100" width="140" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="em" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="media" target="bda" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="kendra" value="Kendra GenAI&#xa;Index" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="55" width="150" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="os" value="OpenSearch&#xa;(hybrid, custom)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="118" width="150" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="graph" value="GraphRAG →&#xa;Neptune Analytics" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="181" width="170" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="bk" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="bda" target="kendra" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="bo" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="bda" target="os" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="bg" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;" edge="1" source="bda" target="graph" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="kb" value="Bedrock KB&#xa;(developer API)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="70" width="160" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="q" value="Amazon Q Business&#xa;(end-user app)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="150" width="160" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="kk" value="shared" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;fontSize=9;fontColor=#64748b;" edge="1" source="kendra" target="kb" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="kq" value="shared" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;fontSize=9;fontColor=#64748b;" edge="1" source="kendra" target="q" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ok" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" edge="1" source="os" target="kb" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gk" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#64748b;strokeWidth=1;endArrow=block;endFill=1;dashed=1;" edge="1" source="graph" target="kb" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="graphNote" value="graph + vector at query → multi-hop answers" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="360" y="232" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ctxNote" value="Contextual retrieval: prepend an LLM-generated chunk description before embedding → higher recall (pairs with hybrid + rerank)" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#16a34a;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="285" width="770" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
