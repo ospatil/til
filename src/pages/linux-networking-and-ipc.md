@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/GistLayout.astro
-tags: [linux, networking, ipc, guide]
+tags: [linux, networking, svelte, guide]
 ---
 
 # Linux Networking & Inter-Process Communication

@@ -30,7 +30,7 @@ UI components have two layers:
 | Layer       | What it provides                                      | Examples                      |
 | ----------- | ----------------------------------------------------- | ----------------------------- |
 | **Styling** | Visual appearance, layout, colors, spacing            | DaisyUI, Tailwind, Bootstrap  |
-| **Behavior**| Keyboard navigation, focus management, ARIA, state    | Melt UI, Bits UI, Radix       |
+| **Behavior**| Keyboard navigation, focus management, ARIA, state    | Melt UI, Bits UI, Radix, Zag.js |
 
 DaisyUI is CSS-only - it gives you beautiful Tailwind-based styling but no JavaScript behavior. When migrating from something like shadcn-svelte (which bundles both), you need a strategy for the behavior layer.
 
@@ -74,6 +74,21 @@ DaisyUI is CSS-only - it gives you beautiful Tailwind-based styling but no JavaS
 - **Bits UI** - Less boilerplate than Melt UI while still allowing you to pass your own classes (including DaisyUI classes).
 - **shadcn-svelte** - Best when you want a complete design system out of the box. Don't combine with DaisyUI (two competing visual systems).
 - **DaisyUI alone** - Sufficient for many components (buttons, cards, badges, alerts). Only add a headless library when you need complex interactive behavior.
+- **Styled libraries (Skeleton, Flowbite, Carbon)** - The npm-delivered answer to shadcn-svelte: styled *and* behavioral components you upgrade via `npm update` instead of maintaining copied source. See below.
+
+### Styled Component Libraries (the npm-delivered alternative to shadcn)
+
+shadcn-svelte gives you styled + behavioral components, but copies the source into your project - so upgrades and git diffs become your responsibility. Several mature libraries offer the same styled + behavioral experience as an **npm dependency**: upgrades are `npm update`, and nothing lands in your source tree.
+
+| Library | Styling | Behavior engine | Notes |
+| ------- | ------- | --------------- | ----- |
+| **Skeleton** (v4) | Tailwind design system | Zag.js (turnkey components) | Framework-agnostic core; Svelte + React. Ships its own Tailwind plugin - conflicts with DaisyUI/Flowbite |
+| **Flowbite Svelte** | Tailwind | Runes-based components | Large component set; closest to a Tailwind/shadcn workflow |
+| **Carbon Components Svelte** | Own (SCSS / Carbon themes) | Native | Enterprise design system, comprehensive, non-Tailwind |
+
+Skeleton is worth a closer look because it has **two tiers**: *Tailwind Components* (buttons, cards, badges - pure CSS classes, no JS) and *Framework Components* (dialog, combobox, tabs, date picker - turnkey Svelte components whose behavior + a11y come from [Zag.js](https://zagjs.com), the same engine behind Ark UI). The Zag.js dependency lives inside the package - conceptually the role Bits UI plays for shadcn, but kept as a dependency instead of copied code.
+
+**The trade vs shadcn-svelte:** you give up freely restructuring a component's internals (you theme via tokens/props/classes instead), in exchange for upgrades you don't hand-maintain.
 
 ---
 
