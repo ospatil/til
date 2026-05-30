@@ -20,7 +20,9 @@ Building a fully client-rendered SPA with SvelteKit (no SSR), and how data fetch
 7. [Combining Loaders & Query: Three Patterns](#7-combining-loaders--query-three-patterns)
 8. [Loaders vs Query: What You Trade](#8-loaders-vs-query-what-you-trade)
 9. [The Optimal Setup](#9-the-optimal-setup)
-10. [Version Gotchas & Setup](#10-version-gotchas--setup)
+10. [Authentication & Protected Routes](#10-authentication--protected-routes)
+11. [Content Security Policy in a SPA](#11-content-security-policy-in-a-spa)
+12. [Version Gotchas & Setup](#12-version-gotchas--setup)
 
 ---
 
@@ -335,7 +337,186 @@ For a fully private app with no SEO, the optimum collapses to: pure SPA + Query,
 
 ---
 
-## 10. Version Gotchas & Setup
+## 10. Authentication & Protected Routes
+
+A pure SPA has no `hooks.server.ts`, no server load functions, and no form actions - so the server-side auth machinery (populating `event.locals.user`, redirecting before render) is gone. Auth becomes a client + API concern.
+
+### The Core Rule: Client Guards Are UX, the API Is Security
+
+With adapter-static + fallback, anyone can navigate directly to `/admin` - the host serves the shell, JS boots, and your guard runs *after*. You cannot prevent that. Security lives in exactly one place: the **API**, which authorizes every request. The SPA's only jobs are (1) don't render protected UI to logged-out users, and (2) attach credentials to API calls. A bypassed guard yields an empty shell and 401s - no data leaks.
+
+> Never treat a client-side route guard or client-side role check as a security boundary. It is cosmetic. The API is the authority.
+
+### Carrying the Session: Cookie vs Token
+
+| Model | How | Security tradeoff |
+| --- | --- | --- |
+| **httpOnly cookie** (recommended) | API sets `Secure; HttpOnly; SameSite` cookie on login; browser attaches it automatically | Token unreadable by JS - XSS can't exfiltrate it. Needs CSRF care (`SameSite=Lax` handles most) |
+| **Token in JS** | API returns a JWT; SPA stores it and sends `Authorization: Bearer` | Immune to CSRF, but XSS can steal the token (especially in localStorage). In-memory is safer but lost on refresh |
+
+httpOnly isn't total XSS immunity - injected script can still make requests *while the page is open* (the cookie rides along) - but it prevents *theft* of a reusable credential.
+
+### Token model: the Bearer header
+
+If you choose tokens over cookies, the SPA attaches the JWT itself. Wrap `fetch` so every request carries the header, and point your queryFns at it:
+
+```ts
+// src/lib/api.ts
+let accessToken = ''                         // in-memory (see storage note)
+export const setToken = (t: string) => { accessToken = t }
+
+export const api = (path: string, init: RequestInit = {}) =>
+  fetch(path, { ...init, headers: { ...init.headers, Authorization: `Bearer ${accessToken}` } })
+```
+
+- **Storage:** keep the access token **in memory**, not `localStorage` - localStorage is readable by any injected script (XSS exfiltration). In-memory is lost on reload, so you re-acquire it via refresh below.
+- **Refresh:** access tokens are short-lived. On a `401`, call `/refresh` (its refresh token ideally in an httpOnly cookie), store the new access token, and retry. If the refresh token also lives in JS, it's XSS-exposed too - the inherent weakness of the pure-token model.
+- **Claims without `/me`:** because the token is readable in JS, you can decode its payload (e.g. with `jwt-decode`) for `roles`/`groups` directly - no `/me` round trip (the OIDC "decode the ID token" pattern below). The cookie model can't do this, which is why it needs `/me`.
+- **Validation is the API's job:** the SPA only *reads* claims for UI gating; the API *verifies* the token's signature and claims on every request. Never trust a client-side decode for authorization.
+
+### Origin Topology (CDN / S3 + CloudFront)
+
+Serving the SPA from a CDN does **not** force cross-origin. Front both with one CloudFront distribution and route by path, so the browser sees a single origin (httpOnly `SameSite=Lax` cookies, zero CORS):
+
+```text
+CloudFront (app.example.com)
+  /api/*  -> origin: Go API (ALB / API GW / Lambda)   [no caching, forward cookies]
+  /*      -> origin: S3 bucket (static SPA)            [cached, immutable assets]
+```
+
+Config gotchas: the `/api/*` behavior must forward cookies and disable caching; static assets stay cached. Fallbacks when origins can't be unified:
+
+- **Sibling subdomains** (`app.` + `api.example.com`): set cookie `Domain=example.com`, `SameSite=Lax`. Cross-origin but *same-site* - cookie still sent.
+- **Truly cross-site** (different registrable domains): `SameSite=None; Secure` + CORS with `Access-Control-Allow-Credentials: true`, an exact allowed origin, and `credentials: 'include'`. Avoid - third-party cookies are being deprecated/partitioned.
+
+### Knowing Auth State: `['me']` as a Query
+
+No server hook means the SPA learns its state at runtime by hitting an authenticated endpoint. TanStack Query is the natural home - one cached, shared source of truth, with `isPending` as the boot "checking auth" state:
+
+```ts
+// src/lib/auth.ts
+import { queryOptions } from '@tanstack/svelte-query'
+export const meQuery = () => queryOptions({
+  queryKey: ['me'],
+  queryFn: async () => {
+    const r = await fetch('/api/me', { credentials: 'include' })
+    if (r.status === 401) return null          // known logged-out (cacheable)
+    if (!r.ok) throw new Error('auth check failed')
+    return r.json()                            // { id, name, roles: [...] }
+  },
+  staleTime: 5 * 60_000
+})
+```
+
+### Guarding Routes
+
+Use route groups and guard in the protected group's universal `+layout.ts`. `ensureQueryData` fetches `/me` once and serves cache thereafter:
+
+```ts
+// src/routes/(app)/+layout.ts
+import { redirect } from '@sveltejs/kit'
+import { queryClient } from '$lib/query'
+import { meQuery } from '$lib/auth'
+export const load = async () => {
+  const user = await queryClient.ensureQueryData(meQuery())
+  if (!user) redirect(303, '/login')           // client-side (UX) redirect
+  return { user }
+}
+```
+
+The guard mounts after the shell, so direct navigation flashes briefly before redirecting (no protected *data* loads - the API 401s). For zero flash, also gate rendering with `{#if user}` in the layout component.
+
+### Per-Navigation: No Repeated `/me`
+
+`ensureQueryData` returns cached data without fetching (it ignores `staleTime`), and a dependency-free layout load won't re-run between sibling pages - so navigating is **zero `/me` calls**. You don't need per-navigation checks because **every data request re-validates the cookie at the API**; session expiry surfaces as a 401 on the next call:
+
+```ts
+// src/lib/query.ts - global 401 handler
+new QueryClient({
+  queryCache: new QueryCache({
+    onError: (err) => {
+      if (err?.status === 401) { queryClient.setQueryData(['me'], null); goto('/login') }
+    }
+  }),
+  defaultOptions: { queries: { staleTime: 30_000 } }
+})
+```
+
+Optionally set `refetchOnWindowFocus` on `['me']` to re-validate when the user returns to the tab.
+
+### Login & Logout
+
+Login/logout are mutations; on logout, `clear()` scrubs cached private data so it can't be read afterward:
+
+```ts
+// login: createMutation(() => ({ mutationFn: postCreds, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }) }))
+async function logout() {
+  await fetch('/api/logout', { method: 'POST', credentials: 'include' })
+  queryClient.clear()
+  goto('/login')
+}
+```
+
+### Reading Authorization Data (Groups/Roles)
+
+With httpOnly cookies the SPA *can't* read the credential - that's the point. Get claims from the **`/me` payload**, not the cookie: the API returns non-sensitive identity + roles, you cache them in `['me']`, and gate UI on them. An admin route guard mirrors the auth guard:
+
+```ts
+// src/routes/(admin)/+layout.ts
+const user = await queryClient.ensureQueryData(meQuery())
+if (!user?.roles.includes('admin')) redirect(303, '/forbidden')
+```
+
+This is UX only - admin API endpoints check the role server-side on every request. Roles can go stale if a user is demoted mid-session (UI lags, but the API already rejects them); `refetchOnWindowFocus` / a short `staleTime` converges it.
+
+### OIDC: Token-in-Browser vs BFF
+
+> **Decision:** pure static hosting with no backend → token-in-browser (with mitigations). Already have an API server, or the app is security-sensitive (PII, admin, financial) → BFF.
+
+OIDC (Cognito, Auth0, Okta, Entra, Keycloak) issues an **ID token** (JWT, client-readable claims incl. groups), an **access token** (the API credential), and a refresh token. "Decode the ID token for groups" is real and common - but it's one of two models, and the choice is the same cookie-vs-token tradeoff:
+
+| | Token-in-browser (public client + PKCE) | BFF (server runs OIDC) |
+| --- | --- | --- |
+| Where tokens live | Browser (JS) | Server session - never in browser |
+| Read groups via | decode ID token in JS | `/me` payload (BFF extracts the claim) |
+| API credential | access token as Bearer | session cookie -> BFF attaches access token |
+| XSS risk | token exfiltration | cookie can't be stolen |
+| Infra | pure static SPA + IdP SDK | needs a backend (your API) |
+
+The BFF model is just the httpOnly-cookie design above with OIDC upstream - the browser never sees a JWT:
+
+```text
+Browser --/auth/login--> BFF --redirect--> IdP
+Browser <-set httpOnly cookie- BFF <-code+PKCE -> tokens- IdP (callback)
+Browser --/api/* (cookie)--> BFF --Bearer access token--> resources
+```
+
+It composes with the CloudFront topology (`/auth/*` + `/api/*` -> backend, `/*` -> S3), and groups still arrive via `/me`, so the SPA code is identical to the cookie model.
+
+Both have a place: **token-in-browser** suits pure-static SPAs with no backend (accept the XSS tradeoff plus mitigations - short-lived tokens, rotating refresh, strict CSP); **BFF** suits anything security-sensitive or that already has an API server. One rule for both: **never send the ID token to your API** - its audience is the client; APIs validate the access token (token model) or the session cookie (BFF).
+
+---
+
+## 11. Content Security Policy in a SPA
+
+A pure SPA can't use CSP **nonces** - they must be minted per request by a server, and a static SPA has none. Use **hashes** instead, computed at build.
+
+In practice most of your code is **external bundles** (`<script src>`), already covered by `script-src 'self'` - hashes only matter for the small inline scripts SvelteKit emits (its bootstrap + serialized data). SvelteKit hashes those for you:
+
+```js
+// svelte.config.js
+kit: { csp: { mode: 'auto', directives: { 'script-src': ['self'] } } }
+```
+
+With `adapter-static`, `mode: 'auto'` resolves to **hash** (it picks hashes for prerendered pages, nonces for SSR). Since there's no server to set a response header, SvelteKit injects the policy as a `<meta>` tag in the prerendered HTML.
+
+Two things `<meta>` can't carry - `frame-ancestors` and reporting - plus HSTS and the other security headers must be set as real response headers on your **CDN/host** (CloudFront response-headers policy, Netlify `_headers`, nginx). If the build emits no inline scripts at all, plain `script-src 'self'` is enough and you need no hashes.
+
+> Full treatment of CSP directives, source values, and the nonce-vs-hash mechanics: [Browser Security & Caching](/browser-security-and-caching/#2-security-headers).
+
+---
+
+## 12. Version Gotchas & Setup
 
 ```bash
 npx sv create ./
@@ -359,3 +540,5 @@ npm i -D @sveltejs/adapter-static
 - [TanStack Query - Svelte](https://tanstack.com/query/latest/docs/framework/svelte/overview)
 - [TanStack Query - migrate v5 to v6](https://tanstack.com/query/latest/docs/framework/svelte/migrate-from-v5-to-v6)
 - [TanStack Query - SSR & SvelteKit](https://tanstack.com/query/latest/docs/framework/svelte/ssr)
+- [SvelteKit Auth (best practices)](https://svelte.dev/docs/kit/auth)
+- [OAuth 2.0 for Browser-Based Apps (IETF BCP)](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps)

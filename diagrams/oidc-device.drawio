@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="OIDC Device" id="oidc-device">
+    <mxGraphModel dx="1000" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="720" pageHeight="424" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Device Authorization Flow" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="210" y="6" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="acA" value="Device (TV / CLI)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="15" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acB" value="Authorization Server" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="285" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acC" value="User's Phone" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="555" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="llA" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="80" as="sourcePoint" /><mxPoint x="90" y="350" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llB" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="80" as="sourcePoint" /><mxPoint x="360" y="350" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llC" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="80" as="sourcePoint" /><mxPoint x="630" y="350" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s1" value="1 · device authorization request" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="108" as="sourcePoint" /><mxPoint x="360" y="108" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s2" value="2 · device_code + user_code + URL" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="142" as="sourcePoint" /><mxPoint x="90" y="142" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="n3" value="3 · show user_code + URL to user" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="8" y="158" width="220" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="4 · poll token → pending" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#d97706;fontColor=#d97706;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="200" as="sourcePoint" /><mxPoint x="360" y="200" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s5" value="5 · approve on phone (login + consent)" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="234" as="sourcePoint" /><mxPoint x="360" y="234" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="n6" value="6 · device_code approved" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="276" y="250" width="168" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="7 · poll token again" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="292" as="sourcePoint" /><mxPoint x="360" y="292" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s8" value="8 · tokens" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="326" as="sourcePoint" /><mxPoint x="90" y="326" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="ft" value="The device never handles credentials - the user approves on a second device with a real browser, then the device's next poll succeeds." style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontSize=10;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="15" y="362" width="690" height="48" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

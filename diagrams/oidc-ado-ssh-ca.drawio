@@ -1,0 +1,61 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="OIDC ADO SSH CA" id="oidc-ado-ssh-ca">
+    <mxGraphModel dx="1000" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="720" pageHeight="448" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="ADO over SSH - Conditional Access" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="180" y="6" width="360" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="acA" value="Git CLI (SSH)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="15" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acB" value="Azure DevOps" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="285" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acC" value="Microsoft Entra" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="555" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="llA" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="80" as="sourcePoint" /><mxPoint x="90" y="378" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llB" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="80" as="sourcePoint" /><mxPoint x="360" y="378" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llC" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="80" as="sourcePoint" /><mxPoint x="630" y="378" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s1" value="1 · git pull (SSH key)" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="108" as="sourcePoint" /><mxPoint x="360" y="108" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s2" value="2 · check Conditional Access" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="142" as="sourcePoint" /><mxPoint x="630" y="142" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s3" value="3 · ✗ session stale" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;fontColor=#dc2626;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="176" as="sourcePoint" /><mxPoint x="360" y="176" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s4" value="4 · ✗ auth required - fails" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#dc2626;fontColor=#dc2626;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="210" as="sourcePoint" /><mxPoint x="90" y="210" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="n5" value="5 · sign in via browser → session refreshed" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="470" y="226" width="238" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="6 · git pull (same key)" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="266" as="sourcePoint" /><mxPoint x="360" y="266" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s7" value="7 · re-check Conditional Access" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="300" as="sourcePoint" /><mxPoint x="630" y="300" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s8" value="8 · ✓ session fresh" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="334" as="sourcePoint" /><mxPoint x="360" y="334" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s9" value="9 · ✓ allowed + data" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="368" as="sourcePoint" /><mxPoint x="90" y="368" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="ft" value="Same SSH key both times - nothing local changed. The browser refreshed a server-side Entra session; ADO re-checked it. Credential (transport) and session (identity) are different axes." style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontSize=10;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="15" y="384" width="690" height="56" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

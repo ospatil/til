@@ -1,0 +1,61 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="OIDC Server-Side" id="oidc-server-side">
+    <mxGraphModel dx="1000" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="720" pageHeight="466" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Server-Driven Three-Legged Flow (BFF)" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="6" width="400" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="acA" value="Browser" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="15" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acB" value="App Server (BFF)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="285" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acC" value="Authorization Server" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="555" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="llA" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="80" as="sourcePoint" /><mxPoint x="90" y="398" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llB" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="80" as="sourcePoint" /><mxPoint x="360" y="398" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llC" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="80" as="sourcePoint" /><mxPoint x="630" y="398" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s1" value="1 · GET /login" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="108" as="sourcePoint" /><mxPoint x="360" y="108" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s2" value="2 · redirect to AS" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="142" as="sourcePoint" /><mxPoint x="90" y="142" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s3" value="3 · authorization request" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="176" as="sourcePoint" /><mxPoint x="630" y="176" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="n4" value="4 · authenticate + consent" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="550" y="192" width="160" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="5 · redirect back with code" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="244" as="sourcePoint" /><mxPoint x="90" y="244" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s6" value="6 · callback with code" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="278" as="sourcePoint" /><mxPoint x="360" y="278" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s7" value="7 · token request (+ client_secret)" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="312" as="sourcePoint" /><mxPoint x="630" y="312" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s8" value="8 · tokens" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="346" as="sourcePoint" /><mxPoint x="360" y="346" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s9" value="9 · set session cookie" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="380" as="sourcePoint" /><mxPoint x="90" y="380" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="ft" value="Steps 1-6 are front channel (browser); 7-8 are the confidential back channel. Tokens stay on the server; the browser gets only an httpOnly session cookie." style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontSize=10;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="15" y="410" width="690" height="44" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
