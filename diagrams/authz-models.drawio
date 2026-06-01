@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="Authorization Models" id="authz-models">
+    <mxGraphModel dx="1100" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="360" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Authorization Models: RBAC vs ABAC vs ReBAC" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="600" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="panelL" value="RBAC - role-based" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;dashed=1;verticalAlign=top;fontColor=#4f46e5;fontStyle=1;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="rU" value="User: alice" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="104" width="120" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="rR" value="Role: editor" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="95" y="168" width="120" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="rP" value="Perm: doc.edit" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="80" y="232" width="150" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="rE1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;endArrow=block;endFill=1;" edge="1" source="rU" target="rR" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rE2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;endArrow=block;endFill=1;" edge="1" source="rR" target="rP" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rCap" value="assigned a role -&gt; the role's rights" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="30" y="274" width="250" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="panelM" value="ABAC - attribute-based" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;dashed=1;verticalAlign=top;fontColor=#4f46e5;fontStyle=1;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="315" y="60" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="aA" value="Attributes:&#10;subject · resource&#10;action · env" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;align=left;spacingLeft=8;fontSize=10;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="104" width="130" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="aPol" value="Policy&#10;rules" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="480" y="112" width="90" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="aD" value="Permit / Deny" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="385" y="232" width="140" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="aE1" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;endArrow=block;endFill=1;" edge="1" source="aA" target="aPol" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="aE2" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;endArrow=block;endFill=1;" edge="1" source="aPol" target="aD" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="aCap" value="rules evaluated over attributes" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="325" y="274" width="250" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="panelR" value="ReBAC - relationship-based" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;dashed=1;verticalAlign=top;fontColor=#4f46e5;fontStyle=1;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="60" width="270" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="gU" value="alice" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="625" y="108" width="90" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="gG" value="eng-team" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="770" y="108" width="95" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="gD" value="doc #42" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="700" y="214" width="110" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="gE1" value="member" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;endArrow=block;endFill=1;fontSize=9;fontColor=#9673a6;labelBackgroundColor=#f8fafc;" edge="1" source="gU" target="gG" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gE2" value="editor" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;endArrow=block;endFill=1;fontSize=9;fontColor=#16a34a;labelBackgroundColor=#f8fafc;" edge="1" source="gG" target="gD" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gCap" value="traverse the relationship graph" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="615" y="274" width="260" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="foot" value="RBAC = coarse roles · ABAC = attribute rules · ReBAC = a relationship graph. The model dictates where permissions live and how cheaply you can answer 'list everything alice can see.'" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#4f46e5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="322" width="820" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

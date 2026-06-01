@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="Email OTP Flow" id="email-otp-flow">
+    <mxGraphModel dx="1000" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="720" pageHeight="420" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Email OTP / Magic Link" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="210" y="6" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="acA" value="User&#10;(browser)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="15" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acB" value="App / IdP" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="285" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acC" value="Email service" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="555" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="llA" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="80" as="sourcePoint" /><mxPoint x="90" y="400" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llB" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="80" as="sourcePoint" /><mxPoint x="360" y="400" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llC" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="80" as="sourcePoint" /><mxPoint x="630" y="400" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s1" value="1 · enter email, request code" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="112" as="sourcePoint" /><mxPoint x="360" y="112" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="n2" value="2 · generate OTP (crypto/rand) · store hash + TTL" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="195" y="130" width="330" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="3 · send code / magic link" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="182" as="sourcePoint" /><mxPoint x="630" y="182" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s4" value="4 · deliver out-of-band" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="212" as="sourcePoint" /><mxPoint x="90" y="212" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="s5" value="5 · submit code" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="250" as="sourcePoint" /><mxPoint x="360" y="250" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="n6" value="6 · constant-time compare · check TTL · invalidate" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="190" y="268" width="340" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="7 · issue session / JWT" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="320" as="sourcePoint" /><mxPoint x="90" y="320" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="ft" value="Possession of the inbox is the proof. The code/link must be single-use, short-lived, rate-limited on both send and verify, and compared in constant time - otherwise the 6-digit space is brute-forceable." style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontSize=10;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="15" y="352" width="690" height="48" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

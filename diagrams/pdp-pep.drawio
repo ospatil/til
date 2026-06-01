@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="PEP PDP" id="pdp-pep">
+    <mxGraphModel dx="1100" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="840" pageHeight="400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Externalized Authorization: PEP / PDP / PAP / PIP" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="120" y="10" width="600" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="client" value="Client&#10;request" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#1e1b4b;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="165" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="pep" value="Application&#10;[ PEP ]&#10;enforces the decision" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="150" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="res" value="Protected resource" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="305" width="170" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="pdp" value="[ PDP ]&#10;evaluate policy&#10;-&gt; Permit / Deny" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#d5e8d4;strokeColor=#16a34a;fontColor=#1e1b4b;fontStyle=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="430" y="160" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="pap" value="[ PAP ]&#10;author + manage policies" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1e1b4b;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="70" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="pip" value="[ PIP ]&#10;supply extra attributes&#10;(user, resource data)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1e1b4b;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="270" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="1 · request" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;endArrow=block;endFill=1;fontSize=10;fontColor=#1e1b4b;labelBackgroundColor=#ffffff;" edge="1" source="client" target="pep" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" value="2 · can subject do action on resource?" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;endArrow=block;endFill=1;fontSize=9;fontColor=#1e1b4b;labelBackgroundColor=#ffffff;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" source="pep" target="pdp" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="3 · Permit / Deny" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;endArrow=block;endFill=1;fontSize=10;fontColor=#16a34a;labelBackgroundColor=#ffffff;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" source="pdp" target="pep" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="4 · allow + serve (else 403)" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;endArrow=block;endFill=1;fontSize=9;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="pep" target="res" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="policies" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#9673a6;endArrow=block;endFill=1;dashed=1;fontSize=9;fontColor=#9673a6;labelBackgroundColor=#ffffff;" edge="1" source="pap" target="pdp" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" value="attributes" style="sketch=1;curveFitting=1;jiggle=2;strokeColor=#d6b656;endArrow=block;endFill=1;dashed=1;fontSize=9;fontColor=#d6b656;labelBackgroundColor=#ffffff;" edge="1" source="pip" target="pdp" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="foot" value="The PEP asks, the PDP decides, the PAP supplies the rules, the PIP supplies the facts. Decoupling enforcement from decision lets policy change without redeploying the app." style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontColor=#4f46e5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="362" width="760" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

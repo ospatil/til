@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="WebAuthn Ceremonies" id="webauthn-ceremonies">
+    <mxGraphModel dx="1000" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="720" pageHeight="648" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="WebAuthn: Registration &amp; Authentication" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#4f46e5;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="6" width="400" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="acA" value="Authenticator&#10;(device + biometric)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="15" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acB" value="Browser&#10;(WebAuthn JS API)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="285" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="acC" value="Relying Party&#10;(your server)" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontStyle=1;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="555" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="llA" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="80" as="sourcePoint" /><mxPoint x="90" y="600" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llB" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="80" as="sourcePoint" /><mxPoint x="360" y="600" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="llC" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#4f46e5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="80" as="sourcePoint" /><mxPoint x="630" y="600" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="hdrR" value="Registration  (one time)" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=3;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="210" y="86" width="300" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="1 · begin registration" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="118" as="sourcePoint" /><mxPoint x="630" y="118" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="r2" value="2 · challenge + user info + rpId" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="148" as="sourcePoint" /><mxPoint x="360" y="148" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="r3" value="3 · navigator.credentials.create()" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="178" as="sourcePoint" /><mxPoint x="90" y="178" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="r4" value="4 · user gesture · generate key pair" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="8" y="196" width="220" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="r5" value="5 · public key + attestation" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="244" as="sourcePoint" /><mxPoint x="360" y="244" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="r6" value="6 · forward attestation" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="274" as="sourcePoint" /><mxPoint x="630" y="274" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="r7" value="7 · verify · store public key + credId" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="468" y="292" width="237" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="divider" style="endArrow=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#cbd5e1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="15" y="338" as="sourcePoint" /><mxPoint x="705" y="338" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="hdrA" value="Authentication  (every login)" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=3;fontColor=#64748b;" vertex="1" parent="1">
+          <mxGeometry x="210" y="344" width="300" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="a8" value="8 · begin login" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="378" as="sourcePoint" /><mxPoint x="630" y="378" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="a9" value="9 · challenge" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="630" y="408" as="sourcePoint" /><mxPoint x="360" y="408" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="a10" value="10 · navigator.credentials.get()" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="438" as="sourcePoint" /><mxPoint x="90" y="438" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="a11" value="11 · unlock private key · sign challenge" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="8" y="456" width="240" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="a12" value="12 · assertion (signed challenge)" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#16a34a;fontColor=#16a34a;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="90" y="504" as="sourcePoint" /><mxPoint x="360" y="504" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="a13" value="13 · forward assertion" style="endArrow=block;endFill=1;sketch=1;curveFitting=1;jiggle=2;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="360" y="534" as="sourcePoint" /><mxPoint x="630" y="534" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="a14" value="14 · verify signature w/ stored public key" style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#ffffff;strokeColor=#cbd5e1;fontColor=#1e1b4b;fontSize=10;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="448" y="552" width="257" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="ft" value="The private key never leaves the authenticator. The server only ever stores a public key, so a breach of its tables leaks nothing usable - and the key is bound to the origin, so a look-alike site gets no signature." style="rounded=1;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#1e1b4b;fontSize=10;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="15" y="592" width="690" height="48" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

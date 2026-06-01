@@ -7,6 +7,8 @@ tags: [oidc, oauth, authentication, security, guide]
 
 A step-by-step walkthrough of the three OpenID Connect / OAuth 2.0 flows you actually meet in practice: **Authorization Code + PKCE** (browser/mobile), the **server-driven three-legged** flow (confidential client / BFF), and the **Device Authorization** flow (TVs, CLIs). Each is built from the same parts, so we start with those, then cover how CLIs and headless tools fit in, which flow to choose, and how to read and verify the JWTs these flows produce.
 
+For what happens *before* these flows - how the user actually logs in, passwordless - and *after* the token, deciding what they're allowed to do, see the companion [Passwordless Auth & Authorization](/passwordless-auth-and-authorization).
+
 ---
 
 ## Table of Contents
